@@ -1,3 +1,4 @@
+/// <reference path="./GameState.ts" />
 /// <reference path="./IResource.ts" />
 /// <reference path="./resource/Religion.ts" />
 
@@ -14,5 +15,42 @@ class GameConfig {
   public relOtherShare:number = 0.02;
   public relNoneShare: number = 0.16;
 
-  constructor () {}
+  public generateState(): GameState {
+    const state = new GameState();
+
+    // create world religions
+    state.addResource('xtian', new Religion(
+      'Christianity', 'God, Jesus, Bible, churches.',
+      this.relChristianityShare * this.worldPopulation));
+
+    state.addResource('islam', new Religion(
+      'Islam', 'God, Muhammad, Quran, mosques.',
+      this.relIslamShare * this.worldPopulation));
+
+    state.addResource('hindu', new Religion(
+      'Hinduism', 'Dogma-free spiritualism.',
+      this.relHinduismShare * this.worldPopulation));
+
+    state.addResource('buddh', new Religion(
+      'Buddhism', 'The minimization of suffering.',
+      this.relBuddhismShare * this.worldPopulation));
+
+    state.addResource('sikhi', new Religion(
+      'Sikhism', 'Meditation and ten Gurus',
+      this.relSikhismShare * this.worldPopulation));
+
+    state.addResource('judah', new Religion(
+      'Judaism', 'God, Abraham, Torah, synagogues.',
+      this.relJudaismShare * this.worldPopulation));
+
+    state.addResource('other', new Religion(
+      'Other', 'A variety of belief systems.',
+      this.relOtherShare * this.worldPopulation));
+
+    state.addResource('agnos', new Religion(
+      'Non-Religious', 'Atheists and agnostics.',
+      this.relNoneShare * this.worldPopulation));
+
+    return state;
+  }
 }

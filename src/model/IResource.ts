@@ -7,5 +7,6 @@ interface IResource {
   description: string,
   resourceType: ResourceType,
   value: number,
-  max: number
+  max?: number,
+  unlocked: boolean
 }
