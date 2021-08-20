@@ -1,14 +1,11 @@
 /// <reference path="../IResource.ts" />
 
-class Religion implements IResource {
+class PlayerOrganization implements IResource {
+  public readonly name = 'Player';
+  public readonly description = 'In you they trust.';
   public readonly resourceType = ResourceType.Religion;
   public readonly max?: number = null;
   public readonly unlocked = true;
 
-  constructor (
-    public readonly name: string,
-    public readonly description: string,
-    public value: number,
-  ) {
-  }
+  public value = 0;
 }

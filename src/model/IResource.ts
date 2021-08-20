@@ -1,12 +1,14 @@
 enum ResourceType {
-  Religion
+  Religion,
+  Consumable
 }
 
 interface IResource {
-  name: string,
-  description: string,
-  resourceType: ResourceType,
-  value: number,
-  max?: number,
-  unlocked: boolean
+  name: string;
+  description: string;
+
+  resourceType: ResourceType;
+  value: number;
+  max?: number;
+  unlocked: boolean;
 }
