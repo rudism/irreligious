@@ -14,10 +14,14 @@ class SavingsBonds extends Purchasable {
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    if (state.getResource('money').value >= 25) {
+    if (state.getResource('money').value >= this.cost.money) {
       this._isUnlocked = true;
       return true;
     }
     return false;
+  }
+
+  protected purchaseEffect (state: GameState) {
+    state.getResource('money').inc += 0.25;
   }
 }

@@ -48,8 +48,13 @@ class DebugRenderer implements IRenderer {
           const elV = el.getElementsByClassName('value')[0];
           const elT = el.getElementsByClassName('max')[0];
           elV.innerHTML = this.formatNumber(resource.value, 1);
-          elT.innerHTML = resource.max !== null ? ` / ${this.formatNumber(resource.max, 2)}` : '';
+          elT.innerHTML = resource.max !== null ? ` / ${this.formatNumber(resource.max, 1)}` : '';
           if (this._handleClick) {
+            if (resource.inc > 0) {
+              console.log(`${resource.name} inc ${resource.inc} to ${this.formatNumber(resource.inc, 1)}`); // tslint:disable-line
+              const elI = el.getElementsByClassName('inc')[0];
+              elI.innerHTML = ` +${this.formatNumber(resource.inc, 1)}/s`;
+            }
             const elC = el.getElementsByClassName('cost');
             if (elC.length > 0) {
               elC[0].innerHTML = this.getCostStr(resource, state);

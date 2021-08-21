@@ -8,6 +8,7 @@ class Religion implements IResource {
   public readonly clickAction: () => void = null;
   public readonly advanceAction: (time: number) => void = null;
   public readonly cost: { [key: string]: number } = null;
+  public readonly inc: number = 0;
 
   constructor (
     public readonly name: string,

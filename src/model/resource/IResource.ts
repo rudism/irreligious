@@ -10,6 +10,7 @@ interface IResource {
 
   resourceType: ResourceType;
   value: number;
+  inc: number;
   max?: number;
   cost: { [key: string]: number };
 

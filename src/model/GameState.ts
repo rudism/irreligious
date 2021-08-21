@@ -16,6 +16,9 @@ class GameState {
       if (this._resources[rkey].advanceAction !== null) {
         this._resources[rkey].advanceAction(time, this);
       }
+      if (this._resources[rkey].inc > 0) {
+        this._resources[rkey].value += this._resources[rkey].inc * time / 1000;
+      }
     }
   }
 
