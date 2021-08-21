@@ -1,14 +1,14 @@
 /// <reference path="./Purchasable.ts" />
 
-class SavingsBonds extends Purchasable {
+class Savings extends Purchasable {
   public max?: number = null;
   private _isUnlocked = false;
 
   constructor (
     public value: number,
   ) {
-    super('Savings Bonds', 'Grows money by a small amount over time.');
-    this.cost = { 'money': 25 };
+    super('Savings', "Can't be spent, but grows money over time.");
+    this.cost = { 'money': 10 };
     this._costMultiplier = { 'money': 1.1 };
   }
 
@@ -22,6 +22,6 @@ class SavingsBonds extends Purchasable {
   }
 
   protected purchaseEffect (state: GameState) {
-    state.getResource('money').inc += 0.25;
+    state.getResource('money').inc += 1;
   }
 }

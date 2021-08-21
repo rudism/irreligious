@@ -1,7 +1,7 @@
 enum ResourceType {
-  Religion,
-  Consumable,
-  Infrastructure
+  Religion = 'religion',
+  Consumable = 'consumable',
+  Infrastructure = 'infrastructure'
 }
 
 interface IResource {

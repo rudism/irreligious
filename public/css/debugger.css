@@ -1,4 +1,5 @@
-#irreligious-game {
+#irreligious-game, .resource-type-container {
+  clear: all;
   overflow: auto;
 }
 div.resource {
