@@ -13,10 +13,10 @@ class GameConfig {
   public relBuddhismShare: number = 0.06;
   public relSikhismShare: number = 0.04;
   public relJudaismShare: number = 0.02;
-  public relOtherShare:number = 0.02;
+  public relOtherShare: number = 0.02;
   public relNoneShare: number = 0.16;
 
-  public generateState(): GameState {
+  public generateState (): GameState {
     const state = new GameState();
 
     // create player organization

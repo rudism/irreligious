@@ -1,0 +1,10 @@
+#irreligious-game {
+  overflow: auto;
+}
+div.resource {
+  float: left;
+  border: 2px solid black;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+}
