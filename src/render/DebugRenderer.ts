@@ -22,7 +22,8 @@ class DebugRenderer implements IRenderer {
       head.appendChild(style);
       // create containers for each resource type
       for (const item in ResourceType) {
-        if (isNaN(Number(item))) {
+        if (isNaN(Number(item))
+          && ResourceType[item] !== ResourceType.Hidden) {
           const el: HTMLElement = document.createElement('div');
           el.id = `resource-container-${ResourceType[item]}`;
           el.className = 'resource-type-container';
