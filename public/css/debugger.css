@@ -1,11 +1,9 @@
-#irreligious-game, .resource-type-container {
-  clear: all;
-  overflow: auto;
+.resource-type-container {
+  display: flex;
 }
-div.resource {
-  float: left;
+.resource {
   border: 2px solid black;
-  margin-right: 5px;
-  margin-bottom: 5px;
   padding: 5px 10px;
+  margin: 0 5px 5px 0;
+  flex-shrink: 0;
 }

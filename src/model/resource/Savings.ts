@@ -1,8 +1,7 @@
 /// <reference path="./Purchasable.ts" />
 
 class Savings extends Purchasable {
-  public max?: number = null;
-  private _isUnlocked = false;
+  private _isUnlocked: boolean = false;
 
   constructor (
     public value: number,
@@ -21,7 +20,7 @@ class Savings extends Purchasable {
     return false;
   }
 
-  protected purchaseEffect (state: GameState) {
-    state.getResource('money').inc += 1;
+  protected purchaseEffect (state: GameState): void {
+    return;
   }
 }

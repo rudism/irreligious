@@ -16,8 +16,14 @@ class GameState {
       if (this._resources[rkey].advanceAction !== null) {
         this._resources[rkey].advanceAction(time, this);
       }
-      if (this._resources[rkey].inc > 0) {
-        this._resources[rkey].value += this._resources[rkey].inc * time / 1000;
+      const max: number | null = this._resources[rkey].max(this);
+      if (this._resources[rkey].inc(this) > 0
+        && (max === null || this._resources[rkey].value < max)) {
+        this._resources[rkey].value +=
+          this._resources[rkey].inc(this) * time / 1000;
+      }
+      if (max !== null && this._resources[rkey].value > max) {
+        this._resources[rkey].value = max;
       }
     }
   }

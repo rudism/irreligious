@@ -3,6 +3,13 @@
   "rules": {
     "no-reference": false,
     "space-before-function-paren": true,
+    "triple-equals": true,
+    "max-line-length": [
+      true, {
+        "limit": 75,
+        "check-strings": true
+      }
+    ],
     "whitespace": [
       true,
       "check-branch",
@@ -14,6 +21,16 @@
       "check-type-operator",
       "check-preblock",
       "check-postbrace"
+    ],
+    "typedef": [
+      true,
+      "call-signature",
+      "arrow-call-signature",
+      "parameter",
+      "arrow-parameter",
+      "property-declaration",
+      "variable-declaration",
+      "member-variable-declaration"
     ]
   }
 }

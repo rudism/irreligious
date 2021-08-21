@@ -17,7 +17,7 @@ class GameConfig {
   public relNoneShare: number = 0.16;
 
   public generateState (): GameState {
-    const state = new GameState();
+    const state: GameState = new GameState();
 
     // create player organization
     state.addResource('plorg', new Religion(
@@ -57,7 +57,7 @@ class GameConfig {
       this.relNoneShare * this.worldPopulation));
 
     // add purchasable resources
-    state.addResource('money', new Money(0, 1000));
+    state.addResource('money', new Money(0));
     state.addResource('bonds', new Savings(0));
 
     return state;

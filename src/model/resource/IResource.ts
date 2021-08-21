@@ -10,8 +10,8 @@ interface IResource {
 
   resourceType: ResourceType;
   value: number;
-  inc: number;
-  max?: number;
+  max: (state: GameState) => number | null;
+  inc: (state: GameState) => number | null;
   cost: { [key: string]: number };
 
   isUnlocked: (state: GameState) => boolean;
