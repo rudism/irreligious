@@ -9,12 +9,16 @@ class GameState {
   public logger: ILogger = null;
   public numberFormatDigits: number = 1;
 
+  public now: number = 0;
+
   public addResource (key: string, resource: IResource): void {
     this._resourceKeys.push(key);
     this._resources[key] = resource;
   }
 
   public advance (time: number): void {
+    this.now = (new Date()).getTime();
+
     // advance each resource
     for (const rkey of this._resourceKeys) {
       if (this._resources[rkey].advanceAction !== null) {
@@ -79,13 +83,13 @@ class GameState {
   public formatNumber (num: number): string {
     type vlookup = { value: number, symbol: string };
     const lookup: vlookup[] = [
-      { value: 1, symbol: "" },
-      { value: 1e3, symbol: "K" },
-      { value: 1e6, symbol: "M" },
-      { value: 1e9, symbol: "G" },
-      { value: 1e12, symbol: "T" },
-      { value: 1e15, symbol: "P" },
-      { value: 1e18, symbol: "E" }
+      { value: 1, symbol: '' },
+      { value: 1e3, symbol: 'K' },
+      { value: 1e6, symbol: 'M' },
+      { value: 1e9, symbol: 'G' },
+      { value: 1e12, symbol: 'T' },
+      { value: 1e15, symbol: 'P' },
+      { value: 1e18, symbol: 'E' }
     ];
     const rx: RegExp = /\.0+$|(\.[0-9]*[1-9])0+$/;
     const item: vlookup =
@@ -93,8 +97,8 @@ class GameState {
         .find((i: vlookup): boolean => num >= i.value);
     return item
       ? (num / item.value).toFixed(this.numberFormatDigits)
-        .replace(rx, "$1") + item.symbol
-      : num.toFixed(this.numberFormatDigits).replace(rx, "$1");
+        .replace(rx, '$1') + item.symbol
+      : num.toFixed(this.numberFormatDigits).replace(rx, '$1');
   }
 
   public log (text: string): void {

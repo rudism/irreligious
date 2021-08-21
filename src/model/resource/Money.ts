@@ -1,6 +1,10 @@
 /// <reference path="./Purchasable.ts" />
 
 class Money extends Purchasable {
+  private _lastCollectionTime: number = 0;
+
+  public cost: { [key: string]: number } = { };
+
   constructor (
     public value: number,
   ) {
@@ -19,9 +23,15 @@ class Money extends Purchasable {
       state.log('You have no followers to collect from!');
       return 0;
     }
+    if (state.now - this._lastCollectionTime < 30000) {
+      this.cost.creds = 0.05;
+      state.deductCost(this.cost);
+      delete this.cost.creds;
+    }
     // each follower gives you $10
     const tithings: number = plorg.value * 10;
     state.log(`You collected $${state.formatNumber(tithings)} from ${state.formatNumber(plorg.value)} followers.`);
+    this._lastCollectionTime = state.now;
     return tithings;
   }
 }

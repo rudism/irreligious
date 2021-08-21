@@ -4,7 +4,6 @@ abstract class Hidden implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Hidden;
   public readonly clickText: null = null;
   public readonly clickDescription: null = null;
-  public readonly advanceAction: null = null;
   public readonly cost: null = null;
   public readonly clickAction: null = null;
   public readonly name: null = null;
@@ -26,5 +25,9 @@ abstract class Hidden implements IResource {
 
   public isUnlocked (state: GameState): boolean {
     return true;
+  }
+
+  public advanceAction (time: number, state: GameState): void {
+    return;
   }
 }

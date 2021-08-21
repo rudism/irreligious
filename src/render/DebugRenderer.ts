@@ -34,6 +34,7 @@ class DebugRenderer implements IRenderer {
     const rkeys: string[] = state.getResources();
     for (const rkey of rkeys) {
       const resource: IResource = state.getResource(rkey);
+      if (resource.resourceType === ResourceType.Hidden) continue;
       const container: HTMLElement = document
         .getElementById(`resource-container-${resource.resourceType}`);
       if (resource.isUnlocked(state)) {
@@ -57,8 +58,8 @@ class DebugRenderer implements IRenderer {
                 ${resource.clickText}</button>`;
           }
           if (resource.cost !== null
-            && Object.keys(resource.cost) !== null) {
-            content += `<br>Cost: <span class='resource-cost'></span>`;
+            && Object.keys(resource.cost).length !== 0) {
+            content += "<br>Cost: <span class='resource-cost'></span>";
           }
           el.innerHTML = content;
           container.appendChild(el);

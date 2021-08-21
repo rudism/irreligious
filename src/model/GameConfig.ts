@@ -1,5 +1,7 @@
 /// <reference path="./GameState.ts" />
+/// <reference path="./resource/Credibility.ts" />
 /// <reference path="./resource/Money.ts" />
+/// <reference path="./resource/PlayerOrg.ts" />
 /// <reference path="./resource/Religion.ts" />
 
 class GameConfig {
@@ -19,8 +21,7 @@ class GameConfig {
     const state: GameState = new GameState();
 
     // create player organization
-    state.addResource('plorg', new Religion(
-      'Player', 'In you they trust.', 0));
+    state.addResource('plorg', new PlayerOrg());
 
     // create world religions
     state.addResource('xtian', new Religion(
@@ -55,7 +56,10 @@ class GameConfig {
       'Non-Religious', 'Atheists and agnostics.',
       this.relNoneShare * this.worldPopulation));
 
-    // add purchasable resources
+    // add hidden resources
+    state.addResource('creds', new Credibility(2));
+
+    // add resources
     state.addResource('money', new Money(100));
 
     return state;
