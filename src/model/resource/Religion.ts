@@ -2,14 +2,14 @@
 
 class Religion implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Religion;
-  public readonly clickText: string = null;
-  public readonly clickDescription: string = null;
-  public readonly advanceAction: (time: number) => void = null;
-  public readonly cost: { [key: string]: number } = null;
+  public readonly clickText: null = null;
+  public readonly clickDescription: null = null;
+  public readonly advanceAction: null = null;
+  public readonly cost: null = null;
 
-  public readonly max: () => null = (): null => null;
-  public readonly inc: () => null = (): null => null;
-  public readonly clickAction: () => void = null;
+  public readonly max: null = null;
+  public readonly inc: null = null;
+  public readonly clickAction: null = null;
 
   constructor (
     public readonly name: string,

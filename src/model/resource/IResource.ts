@@ -1,24 +1,28 @@
 enum ResourceType {
   Religion = 'religion',
   Consumable = 'consumable',
-  Infrastructure = 'infrastructure'
+  Infrastructure = 'infrastructure',
+  Hidden = 'hidden'
 }
 
 interface IResource {
-  name: string;
-  description: string;
+  name: string | null;
+  description: string | null;
 
   resourceType: ResourceType;
   value: number;
-  max: (state: GameState) => number | null;
-  inc: (state: GameState) => number | null;
-  cost: { [key: string]: number };
-
-  isUnlocked: (state: GameState) => boolean;
 
   clickText: string;
   clickDescription: string;
-  clickAction: (state: GameState) => void;
 
-  advanceAction: (time: number, state: GameState) => void;
+  clickAction (state: GameState): void;
+
+  cost: { [key: string]: number };
+
+  max (state: GameState): number | null;
+  inc (state: GameState): number | null;
+
+  isUnlocked (state: GameState): boolean;
+
+  advanceAction (time: number, state: GameState): void;
 }

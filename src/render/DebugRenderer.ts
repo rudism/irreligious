@@ -1,4 +1,5 @@
 /// <reference path="../model/GameState.ts" />
+/// <reference path="../model/logging/ConsoleLogger.ts" />
 /// <reference path="./IRenderer.ts" />
 
 class DebugRenderer implements IRenderer {
@@ -7,6 +8,7 @@ class DebugRenderer implements IRenderer {
 
   public render (state: GameState): void {
     if (!this._initialized) {
+      state.logger = new ConsoleLogger();
       const container: HTMLElement =
         document.getElementById('irreligious-game');
       this._initialized = true;
@@ -70,16 +72,17 @@ class DebugRenderer implements IRenderer {
           el.getElementsByClassName('resource-value')[0];
         const elT: Element =
           el.getElementsByClassName('resource-max')[0];
-        elV.innerHTML = this.formatNumber(resource.value, 1);
-        elT.innerHTML = resource.max(state) !== null
-          ? ` / ${this.formatNumber(resource.max(state), 1)}`
+        elV.innerHTML = state.formatNumber(resource.value);
+        elT.innerHTML = resource.max !== null
+          && resource.max(state) !== null
+          ? ` / ${state.formatNumber(resource.max(state))}`
           : '';
         if (this._handleClick) {
-          if (resource.inc(state) > 0) {
+          if (resource.inc !== null && resource.inc(state) > 0) {
             const elI: Element =
               el.getElementsByClassName('resource-inc')[0];
             elI.innerHTML =
-              ` +${this.formatNumber(resource.inc(state), 1)}/s`;
+              ` +${state.formatNumber(resource.inc(state))}/s`;
           }
           const elC: HTMLCollectionOf<Element> =
             el.getElementsByClassName('resource-cost');
@@ -98,33 +101,13 @@ class DebugRenderer implements IRenderer {
       if (resource.cost[rkey] !== undefined) {
         if (cost !== '') cost += ', ';
         if (rkey === 'money') {
-          cost += `$${this.formatNumber(resource.cost[rkey], 1)}`;
+          cost += `$${state.formatNumber(resource.cost[rkey])}`;
         } else {
-          cost += `${this.formatNumber(resource.cost[rkey], 1)}
+          cost += `${state.formatNumber(resource.cost[rkey])}
             ${state.getResource(rkey).name}`;
         }
       }
     }
     return cost;
-  }
-
-  private formatNumber (num: number, digits: number): string {
-    type vlookup = { value: number, symbol: string };
-    const lookup: vlookup[] = [
-      { value: 1, symbol: "" },
-      { value: 1e3, symbol: "K" },
-      { value: 1e6, symbol: "M" },
-      { value: 1e9, symbol: "G" },
-      { value: 1e12, symbol: "T" },
-      { value: 1e15, symbol: "P" },
-      { value: 1e18, symbol: "E" }
-    ];
-    const rx: RegExp = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    const item: vlookup =
-      lookup.slice().reverse()
-        .find((i: vlookup): boolean => num >= i.value);
-    return item
-      ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol
-      : num.toFixed(digits).replace(rx, "$1");
   }
 }

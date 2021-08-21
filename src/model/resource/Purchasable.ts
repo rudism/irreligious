@@ -7,9 +7,9 @@ abstract class Purchasable implements IResource {
   public clickText: string = 'Purchase';
   public clickDescription: string = 'Purchase';
 
-  public cost: { [key: string]: number } = null;
+  public cost: { [key: string]: number } | null = null;
 
-  protected _costMultiplier: { [key: string]: number } = null;
+  protected _costMultiplier: { [key: string]: number } | null = null;
   protected _baseMax: number | null = null;
 
   constructor (
@@ -20,7 +20,7 @@ abstract class Purchasable implements IResource {
   public clickAction (state: GameState): void {
     if (this.max(state) !== null && this.value >= this.max(state)) return;
     if (state.deductCost(this.cost)) {
-      this.value += 1;
+      this.value += this._incrementAmount(state);
       if (this._costMultiplier !== null
         && Object.keys(this._costMultiplier !== null)) {
         for (const rkey of Object.keys(this._costMultiplier)) {
@@ -44,5 +44,9 @@ abstract class Purchasable implements IResource {
 
   public isUnlocked (state: GameState): boolean {
     return false;
+  }
+
+  protected _incrementAmount (state: GameState): number {
+    return 1;
   }
 }

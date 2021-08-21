@@ -1,3 +1,4 @@
+/// <reference path="./logging/ILogger.ts" />
 /// <reference path="./resource/IResource.ts" />
 
 class GameState {
@@ -5,6 +6,8 @@ class GameState {
   private _resourceKeys: string[] = [];
 
   public onResourceClick: (() => void)[] = [];
+  public logger: ILogger = null;
+  public numberFormatDigits: number = 1;
 
   public addResource (key: string, resource: IResource): void {
     this._resourceKeys.push(key);
@@ -12,15 +15,24 @@ class GameState {
   }
 
   public advance (time: number): void {
+    // advance each resource
     for (const rkey of this._resourceKeys) {
       if (this._resources[rkey].advanceAction !== null) {
         this._resources[rkey].advanceAction(time, this);
       }
-      const max: number | null = this._resources[rkey].max(this);
-      if (this._resources[rkey].inc(this) > 0
-        && (max === null || this._resources[rkey].value < max)) {
-        this._resources[rkey].value +=
-          this._resources[rkey].inc(this) * time / 1000;
+    }
+
+    // perform auto increments
+    for (const rkey of this._resourceKeys) {
+      const max: number = this._resources[rkey].max
+        ? this._resources[rkey].max(this)
+        : null;
+      const inc: number = this._resources[rkey].inc
+        ? this._resources[rkey].inc(this)
+        : 0;
+      if (inc > 0 && (max === null
+        || this._resources[rkey].value < max)) {
+        this._resources[rkey].value += inc * time / 1000;
       }
       if (max !== null && this._resources[rkey].value > max) {
         this._resources[rkey].value = max;
@@ -62,5 +74,32 @@ class GameState {
       }
     }
     return true;
+  }
+
+  public formatNumber (num: number): string {
+    type vlookup = { value: number, symbol: string };
+    const lookup: vlookup[] = [
+      { value: 1, symbol: "" },
+      { value: 1e3, symbol: "K" },
+      { value: 1e6, symbol: "M" },
+      { value: 1e9, symbol: "G" },
+      { value: 1e12, symbol: "T" },
+      { value: 1e15, symbol: "P" },
+      { value: 1e18, symbol: "E" }
+    ];
+    const rx: RegExp = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    const item: vlookup =
+      lookup.slice().reverse()
+        .find((i: vlookup): boolean => num >= i.value);
+    return item
+      ? (num / item.value).toFixed(this.numberFormatDigits)
+        .replace(rx, "$1") + item.symbol
+      : num.toFixed(this.numberFormatDigits).replace(rx, "$1");
+  }
+
+  public log (text: string): void {
+    if (this.logger !== null) {
+      this.logger.msg(text);
+    }
   }
 }

@@ -5,19 +5,23 @@ class Money extends Purchasable {
     public value: number,
   ) {
     super('Money', 'Used to purchase goods and services.');
-    this.clickText = 'Beg';
-    this.clickDescription = 'Alms for the poor.';
-    this._baseMax = 1000;
+    this.clickText = 'Collect Tithes';
+    this.clickDescription = 'Voluntary contributions from followers.';
   }
 
   public isUnlocked (state: GameState): boolean {
     return true;
   }
 
-  public inc (state: GameState): number {
-    let baseInc: number = 0;
-    // bonds give $1/s
-    baseInc += state.getResource('bonds').value;
-    return baseInc;
+  protected _incrementAmount (state: GameState): number {
+    const plorg: IResource = state.getResource('plorg');
+    if (plorg.value === 0) {
+      state.log('You have no followers to collect from!');
+      return 0;
+    }
+    // each follower gives you $10
+    const tithings: number = plorg.value * 10;
+    state.log(`You collected $${state.formatNumber(tithings)} from ${state.formatNumber(plorg.value)} followers.`);
+    return tithings;
   }
 }

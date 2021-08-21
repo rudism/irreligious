@@ -1,7 +1,6 @@
 /// <reference path="./GameState.ts" />
 /// <reference path="./resource/Money.ts" />
 /// <reference path="./resource/Religion.ts" />
-/// <reference path="./resource/Savings.ts" />
 
 class GameConfig {
   public worldPopulation: number = 790000000;
@@ -57,8 +56,7 @@ class GameConfig {
       this.relNoneShare * this.worldPopulation));
 
     // add purchasable resources
-    state.addResource('money', new Money(0));
-    state.addResource('bonds', new Savings(0));
+    state.addResource('money', new Money(100));
 
     return state;
   }
