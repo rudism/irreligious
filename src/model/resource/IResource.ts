@@ -11,7 +11,9 @@ interface IResource {
   resourceType: ResourceType;
   value: number;
   max?: number;
-  unlocked: boolean;
+  cost: { [key: string]: number };
+
+  isUnlocked: (state: GameState) => boolean;
 
   clickText: string;
   clickDescription: string;

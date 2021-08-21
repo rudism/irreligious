@@ -3,6 +3,7 @@
 
 class DebugRenderer implements IRenderer {
   private _initialized = false;
+  private _handleClick = true;
 
   public render (state: GameState) {
     const container = document.getElementById('irreligious-game');
@@ -11,15 +12,17 @@ class DebugRenderer implements IRenderer {
     } else {
       if (!this._initialized) {
         this._initialized = true;
+        state.onResourceClick.push(() => this._handleClick = true);
         const style = document.createElement('link');
         style.setAttribute('rel', 'stylesheet');
         style.setAttribute('href', 'css/debugger.css');
         const head = document.getElementsByTagName('head')[0];
         head.appendChild(style);
       }
-      for (const rkey of state.getResources()) {
+      const rkeys = state.getResources();
+      for (const rkey of rkeys) {
         const resource = state.getResource(rkey);
-        if (resource.unlocked) {
+        if (resource.isUnlocked(state)) {
           let el = document.getElementById(`r_${rkey}`);
           if (el === null) {
             el = document.createElement('div');
@@ -27,10 +30,13 @@ class DebugRenderer implements IRenderer {
             el.id = `r_${rkey}`;
             let content = `
               <span class='resourceTitle' title='${resource.description}'>${resource.name}</span><br>
-              <span class='value'></span><span class='max'></span>
+              <span class='value'></span><span class='max'></span><span class='inc'></span>
             `;
             if (resource.clickText !== null) {
               content += `<br><button class='btn' title='${resource.clickDescription}'>${resource.clickText}</button>`;
+            }
+            if (resource.cost !== null && Object.keys(resource.cost) !== null) {
+              content += `<br>Cost: <span class='cost'></span>`;
             }
             el.innerHTML = content;
             container.appendChild(el);
@@ -43,9 +49,31 @@ class DebugRenderer implements IRenderer {
           const elT = el.getElementsByClassName('max')[0];
           elV.innerHTML = this.formatNumber(resource.value, 1);
           elT.innerHTML = resource.max !== null ? ` / ${this.formatNumber(resource.max, 2)}` : '';
+          if (this._handleClick) {
+            const elC = el.getElementsByClassName('cost');
+            if (elC.length > 0) {
+              elC[0].innerHTML = this.getCostStr(resource, state);
+            }
+          }
+        }
+      }
+      this._handleClick = false;
+    }
+  }
+
+  private getCostStr (resource: IResource, state: GameState) {
+    let cost = '';
+    for (const rkey of state.getResources()) {
+      if (resource.cost[rkey] !== undefined) {
+        if (cost !== '') cost += ', ';
+        if (rkey === 'money') {
+          cost += `$${this.formatNumber(resource.cost[rkey], 1)}`;
+        } else {
+          cost += `${this.formatNumber(resource.cost[rkey], 1)} ${state.getResource(rkey).name}`;
         }
       }
     }
+    return cost;
   }
 
   private formatNumber (num: number, digits: number): string {

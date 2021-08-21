@@ -26,12 +26,12 @@ function gameLoop (state: GameState, renderer: IRenderer): void {
   const state = config.generateState();
 
   // re-run main loop immediately on user clicks
-  state.onResourceClick = () => {
+  state.onResourceClick.push(() => {
     if (globalTimeout !== null) {
       clearTimeout(globalTimeout);
       gameLoop(state, renderer);
     }
-  }
+  });
 
   if (document.readyState !== 'loading') gameLoop(state, renderer);
   else document.addEventListener('DOMContentLoaded', () => gameLoop(state, renderer));

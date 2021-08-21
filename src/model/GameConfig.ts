@@ -1,7 +1,7 @@
 /// <reference path="./GameState.ts" />
 /// <reference path="./resource/Money.ts" />
-/// <reference path="./resource/PlayerOrganization.ts" />
 /// <reference path="./resource/Religion.ts" />
+/// <reference path="./resource/SavingsBonds.ts" />
 
 class GameConfig {
   public worldPopulation: number = 790000000;
@@ -20,7 +20,8 @@ class GameConfig {
     const state = new GameState();
 
     // create player organization
-    state.addResource('plorg', new PlayerOrganization());
+    state.addResource('plorg', new Religion(
+      'Player', 'In you they trust.', 0));
 
     // create world religions
     state.addResource('xtian', new Religion(
@@ -55,8 +56,9 @@ class GameConfig {
       'Non-Religious', 'Atheists and agnostics.',
       this.relNoneShare * this.worldPopulation));
 
-    // add crafting resources
+    // add purchasable resources
     state.addResource('money', new Money(0, 1000));
+    state.addResource('bonds', new SavingsBonds(0));
 
     return state;
   }

@@ -5,9 +5,12 @@ class Money extends Purchasable {
     public value: number,
     public max: number
   ) {
-    super('Money', 'Used to purchase goods and services.', null);
+    super('Money', 'Used to purchase goods and services.');
     this.clickText = 'Beg';
     this.clickDescription = 'Alms for the poor.';
-    this.unlocked = true;
+  }
+
+  public isUnlocked (state: GameState): boolean {
+    return true;
   }
 }
