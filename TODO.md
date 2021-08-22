@@ -1,0 +1,46 @@
+- second click functionality (for selling)
+- more infrastructure
+  - more follower storage space
+    - mansions (in compounds)
+    - apartment complexes
+    - islands
+    - countries
+  - billboards for auto-recruit
+  - cryptocurrency mining rigs
+  - media companies, churches, megachurches
+  - textbook manufacturers, schools, colleges
+    - reduce general population education
+- job resource type
+  - you promote your followers into jobs
+  - max is total number of followers minus active jobs
+    - plus other requirements
+      - for example pastors need churches, evangelists need megachurches
+  - job ideas
+    - pastors
+      - small chance to auto-recruit new followers
+      - collect some portion of tithes automatically every 30s
+      - needs churches
+    - evangelists
+      - bigger chance to auto-recruit new followers
+      - needs mega-churches
+    - reporters
+      - increase credibility restore rate
+      - needs media companies
+    - teachers, professors
+      - slow growth of population education
+    - politician
+      - grow political influence
+- more passives
+  - general education of population
+    - higher makes recruitment harder
+  - political influence
+    - affects credibility, needed to enact policies
+- consumable resource type
+  - one-off actions that cost money
+    - ad blitz to improve credibility
+    - ad blitz to improve recruitment rates
+- technology
+  - need to research technology to unlock some resources
+- policies
+  - can affect a wide range of stuff
+  - costs political influence to enact and maintain
