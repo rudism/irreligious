@@ -85,7 +85,8 @@ class DebugRenderer implements IRenderer {
       document.getElementById('dbg-btn-reset')
         .addEventListener('click', (): void => {
           state.reset();
-          this._handleClick = true;
+          document.getElementById('irreligious-game').innerHTML = '';
+          this._initialized = false;
         });
     }
     for (const rkey of rkeys) {

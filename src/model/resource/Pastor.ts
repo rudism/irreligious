@@ -24,7 +24,8 @@ class Pastor extends Job {
       const plorg: IResource = state.getResource('plorg');
       // each pastor can collect from up to 100 followers
       let tithed: number = this.value * 100;
-      if (plorg.value < tithed) tithed = plorg.value;
+      if (Math.floor(plorg.value) < tithed)
+        tithed = Math.floor(plorg.value);
       let collected: number = tithed * state.config.cfgTitheAmount;
       if (collected > money.max(state) - money.value)
         collected = money.max(state) - money.value;

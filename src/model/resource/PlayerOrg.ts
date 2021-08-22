@@ -108,28 +108,30 @@ class PlayerOrg implements IResource {
       && (Object.keys(this._followerSources).length > 0
         || Object.keys(this._followerDests).length > 0)) {
       if (Object.keys(this._followerDests).length > 0) {
-        let msg: string;
+        let msg: string = '';
+        let total: number = 0;
         for (const rkey of Object.keys(this._followerDests)) {
-          if (msg === undefined) msg = 'You lost ';
-          else msg += ' and ';
+          if (msg !== '') msg += ', ';
           const religion: IResource = state.getResource(rkey);
           msg +=
-            `${state.formatNumber(this._followerDests[rkey])} followers to ${religion.name}`;
+            `${state.formatNumber(this._followerDests[rkey])} to ${religion.name}`;
+          total += this._followerDests[rkey];
           delete this._followerDests[rkey];
         }
-        state.log(msg);
+        state.log(`You lost ${state.formatNumber(total)} followers: ${msg}`);
       }
       if (Object.keys(this._followerSources).length > 0) {
-        let msg: string;
+        let msg: string = '';
+        let total: number = 0;
         for (const rkey of Object.keys(this._followerSources)) {
-          if (msg === undefined) msg = 'You gained ';
-          else msg += ' and ';
+          if (msg !== '') msg += ', ';
           const religion: IResource = state.getResource(rkey);
           msg +=
-            `${state.formatNumber(this._followerSources[rkey])} followers from ${religion.name}`;
+            `${state.formatNumber(this._followerSources[rkey])} from ${religion.name}`;
+          total += this._followerSources[rkey];
           delete this._followerSources[rkey];
         }
-        state.log(msg);
+        state.log(`You gained ${state.formatNumber(total)} followers: ${msg}`);
       }
       this._lastRecruitmentLog = state.now;
     }
