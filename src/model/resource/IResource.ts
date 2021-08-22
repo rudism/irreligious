@@ -1,5 +1,6 @@
 enum ResourceType {
   Religion = 'religion',
+  Job = 'job',
   Consumable = 'consumable',
   Infrastructure = 'infrastructure',
   Passive = 'passive'
@@ -11,6 +12,7 @@ interface IResource {
 
   resourceType: ResourceType;
   value: number;
+  valueInWholeNumbers: boolean;
 
   clickText: string;
   clickDescription: string;

@@ -17,8 +17,8 @@ class House extends Infrastructure {
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    const tents: IResource = state.getResource('tents');
-    if (tents.value === tents.max(state)) {
+    const compounds: IResource = state.getResource('cmpnd');
+    if (compounds.value > 0) {
       this._isUnlocked = true;
     }
     return this._isUnlocked;

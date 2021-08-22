@@ -5,11 +5,10 @@ class Money extends Purchasable {
 
   public resourceType: ResourceType = ResourceType.Consumable;
   public cost: { [key: string]: number } = { };
+  public readonly valueInWholeNumbers: boolean = false;
 
   constructor (
-    public value: number,
-    private readonly _baseTitheAmount: number,
-    private readonly _baseCryptoReturnAmount: number
+    public value: number
   ) {
     super('Money', 'Used to purchase goods and services.');
     this.clickText = 'Collect Tithes';
@@ -22,8 +21,13 @@ class Money extends Purchasable {
   }
 
   public inc (state: GameState): number {
+    let inc: number = 0;
+
     // crypto currency
-    return state.getResource('crpto').value * this._baseCryptoReturnAmount;
+    inc += state.getResource('crpto').value
+      * state.config.cfgCryptoReturnAmount;
+
+    return inc;
   }
 
   protected _purchaseAmount (state: GameState): number {
@@ -33,12 +37,12 @@ class Money extends Purchasable {
       return 0;
     }
     const diff: number = state.now - this._lastCollectionTime;
-    if (diff < 30000) {
-      const lost: number = 30000 / diff / 3;
+    if (diff < state.config.cfgTimeBetweenTithes) {
+      const lost: number = state.config.cfgTimeBetweenTithes / diff / 3;
       state.getResource('creds').value -= lost;
     }
     // each follower gives you $10
-    const tithings: number = plorg.value * this._baseTitheAmount;
+    const tithings: number = plorg.value * state.config.cfgTitheAmount;
     this._lastCollectionTime = state.now;
     return tithings;
   }

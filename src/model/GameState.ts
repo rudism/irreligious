@@ -2,6 +2,8 @@ class GameState {
   private _versionMaj: number = 0;
   private _versionMin: number = 1;
 
+  public config: GameConfig;
+
   private _timeSinceSave: number = 0;
   private readonly _timeBetweenSaves: number = 10000;
 

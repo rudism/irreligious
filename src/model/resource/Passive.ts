@@ -6,6 +6,7 @@ abstract class Passive implements IResource {
   public readonly clickDescription: null = null;
   public readonly cost: null = null;
   public readonly clickAction: null = null;
+  public readonly valueInWholeNumbers: boolean = false;
 
   protected _baseMax: number | null;
   protected _baseInc: number | null;

@@ -82,7 +82,10 @@ class DebugRenderer implements IRenderer {
           el.getElementsByClassName('resource-value')[0];
         const elT: Element =
           el.getElementsByClassName('resource-max')[0];
-        elV.innerHTML = state.formatNumber(resource.value);
+        const value: number = resource.valueInWholeNumbers
+          ? Math.floor(resource.value)
+          : resource.value;
+        elV.innerHTML = state.formatNumber(value);
         elT.innerHTML = resource.max !== null
           && resource.max(state) !== null
           ? ` / ${state.formatNumber(resource.max(state))}`

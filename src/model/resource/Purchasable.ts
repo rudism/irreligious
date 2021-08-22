@@ -3,6 +3,7 @@
 abstract class Purchasable implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Consumable;
   public value: number = 0;
+  public valueInWholeNumbers: boolean = true;
 
   public clickText: string = 'Purchase';
   public clickDescription: string = 'Purchase';

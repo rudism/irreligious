@@ -6,9 +6,9 @@ class PlayerOrg implements IResource {
   public readonly description: string = 'In you they trust.';
 
   public cost: { [key: string]: number } = { };
-  public readonly inc: null = null;
 
   public value: number = 0;
+  public readonly valueInWholeNumbers: boolean = true;
 
   public clickText: string = 'Recruit';
   public clickDescription: string = 'Gather new followers.';
@@ -51,6 +51,16 @@ class PlayerOrg implements IResource {
     } else {
       state.log('Your recruiting efforts failed.');
     }
+  }
+
+  public inc (state: GameState): number {
+    let inc: number = 0;
+
+    // pastor auto-recruit
+    inc += state.getResource('pstor').value
+      * state.config.cfgPastorRecruitRate;
+
+    return inc;
   }
 
   public advanceAction (time: number, state: GameState): void {

@@ -42,6 +42,9 @@ body, html {
 #resource-container-religion .resource {
   background-color: #ccf;
 }
+#resource-container-job .resource {
+  background-color: #fcf;
+}
 #resource-container-consumable .resource {
   background-color: #cfc;
 }

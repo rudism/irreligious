@@ -1,12 +1,14 @@
 /// <reference path="./GameState.ts" />
+/// <reference path="./resource/Church.ts" />
+/// <reference path="./resource/Compound.ts" />
 /// <reference path="./resource/Credibility.ts" />
 /// <reference path="./resource/CryptoCurrency.ts" />
+/// <reference path="./resource/House.ts" />
 /// <reference path="./resource/Money.ts" />
+/// <reference path="./resource/Pastor.ts" />
 /// <reference path="./resource/PlayerOrg.ts" />
 /// <reference path="./resource/Religion.ts" />
 /// <reference path="./resource/Tent.ts" />
-/// <reference path="./resource/House.ts" />
-/// <reference path="./resource/Compound.ts" />
 
 class GameConfig {
   public worldPopulation: number = 790000000;
@@ -21,12 +23,15 @@ class GameConfig {
   public relOtherShare: number = 0.02;
   public relNoneShare: number = 0.16;
 
-  public baseTitheAmount: number = 10;
-  public baseCryptoReturnAmount: number = 1;
-  public baseCredibilityRestoreRate: number = 0.25;
+  public cfgTitheAmount: number = 10;
+  public cfgTimeBetweenTithes: number = 30000;
+  public cfgCryptoReturnAmount: number = 1;
+  public cfgCredibilityRestoreRate: number = 0.25;
+  public cfgPastorRecruitRate: number = 0.01;
 
   public generateState (): GameState {
     const state: GameState = new GameState();
+    state.config = this;
 
     // create player organization
     state.addResource('plorg', new PlayerOrg());
@@ -64,17 +69,19 @@ class GameConfig {
       'Non-Religious', 'Atheists and agnostics.',
       this.relNoneShare * this.worldPopulation));
 
+    // add jobs
+    state.addResource('pstor', new Pastor());
+
     // add resources
-    state.addResource('money', new Money(3.50,
-      this.baseTitheAmount, this.baseCryptoReturnAmount));
+    state.addResource('money', new Money(3.50));
     state.addResource('crpto', new CryptoCurrency());
     state.addResource('tents', new Tent());
     state.addResource('house', new House());
     state.addResource('cmpnd', new Compound());
+    state.addResource('chrch', new Church());
 
     // add passive resources
-    state.addResource('creds', new Credibility(
-      this.baseCredibilityRestoreRate));
+    state.addResource('creds', new Credibility());
 
     return state;
   }

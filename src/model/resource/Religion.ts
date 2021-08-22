@@ -9,6 +9,7 @@ class Religion implements IResource {
   public readonly cost: null = null;
   public readonly max: null = null;
   public readonly inc: null = null;
+  public readonly valueInWholeNumbers: boolean = true;
 
   constructor (
     public readonly name: string,

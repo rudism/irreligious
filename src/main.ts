@@ -29,9 +29,11 @@ function startGame (state: GameState, renderer: IRenderer): void {
   const config: GameConfig = new GameConfig();
 
   // debug values to make the game play faster while testing
-  config.baseTitheAmount = 1000;
-  config.baseCryptoReturnAmount = 100;
-  config.baseCredibilityRestoreRate = 5;
+  config.cfgTitheAmount = 1000;
+  config.cfgTimeBetweenTithes = 5000;
+  config.cfgCryptoReturnAmount = 100;
+  config.cfgCredibilityRestoreRate = 5;
+  config.cfgPastorRecruitRate = 0.5;
 
   const renderer: IRenderer = new DebugRenderer();
   const state: GameState = config.generateState();
