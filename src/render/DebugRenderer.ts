@@ -5,6 +5,7 @@ class DebugRenderer implements IRenderer {
   private _handleClick: boolean = true;
 
   public render (state: GameState): void {
+    const rkeys: string[] = state.getResources();
     if (!this._initialized) {
       const container: HTMLElement =
         document.getElementById('irreligious-game');
@@ -36,48 +37,53 @@ class DebugRenderer implements IRenderer {
           resDiv.appendChild(el);
         }
       }
+      // create containers for each resource
+      for (const rkey of rkeys) {
+        const resource: IResource = state.getResource(rkey);
+        const resContainer: HTMLElement =
+          document.getElementById(
+            `resource-container-${resource.resourceType}`);
+        const el: HTMLElement = document.createElement('div');
+        el.className = 'resource locked';
+        el.id = `resource-details-${rkey}`;
+        let content: string = `
+          <span class='resource-title'
+            title='${this._escape(resource.description)}'>
+            ${this._escape(resource.name
+              ? resource.name
+              : rkey)}</span><br>
+          <span class='resource-value'></span>
+          <span class='resource-max'></span>
+          <span class='resource-inc'></span>
+        `;
+        if (resource.clickText !== null) {
+          content += `<br>
+            <button class='resource-btn'
+              title='${this._escape(resource.clickDescription)}'>
+              ${this._escape(resource.clickText)}</button>`;
+        }
+        if (resource.cost !== null
+          && Object.keys(resource.cost).length !== 0) {
+          content += "<br>Cost: <span class='resource-cost'></span>";
+        }
+        el.innerHTML = content;
+        resContainer.appendChild(el);
+        if (resource.clickAction !== null) {
+          const btn: Element =
+            el.getElementsByClassName('resource-btn')[0];
+          btn.addEventListener('click', (): void =>
+            state.performClick(rkey));
+        }
+      }
     }
-    const rkeys: string[] = state.getResources();
     for (const rkey of rkeys) {
       const resource: IResource = state.getResource(rkey);
       const container: HTMLElement = document
         .getElementById(`resource-container-${resource.resourceType}`);
       if (resource.isUnlocked(state)) {
-        let el: HTMLElement = document
+        const el: HTMLElement = document
           .getElementById(`resource-details-${rkey}`);
-        if (el === null) {
-          el = document.createElement('div');
-          el.className = 'resource';
-          el.id = `resource-details-${rkey}`;
-          let content: string = `
-            <span class='resource-title'
-              title='${this._escape(resource.description)}'>
-              ${this._escape(resource.name
-                ? resource.name
-                : rkey)}</span><br>
-            <span class='resource-value'></span>
-            <span class='resource-max'></span>
-            <span class='resource-inc'></span>
-          `;
-          if (resource.clickText !== null) {
-            content += `<br>
-              <button class='resource-btn'
-                title='${this._escape(resource.clickDescription)}'>
-                ${this._escape(resource.clickText)}</button>`;
-          }
-          if (resource.cost !== null
-            && Object.keys(resource.cost).length !== 0) {
-            content += "<br>Cost: <span class='resource-cost'></span>";
-          }
-          el.innerHTML = content;
-          container.appendChild(el);
-          if (resource.clickAction !== null) {
-            const btn: Element =
-              el.getElementsByClassName('resource-btn')[0];
-            btn.addEventListener('click', (): void =>
-              state.performClick(rkey));
-          }
-        }
+        if (el.className !== 'resource') el.className = 'resource';
         const elV: Element =
           el.getElementsByClassName('resource-value')[0];
         const elT: Element =

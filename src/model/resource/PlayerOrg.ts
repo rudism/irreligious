@@ -8,18 +8,33 @@ class PlayerOrg implements IResource {
   public readonly clickText: string = 'Recruit';
   public readonly clickDescription: string = 'Gather new followers.';
   public value: number = 0;
-  public readonly cost: { [key: string]: number } = { };
+  public readonly cost: null = null;
 
-  public readonly inc: null = null;
-
-  private _lastLostTime: number = 0;
+  private _timeSinceLastLost: number = 0;
   private _baseMax: number = 5;
+  private _lastRecruitmentLog: number = 0;
+  private _followerSources: { [key: string]: number } = { };
+  private _followerDests: { [key: string]: number } = { };
 
   public max (state: GameState): number {
     let max: number = this._baseMax;
     max += state.getResource('tents').value * 2;
     max += state.getResource('house').value * 10;
     return max;
+  }
+
+  public inc (state: GameState): number {
+    let inc: number = 0;
+
+    // pastor recruiting
+    const pastors: number = state.getResource('pstor').value;
+    inc += pastors * state.config.cfgPastorRecruitRate;
+
+    // credibility adjustment
+    const creds: IResource = state.getResource('creds');
+    inc *= creds.value / creds.max(state);
+
+    return inc;
   }
 
   public clickAction (state: GameState): void {
@@ -33,23 +48,39 @@ class PlayerOrg implements IResource {
     const creds: IResource = state.getResource('creds');
     const ratio: number = Math.ceil(creds.value) / creds.max(state);
     if (Math.random() > ratio) {
-      state.log('Your recruiting efforts failed.');
+      state.log('Your recruitment efforts failed.');
       return;
     }
 
-    const source: [string, IResource] = this._getRandomReligion(state);
-    this.cost[source[0]] = 1;
-    if (state.deductCost(this.cost)) {
-      this.value++;
-      delete this.cost[source[0]];
-      state.log(`You converted one new follower from ${source[1].name}!`);
-    } else {
-      state.log('Your recruiting efforts failed.');
-    }
+    this.addValue(1, state);
   }
 
   public addValue (amount: number, state: GameState): void {
+    const oldValue: number = this.value;
     this.value += amount;
+    const diff: number = Math.floor(this.value) - Math.floor(oldValue);
+
+    if (diff > 0) {
+      // gained followers must come from other faiths
+      for (let i: number = 0; i < diff; i++) {
+        const source: [string, IResource] = this._getRandomReligion(state);
+        source[1].addValue(-1, state);
+        const curFollowers: number = this._followerSources[source[0]];
+        this._followerSources[source[0]] = curFollowers
+          ? curFollowers + 1
+          : 1;
+      }
+    } else {
+      // lost followers must return to other faiths
+      for (let i: number = 0; i < diff * -1; i++) {
+        const dest: [string, IResource] = this._getRandomReligion(state);
+        dest[1].addValue(1, state);
+        const curFollowers: number = this._followerDests[dest[0]];
+        this._followerDests[dest[0]] = curFollowers
+          ? curFollowers + 1
+          : 1;
+      }
+    }
   }
 
   public isUnlocked (state: GameState): boolean {
@@ -58,19 +89,48 @@ class PlayerOrg implements IResource {
 
   public advanceAction (time: number, state: GameState): void {
     // chance to lose some followers every 10s if credibility < 100%
-    if (state.now - this._lastLostTime > 10000) {
+    this._timeSinceLastLost += time;
+    if (this._timeSinceLastLost > 10000) {
       if (this.value > 0) {
         const creds: IResource = state.getResource('creds');
         const ratio: number = Math.ceil(creds.value) / creds.max(state);
         if (Math.random() > ratio) {
           const lost: number = Math.ceil(this.value / 25 * (1 - ratio));
           this.addValue(lost * -1, state);
-          const dest: [string, IResource] = this._getRandomReligion(state);
-          dest[1].addValue(lost, state);
-          state.log(`You lost ${lost} followers to ${dest[1].name}.`);
         }
       }
-      this._lastLostTime = state.now;
+      this._timeSinceLastLost = 0;
+    }
+
+    // log lost and gained followers every 10s
+    if (state.now - this._lastRecruitmentLog > 10000
+      && (Object.keys(this._followerSources).length > 0
+        || Object.keys(this._followerDests).length > 0)) {
+      if (Object.keys(this._followerDests).length > 0) {
+        let msg: string;
+        for (const rkey of Object.keys(this._followerDests)) {
+          if (msg === undefined) msg = 'You lost ';
+          else msg += ' and ';
+          const religion: IResource = state.getResource(rkey);
+          msg +=
+            `${state.formatNumber(this._followerDests[rkey])} followers to ${religion.name}`;
+          delete this._followerDests[rkey];
+        }
+        state.log(msg);
+      }
+      if (Object.keys(this._followerSources).length > 0) {
+        let msg: string;
+        for (const rkey of Object.keys(this._followerSources)) {
+          if (msg === undefined) msg = 'You gained ';
+          else msg += ' and ';
+          const religion: IResource = state.getResource(rkey);
+          msg +=
+            `${state.formatNumber(this._followerSources[rkey])} followers from ${religion.name}`;
+          delete this._followerSources[rkey];
+        }
+        state.log(msg);
+      }
+      this._lastRecruitmentLog = state.now;
     }
   }
 

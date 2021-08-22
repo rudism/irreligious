@@ -4,7 +4,8 @@ class Pastor extends Job {
   private _timeSinceLastTithe: number = 0;
 
   constructor () {
-    super('Pastors', 'Leaders of the faith.');
+    super('Pastors',
+      'Collect tithings for you and recruit new members from other faiths automatically.');
   }
 
   public max (state: GameState): number {
