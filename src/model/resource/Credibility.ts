@@ -6,8 +6,9 @@ class Credibility extends Passive {
   constructor () {
     super(
       'Credibility',
-      'Affects your ability to recruit and retain followers.',
-      100, 100, 0.25);
+      'Affects your ability to recruit and retain followers.');
+    this._baseMax = 100;
+    this.value = 100;
   }
 
   public max (state: GameState): number {

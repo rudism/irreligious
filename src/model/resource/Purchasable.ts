@@ -2,13 +2,11 @@
 
 abstract class Purchasable implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Consumable;
-  public value: number = 0;
   public valueInWholeNumbers: boolean = true;
-
   public clickText: string = 'Purchase';
   public clickDescription: string = 'Purchase';
-
-  public cost: { [key: string]: number } = { };
+  public value: number = 0;
+  public readonly cost: { [key: string]: number } = { };
 
   protected _costMultiplier: { [key: string]: number } = { };
   protected _baseMax: number | null = null;
@@ -18,6 +16,14 @@ abstract class Purchasable implements IResource {
     public readonly name: string,
     public readonly description: string
   ) { }
+
+  public max (state: GameState): number | null {
+    return this._baseMax;
+  }
+
+  public inc (state: GameState): number | null {
+    return null;
+  }
 
   public clickAction (state: GameState): void {
     if (this.max(state) !== null && this.value >= this.max(state)) return;
@@ -33,16 +39,8 @@ abstract class Purchasable implements IResource {
     }
   }
 
-  public inc (state: GameState): number | null {
-    return null;
-  }
-
-  public max (state: GameState): number | null {
-    return this._baseMax;
-  }
-
-  public advanceAction (time: number, state: GameState): void {
-    return;
+  public addValue (amount: number, state: GameState): void {
+    this.value += amount;
   }
 
   public isUnlocked (state: GameState): boolean {
@@ -50,6 +48,10 @@ abstract class Purchasable implements IResource {
       this._isUnlocked = true;
     }
     return this._isUnlocked;
+  }
+
+  public advanceAction (time: number, state: GameState): void {
+    return;
   }
 
   protected _purchaseAmount (state: GameState): number {

@@ -7,24 +7,19 @@ enum ResourceType {
 }
 
 interface IResource {
-  name: string | null;
-  description: string | null;
-
-  resourceType: ResourceType;
-  value: number;
-  valueInWholeNumbers: boolean;
-
-  clickText: string;
-  clickDescription: string;
-
-  clickAction (state: GameState): void;
-
-  cost: { [key: string]: number };
+  readonly resourceType: ResourceType;
+  readonly name: string | null;
+  readonly description: string | null;
+  readonly valueInWholeNumbers: boolean;
+  readonly clickText: string;
+  readonly clickDescription: string;
+  readonly value: number;
+  readonly cost: { [key: string]: number };
 
   max (state: GameState): number | null;
   inc (state: GameState): number | null;
-
+  clickAction (state: GameState): void;
+  addValue (amount: number, state: GameState): void;
   isUnlocked (state: GameState): boolean;
-
   advanceAction (time: number, state: GameState): void;
 }

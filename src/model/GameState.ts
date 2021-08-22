@@ -50,13 +50,14 @@ class GameState {
         : 0;
       if (inc > 0 && (max === null
         || this._resources[rkey].value < max)) {
-        this._resources[rkey].value += inc * time / 1000;
+        this._resources[rkey].addValue(inc * time / 1000, this);
       }
-      if (max !== null && this._resources[rkey].value > max) {
-        this._resources[rkey].value = max;
+      const val: number = this._resources[rkey].value;
+      if (max !== null && val > max) {
+        this._resources[rkey].addValue((val - max) * -1, this);
       }
-      if (this._resources[rkey].value < 0) {
-        this._resources[rkey].value = 0;
+      if (val < 0) {
+        this._resources[rkey].addValue(val * -1, this);
       }
     }
   }
@@ -82,7 +83,7 @@ class GameState {
     if (cost === null || Object.keys(cost) === null) return true;
     if (!this.isPurchasable(cost)) return false;
     for (const rkey of Object.keys(cost)) {
-      this._resources[rkey].value -= cost[rkey];
+      this._resources[rkey].addValue(cost[rkey] * -1, this);
     }
     return true;
   }
@@ -151,7 +152,9 @@ class GameState {
             if (saveObj[rkey] !== undefined
               && saveObj[rkey].value !== undefined
               && saveObj[rkey].cost !== undefined) {
+              // @ts-ignore
               this._resources[rkey].value = saveObj[rkey].value;
+              // @ts-ignore
               this._resources[rkey].cost = saveObj[rkey].cost;
             }
           }

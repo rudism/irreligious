@@ -4,21 +4,16 @@ class PlayerOrg implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Religion;
   public readonly name: string = 'Player';
   public readonly description: string = 'In you they trust.';
-
-  public cost: { [key: string]: number } = { };
-
-  public value: number = 0;
   public readonly valueInWholeNumbers: boolean = true;
+  public readonly clickText: string = 'Recruit';
+  public readonly clickDescription: string = 'Gather new followers.';
+  public value: number = 0;
+  public readonly cost: { [key: string]: number } = { };
 
-  public clickText: string = 'Recruit';
-  public clickDescription: string = 'Gather new followers.';
+  public readonly inc: null = null;
 
   private _lastLostTime: number = 0;
   private _baseMax: number = 5;
-
-  public isUnlocked (state: GameState): boolean {
-    return true;
-  }
 
   public max (state: GameState): number {
     let max: number = this._baseMax;
@@ -53,14 +48,12 @@ class PlayerOrg implements IResource {
     }
   }
 
-  public inc (state: GameState): number {
-    let inc: number = 0;
+  public addValue (amount: number, state: GameState): void {
+    this.value += amount;
+  }
 
-    // pastor auto-recruit
-    inc += state.getResource('pstor').value
-      * state.config.cfgPastorRecruitRate;
-
-    return inc;
+  public isUnlocked (state: GameState): boolean {
+    return true;
   }
 
   public advanceAction (time: number, state: GameState): void {
@@ -71,9 +64,9 @@ class PlayerOrg implements IResource {
         const ratio: number = Math.ceil(creds.value) / creds.max(state);
         if (Math.random() > ratio) {
           const lost: number = Math.ceil(this.value / 25 * (1 - ratio));
-          this.value -= lost;
+          this.addValue(lost * -1, state);
           const dest: [string, IResource] = this._getRandomReligion(state);
-          dest[1].value += lost;
+          dest[1].addValue(lost, state);
           state.log(`You lost ${lost} followers to ${dest[1].name}.`);
         }
       }

@@ -2,13 +2,12 @@
 
 abstract class Job implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Job;
-  public value: number = 0;
   public readonly valueInWholeNumbers: boolean = true;
-
-  public clickText: string = 'Hire';
-  public clickDescription: string = 'Promote one of your followers.';
-
-  public cost: { [key: string]: number } = { };
+  public readonly clickText: string = 'Hire';
+  public readonly clickDescription: string =
+    'Promote one of your followers.';
+  public value: number = 0;
+  public readonly cost: { [key: string]: number } = { };
 
   protected _costMultiplier: { [key: string]: number } = { };
   protected _isUnlocked: boolean = false;
@@ -18,13 +17,21 @@ abstract class Job implements IResource {
     public readonly description: string
   ) { }
 
+  public max (state: GameState): number | null {
+    return null;
+  }
+
+  public inc (state: GameState): number | null {
+    return null;
+  }
+
   public clickAction (state: GameState): void {
     if (this._availableJobs(state) <= 0) {
       state.log('You have no unemployed followers to promote.');
       return;
     }
     if (this.value < this.max(state) && state.deductCost(this.cost)) {
-      this.value++;
+      this.addValue(1, state);
       state.log(this._hireLog(1, state));
       for (const rkey of Object.keys(this._costMultiplier)) {
         this.cost[rkey] *= this._costMultiplier[rkey];
@@ -32,20 +39,16 @@ abstract class Job implements IResource {
     }
   }
 
-  public inc (state: GameState): number | null {
-    return null;
-  }
-
-  public max (state: GameState): number | null {
-    return null;
-  }
-
-  public advanceAction (time: number, state: GameState): void {
-    return;
+  public addValue (amount: number, state: GameState): void {
+    this.value += amount;
   }
 
   public isUnlocked (state: GameState): boolean {
     return this._isUnlocked;
+  }
+
+  public advanceAction (time: number, state: GameState): void {
+    return;
   }
 
   protected _availableJobs (state: GameState): number {

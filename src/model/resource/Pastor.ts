@@ -28,7 +28,7 @@ class Pastor extends Job {
       if (collected > money.max(state) - money.value)
         collected = money.max(state) - money.value;
       if (collected > 0) {
-        money.value += collected;
+        money.addValue(collected, state);
         state.log(`Your pastors collected $${state.formatNumber(collected)} in tithings from ${state.formatNumber(tithed)} followers.`);
       }
       this._timeSinceLastTithe = 0;

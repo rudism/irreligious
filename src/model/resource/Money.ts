@@ -1,11 +1,9 @@
 /// <reference path="./Purchasable.ts" />
 
 class Money extends Purchasable {
-  private _lastCollectionTime: number = 0;
+  public readonly resourceType: ResourceType = ResourceType.Consumable;
 
-  public resourceType: ResourceType = ResourceType.Consumable;
-  public cost: { [key: string]: number } = { };
-  public readonly valueInWholeNumbers: boolean = false;
+  private _lastCollectionTime: number = 0;
 
   constructor (
     public value: number
@@ -14,10 +12,14 @@ class Money extends Purchasable {
     this.clickText = 'Collect Tithes';
     this.clickDescription = 'Voluntary contributions from followers.';
     this._baseMax = 500000;
+    this.valueInWholeNumbers = false;
+    this._isUnlocked = true;
   }
 
-  public isUnlocked (state: GameState): boolean {
-    return true;
+  public max (state: GameState): number | null {
+    let max: number = this._baseMax;
+    max += state.getResource('cmpnd').value * 500000;
+    return max;
   }
 
   public inc (state: GameState): number {
@@ -39,7 +41,7 @@ class Money extends Purchasable {
     const diff: number = state.now - this._lastCollectionTime;
     if (diff < state.config.cfgTimeBetweenTithes) {
       const lost: number = state.config.cfgTimeBetweenTithes / diff / 3;
-      state.getResource('creds').value -= lost;
+      state.getResource('creds').addValue(lost * -1, state);
     }
     // each follower gives you $10
     const tithings: number = plorg.value * state.config.cfgTitheAmount;
@@ -50,11 +52,5 @@ class Money extends Purchasable {
   protected _purchaseLog (amount: number, state: GameState): string {
     const followers: number = state.getResource('plorg').value;
     return `You collected $${state.formatNumber(amount)} from ${state.formatNumber(followers)} followers.`;
-  }
-
-  public max (state: GameState): number | null {
-    let max: number = this._baseMax;
-    max += state.getResource('cmpnd').value * 500000;
-    return max;
   }
 }
