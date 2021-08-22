@@ -1,4 +1,10 @@
 class GameState {
+  private _versionMaj: number = 0;
+  private _versionMin: number = 1;
+
+  private _timeSinceSave: number = 0;
+  private readonly _timeBetweenSaves: number = 10000;
+
   private _resources: Record<string, IResource> = { };
   private _resourceKeys: string[] = [];
 
@@ -15,6 +21,12 @@ class GameState {
 
   public advance (time: number): void {
     this.now = (new Date()).getTime();
+
+    this._timeSinceSave += time;
+    if (this._timeSinceSave >= this._timeBetweenSaves) {
+      this.save();
+      this._timeSinceSave = 0;
+    }
 
     // advance each resource
     for (const rkey of this._resourceKeys) {
@@ -107,6 +119,52 @@ class GameState {
   public log (text: string): void {
     if (this.logger !== null) {
       this.logger.msg(text);
+    }
+  }
+
+  public save (): void {
+    const saveObj: { [key: string]: any } = { };
+    saveObj.version = {
+      maj: this._versionMaj,
+      min: this._versionMin
+    };
+    for (const rkey of this._resourceKeys) {
+      saveObj[rkey] = {
+        value: this._resources[rkey].value,
+        cost: this._resources[rkey].cost
+      };
+    }
+    const saveStr: string = btoa(JSON.stringify(saveObj));
+    localStorage.setItem('savegame', saveStr);
+  }
+
+  public load (): void {
+    const saveStr: string = localStorage.getItem('savegame');
+    if (saveStr !== null) {
+      try {
+        const saveObj: { [key: string]: any } =
+          JSON.parse(atob(saveStr));
+        if (this._versionMaj === saveObj.version.maj) {
+          for (const rkey of this._resourceKeys) {
+            if (saveObj[rkey] !== undefined
+              && saveObj[rkey].value !== undefined
+              && saveObj[rkey].cost !== undefined) {
+              this._resources[rkey].value = saveObj[rkey].value;
+              this._resources[rkey].cost = saveObj[rkey].cost;
+            }
+          }
+        } else {
+          // tslint:disable-next-line
+          console.log('The saved game is too old to load.');
+        }
+      } catch (e) {
+        // tslint:disable-next-line
+        console.log('There was an error loading the saved game.');
+        console.log(e); // tslint:disable-line
+      }
+    } else {
+      // tslint:disable-next-line
+      console.log('No save game was found.');
     }
   }
 }

@@ -19,6 +19,11 @@ function gameLoop (state: GameState, renderer: IRenderer): void {
     gameLoop(state, renderer), cycleLength);
 }
 
+function startGame (state: GameState, renderer: IRenderer): void {
+  state.load(); // load saved game if one exists
+  gameLoop(state, renderer); // start the main loop
+}
+
 // run with default config at startup
 ((): void => {
   const config: GameConfig = new GameConfig();
@@ -39,7 +44,7 @@ function gameLoop (state: GameState, renderer: IRenderer): void {
     }
   });
 
-  if (document.readyState !== 'loading') gameLoop(state, renderer);
+  if (document.readyState !== 'loading') startGame(state, renderer);
   else document.addEventListener('DOMContentLoaded', (): void =>
-    gameLoop(state, renderer));
+    startGame(state, renderer));
 })();

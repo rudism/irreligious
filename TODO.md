@@ -1,7 +1,3 @@
-- save/restore state in local storage
-  - need to save all not-computed resource properties that can change
-    - resource.value
-    - resource.cost
 - second click functionality (for selling)
 - more infrastructure
   - more follower storage space

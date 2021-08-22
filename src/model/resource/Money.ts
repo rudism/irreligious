@@ -45,7 +45,7 @@ class Money extends Purchasable {
 
   protected _purchaseLog (amount: number, state: GameState): string {
     const followers: number = state.getResource('plorg').value;
-    return `You collected $${amount} from ${followers} followers.`;
+    return `You collected $${state.formatNumber(amount)} from ${state.formatNumber(followers)} followers.`;
   }
 
   public max (state: GameState): number | null {
