@@ -12,7 +12,7 @@ class Money extends Purchasable {
     super('Money', 'Used to purchase goods and services.');
     this.clickText = 'Collect Tithes';
     this.clickDescription = 'Voluntary contributions from followers.';
-    this._baseMax = 999999;
+    this._baseMax = 1000000;
   }
 
   public isUnlocked (state: GameState): boolean {
@@ -37,8 +37,12 @@ class Money extends Purchasable {
     }
     // each follower gives you $10
     const tithings: number = plorg.value * 10;
-    state.log(`You collected $${state.formatNumber(tithings)} from ${state.formatNumber(plorg.value)} followers.`);
     this._lastCollectionTime = state.now;
     return tithings;
+  }
+
+  protected _purchaseLog (amount: number, state: GameState): string {
+    const followers: number = state.getResource('plorg').value;
+    return `You collected $${amount} from ${followers} followers.`;
   }
 }

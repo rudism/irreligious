@@ -1,4 +1,4 @@
-/// <reference path="../model/logging/ConsoleLogger.ts" />
+/// <reference path="../model/logging/DebugLogger.ts" />
 
 class DebugRenderer implements IRenderer {
   private _initialized: boolean = false;
@@ -6,7 +6,6 @@ class DebugRenderer implements IRenderer {
 
   public render (state: GameState): void {
     if (!this._initialized) {
-      state.logger = new ConsoleLogger();
       const container: HTMLElement =
         document.getElementById('irreligious-game');
       this._initialized = true;
@@ -18,13 +17,23 @@ class DebugRenderer implements IRenderer {
       style.setAttribute('href', 'css/debugger.css');
       const head: HTMLElement = document.getElementsByTagName('head')[0];
       head.appendChild(style);
+      // create resource area and logging area
+      const resDiv: HTMLElement = document.createElement('div');
+      resDiv.id = 'resource-section';
+      container.appendChild(resDiv);
+      const logDiv: HTMLElement = document.createElement('div');
+      logDiv.id = 'logging-section';
+      container.appendChild(logDiv);
+      const logContent: HTMLElement = document.createElement('div');
+      logDiv.appendChild(logContent);
+      state.logger = new DebugLogger(logContent);
       // create containers for each resource type
       for (const item in ResourceType) {
         if (isNaN(Number(item))) {
           const el: HTMLElement = document.createElement('div');
           el.id = `resource-container-${ResourceType[item]}`;
           el.className = 'resource-type-container';
-          container.appendChild(el);
+          resDiv.appendChild(el);
         }
       }
     }
@@ -78,6 +87,14 @@ class DebugRenderer implements IRenderer {
           && resource.max(state) !== null
           ? ` / ${state.formatNumber(resource.max(state))}`
           : '';
+        const elB: HTMLCollectionOf<Element> =
+          el.getElementsByClassName('resource-btn');
+        if (elB.length > 0) {
+          const enabled: boolean = state.isPurchasable(resource.cost)
+            && resource.value < resource.max(state);
+          if (enabled) elB[0].removeAttribute('disabled');
+          else elB[0].setAttribute('disabled', 'disabled');
+        }
         if (this._handleClick) {
           if (resource.inc !== null && resource.inc(state) > 0) {
             const elI: Element =

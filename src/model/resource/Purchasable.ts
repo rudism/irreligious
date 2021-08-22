@@ -21,9 +21,13 @@ abstract class Purchasable implements IResource {
   public clickAction (state: GameState): void {
     if (this.max(state) !== null && this.value >= this.max(state)) return;
     if (state.deductCost(this.cost)) {
-      this.value += this._purchaseAmount(state);
-      for (const rkey of Object.keys(this._costMultiplier)) {
-        this.cost[rkey] *= this._costMultiplier[rkey];
+      const amount: number = this._purchaseAmount(state);
+      if (amount > 0) {
+        this.value += amount;
+        state.log(this._purchaseLog(amount, state));
+        for (const rkey of Object.keys(this._costMultiplier)) {
+          this.cost[rkey] *= this._costMultiplier[rkey];
+        }
       }
     }
   }
@@ -49,5 +53,9 @@ abstract class Purchasable implements IResource {
 
   protected _purchaseAmount (state: GameState): number {
     return 1;
+  }
+
+  protected _purchaseLog (amount: number, state: GameState): string {
+    return `You purchased ${amount} x ${this.name}.`;
   }
 }
