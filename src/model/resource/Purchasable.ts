@@ -1,7 +1,7 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Purchasable implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.Infrastructure;
+  public readonly resourceType: ResourceType = ResourceType.Consumable;
   public value: number = 0;
 
   public clickText: string = 'Purchase';

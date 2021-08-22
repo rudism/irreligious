@@ -4,6 +4,9 @@
 /// <reference path="./resource/Money.ts" />
 /// <reference path="./resource/PlayerOrg.ts" />
 /// <reference path="./resource/Religion.ts" />
+/// <reference path="./resource/Tent.ts" />
+/// <reference path="./resource/House.ts" />
+/// <reference path="./resource/Compound.ts" />
 
 class GameConfig {
   public worldPopulation: number = 790000000;
@@ -63,6 +66,9 @@ class GameConfig {
     // add resources
     state.addResource('money', new Money(3.50));
     state.addResource('crpto', new CryptoCurrency());
+    state.addResource('tents', new Tent());
+    state.addResource('house', new House());
+    state.addResource('cmpnd', new Compound());
 
     return state;
   }

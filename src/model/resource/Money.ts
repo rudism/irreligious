@@ -12,7 +12,7 @@ class Money extends Purchasable {
     super('Money', 'Used to purchase goods and services.');
     this.clickText = 'Collect Tithes';
     this.clickDescription = 'Voluntary contributions from followers.';
-    this._baseMax = 10000;
+    this._baseMax = 999999;
   }
 
   public isUnlocked (state: GameState): boolean {

@@ -21,7 +21,10 @@ class PlayerOrg implements IResource {
   }
 
   public max (state: GameState): number {
-    return this._baseMax;
+    let max: number = this._baseMax;
+    max += state.getResource('tents').value * 2;
+    max += state.getResource('house').value * 10;
+    return max;
   }
 
   public clickAction (state: GameState): void {
