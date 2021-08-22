@@ -52,6 +52,7 @@ class PlayerOrg implements IResource {
       return;
     }
 
+    this._lastRecruitmentLog = 0; // always log on click
     this.addValue(1, state);
   }
 

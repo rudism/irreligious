@@ -10,6 +10,7 @@ class Tent extends Infrastructure {
   }
 
   public max (state: GameState): number {
+    // ten extra tents per compound
     let max: number = this._baseMax;
     max += state.getResource('cmpnd').value * 10;
     return max;

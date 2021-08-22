@@ -3,7 +3,7 @@
 class Compound extends Infrastructure {
   constructor () {
     super('Compounds',
-      'Provides space for tents and houses and a place to hide more money.');
+      'Provides space for tents, houses, and churches and a place to hide more money.');
     this.cost.money = 15000;
     this._costMultiplier.money = 1.5;
   }

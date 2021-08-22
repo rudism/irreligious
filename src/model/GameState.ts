@@ -1,6 +1,6 @@
 class GameState {
-  private _versionMaj: number = 0;
-  private _versionMin: number = 1;
+  private readonly _versionMaj: number = 0;
+  private readonly _versionMin: number = 1;
 
   public config: GameConfig;
 
@@ -71,6 +71,8 @@ class GameState {
   }
 
   public performClick (resourceKey: string): void {
+    if (!this._resources[resourceKey].isUnlocked(this)) return;
+
     if (this._resources[resourceKey].clickAction !== null) {
       this._resources[resourceKey].clickAction(this);
       for (const callback of this.onResourceClick) {
@@ -171,5 +173,12 @@ class GameState {
       // tslint:disable-next-line
       console.log('No save game was found.');
     }
+  }
+
+  public reset (): void {
+    const newState: GameState = this.config.generateState();
+    localStorage.clear();
+    this._resources = newState._resources;
+    this.log('Reset all game resources.');
   }
 }

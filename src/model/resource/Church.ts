@@ -4,8 +4,21 @@ class Church extends Infrastructure {
   constructor () {
     super('Churches',
       'Preaching grounds for 2 pastors.');
-    this.cost.money = 10000;
+    this.cost.money = 150000;
     this._costMultiplier.money = 1.01;
-    this._baseMax = 2;
+  }
+
+  public max (state: GameState): number {
+    // one church per compound
+    return state.getResource('cmpnd').value;
+  }
+
+  public isUnlocked (state: GameState): boolean {
+    if (this._isUnlocked) return true;
+    const compounds: IResource = state.getResource('cmpnd');
+    if (compounds.value > 0) {
+      this._isUnlocked = true;
+    }
+    return this._isUnlocked;
   }
 }

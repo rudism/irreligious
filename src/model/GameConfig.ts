@@ -77,8 +77,8 @@ class GameConfig {
     state.addResource('crpto', new CryptoCurrency());
     state.addResource('tents', new Tent());
     state.addResource('house', new House());
-    state.addResource('cmpnd', new Compound());
     state.addResource('chrch', new Church());
+    state.addResource('cmpnd', new Compound());
 
     // add passive resources
     state.addResource('creds', new Credibility());

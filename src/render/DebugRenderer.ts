@@ -75,14 +75,26 @@ class DebugRenderer implements IRenderer {
             state.performClick(rkey));
         }
       }
+      // create tools footer
+      const footer: HTMLElement = document.createElement('div');
+      footer.className = 'footer';
+      footer.innerHTML = `
+<button id='dbg-btn-reset'>Reset Game</button>
+      `;
+      resDiv.appendChild(footer);
+      document.getElementById('dbg-btn-reset')
+        .addEventListener('click', (): void => {
+          state.reset();
+          this._handleClick = true;
+        });
     }
     for (const rkey of rkeys) {
       const resource: IResource = state.getResource(rkey);
       const container: HTMLElement = document
         .getElementById(`resource-container-${resource.resourceType}`);
+      const el: HTMLElement = document
+        .getElementById(`resource-details-${rkey}`);
       if (resource.isUnlocked(state)) {
-        const el: HTMLElement = document
-          .getElementById(`resource-details-${rkey}`);
         if (el.className !== 'resource') el.className = 'resource';
         const elV: Element =
           el.getElementsByClassName('resource-value')[0];
@@ -105,19 +117,22 @@ class DebugRenderer implements IRenderer {
           if (enabled) elB[0].removeAttribute('disabled');
           else elB[0].setAttribute('disabled', 'disabled');
         }
+        if (resource.inc !== null && resource.inc(state) > 0) {
+          const elI: Element =
+            el.getElementsByClassName('resource-inc')[0];
+          elI.innerHTML =
+            ` +${state.formatNumber(resource.inc(state))}/s`;
+        }
         if (this._handleClick) {
-          if (resource.inc !== null && resource.inc(state) > 0) {
-            const elI: Element =
-              el.getElementsByClassName('resource-inc')[0];
-            elI.innerHTML =
-              ` +${state.formatNumber(resource.inc(state))}/s`;
-          }
           const elC: HTMLCollectionOf<Element> =
             el.getElementsByClassName('resource-cost');
           if (elC.length > 0) {
             elC[0].innerHTML = this._getCostStr(resource, state);
           }
         }
+      } else {
+        if (el.className !== 'resource locked')
+          el.className = 'resource locked';
       }
     }
     this._handleClick = false;
