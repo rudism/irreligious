@@ -1,7 +1,5 @@
 /// <reference path="./model/GameConfig.ts" />
-/// <reference path="./model/GameState.ts" />
 /// <reference path="./render/DebugRenderer.ts" />
-/// <reference path="./render/IRenderer.ts" />
 
 let globalStartTime: number = 0;
 let globalTimeout: number = null;

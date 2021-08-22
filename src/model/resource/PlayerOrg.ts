@@ -1,4 +1,4 @@
-/// <reference path="./Religion.ts" />
+/// <reference path="./IResource.ts" />
 
 class PlayerOrg implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Religion;

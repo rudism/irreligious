@@ -1,6 +1,3 @@
-/// <reference path="./logging/ILogger.ts" />
-/// <reference path="./resource/IResource.ts" />
-
 class GameState {
   private _resources: Record<string, IResource> = { };
   private _resourceKeys: string[] = [];

@@ -1,6 +1,4 @@
-/// <reference path="../model/GameState.ts" />
 /// <reference path="../model/logging/ConsoleLogger.ts" />
-/// <reference path="./IRenderer.ts" />
 
 class DebugRenderer implements IRenderer {
   private _initialized: boolean = false;
