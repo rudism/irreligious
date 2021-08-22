@@ -3,8 +3,20 @@
   flex-wrap: wrap;
 }
 .resource {
-  min-width: 8em;
+  min-width: 12em;
   border: 2px solid black;
   padding: 0.25em 0.5em;
   margin: 0 0.5em 0.5em 0;
+}
+#resource-container-religion .resource {
+  background-color: #ccf;
+}
+#resource-container-consumable .resource {
+  background-color: #cfc;
+}
+#resource-container-infrastructure .resource {
+  background-color: #fcc;
+}
+#resource-container-passive .resource {
+  background-color: #ffc;
 }

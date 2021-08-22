@@ -12,8 +12,8 @@ function gameLoop (state: GameState, renderer: IRenderer): void {
   const elapsedTime: number = globalStartTime > 0
     ? (new Date()).getTime() - globalStartTime : 0;
 
-  renderer.render(state);
   state.advance(elapsedTime);
+  renderer.render(state);
 
   // run again in 1sec
   globalStartTime = (new Date()).getTime();

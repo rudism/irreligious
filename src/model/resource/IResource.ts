@@ -2,7 +2,7 @@ enum ResourceType {
   Religion = 'religion',
   Consumable = 'consumable',
   Infrastructure = 'infrastructure',
-  Hidden = 'hidden'
+  Passive = 'passive'
 }
 
 interface IResource {

@@ -1,5 +1,6 @@
 /// <reference path="./GameState.ts" />
 /// <reference path="./resource/Credibility.ts" />
+/// <reference path="./resource/CryptoCurrency.ts" />
 /// <reference path="./resource/Money.ts" />
 /// <reference path="./resource/PlayerOrg.ts" />
 /// <reference path="./resource/Religion.ts" />
@@ -57,10 +58,11 @@ class GameConfig {
       this.relNoneShare * this.worldPopulation));
 
     // add hidden resources
-    state.addResource('creds', new Credibility(2));
+    state.addResource('creds', new Credibility());
 
     // add resources
-    state.addResource('money', new Money(100));
+    state.addResource('money', new Money(3.50));
+    state.addResource('crpto', new CryptoCurrency());
 
     return state;
   }

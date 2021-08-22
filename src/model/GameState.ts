@@ -21,13 +21,16 @@ class GameState {
 
     // advance each resource
     for (const rkey of this._resourceKeys) {
-      if (this._resources[rkey].advanceAction !== null) {
+      if (this._resources[rkey].isUnlocked(this)
+        && this._resources[rkey].advanceAction !== null) {
         this._resources[rkey].advanceAction(time, this);
       }
     }
 
     // perform auto increments
     for (const rkey of this._resourceKeys) {
+      if (!this._resources[rkey].isUnlocked(this)) continue;
+
       const max: number = this._resources[rkey].max
         ? this._resources[rkey].max(this)
         : null;
@@ -40,6 +43,9 @@ class GameState {
       }
       if (max !== null && this._resources[rkey].value > max) {
         this._resources[rkey].value = max;
+      }
+      if (this._resources[rkey].value < 0) {
+        this._resources[rkey].value = 0;
       }
     }
   }

@@ -22,8 +22,7 @@ class DebugRenderer implements IRenderer {
       head.appendChild(style);
       // create containers for each resource type
       for (const item in ResourceType) {
-        if (isNaN(Number(item))
-          && ResourceType[item] !== ResourceType.Hidden) {
+        if (isNaN(Number(item))) {
           const el: HTMLElement = document.createElement('div');
           el.id = `resource-container-${ResourceType[item]}`;
           el.className = 'resource-type-container';
@@ -34,7 +33,6 @@ class DebugRenderer implements IRenderer {
     const rkeys: string[] = state.getResources();
     for (const rkey of rkeys) {
       const resource: IResource = state.getResource(rkey);
-      if (resource.resourceType === ResourceType.Hidden) continue;
       const container: HTMLElement = document
         .getElementById(`resource-container-${resource.resourceType}`);
       if (resource.isUnlocked(state)) {
@@ -45,8 +43,11 @@ class DebugRenderer implements IRenderer {
           el.className = 'resource';
           el.id = `resource-details-${rkey}`;
           let content: string = `
-            <span class='resource-title' title='${resource.description}'>
-              ${resource.name}</span><br>
+            <span class='resource-title'
+              title='${this._escape(resource.description)}'>
+              ${this._escape(resource.name
+                ? resource.name
+                : rkey)}</span><br>
             <span class='resource-value'></span>
             <span class='resource-max'></span>
             <span class='resource-inc'></span>
@@ -54,8 +55,8 @@ class DebugRenderer implements IRenderer {
           if (resource.clickText !== null) {
             content += `<br>
               <button class='resource-btn'
-                title='${resource.clickDescription}'>
-                ${resource.clickText}</button>`;
+                title='${this._escape(resource.clickDescription)}'>
+                ${this._escape(resource.clickText)}</button>`;
           }
           if (resource.cost !== null
             && Object.keys(resource.cost).length !== 0) {
@@ -89,7 +90,7 @@ class DebugRenderer implements IRenderer {
           const elC: HTMLCollectionOf<Element> =
             el.getElementsByClassName('resource-cost');
           if (elC.length > 0) {
-            elC[0].innerHTML = this.getCostStr(resource, state);
+            elC[0].innerHTML = this._getCostStr(resource, state);
           }
         }
       }
@@ -97,7 +98,21 @@ class DebugRenderer implements IRenderer {
     this._handleClick = false;
   }
 
-  private getCostStr (resource: IResource, state: GameState): string {
+  private _escape (text: string): string {
+    const escapes: { [key: string]: string } = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;',
+      '/': '&#x2F;'
+    }
+    const escaper: RegExp = /[&<>"'\/]/g;
+    return text.replace(escaper, (match: string): string =>
+      escapes[match]);
+  }
+
+  private _getCostStr (resource: IResource, state: GameState): string {
     let cost: string = '';
     for (const rkey of state.getResources()) {
       if (resource.cost[rkey] !== undefined) {

@@ -14,7 +14,7 @@
       true, {
         "limit": 75,
         "check-strings": true,
-        "ignore-pattern": "\\s+state\\.log\\("
+        "ignore-pattern": "(^\\s+state\\.log\\(|^\\s+['\"`])"
       }
     ],
     "whitespace": [

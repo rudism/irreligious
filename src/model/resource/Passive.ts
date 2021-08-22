@@ -1,22 +1,28 @@
 /// <reference path="./IResource.ts" />
 
-abstract class Hidden implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.Hidden;
+abstract class Passive implements IResource {
+  public readonly resourceType: ResourceType = ResourceType.Passive;
   public readonly clickText: null = null;
   public readonly clickDescription: null = null;
   public readonly cost: null = null;
   public readonly clickAction: null = null;
-  public readonly name: null = null;
-  public readonly description: null = null;
 
-  protected _baseMax: number | null = null;
+  protected _baseMax: number | null;
+  protected _baseInc: number | null;
 
   constructor (
-    public value: number
-  ) { }
+    public name: string,
+    public description: string,
+    public value: number,
+    max: number | null,
+    inc: number | null
+  ) {
+    this._baseMax = max;
+    this._baseInc = inc;
+  }
 
   public inc (state: GameState): number | null {
-    return null;
+    return this._baseInc;
   }
 
   public max (state: GameState): number | null {
