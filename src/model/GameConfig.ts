@@ -21,6 +21,10 @@ class GameConfig {
   public relOtherShare: number = 0.02;
   public relNoneShare: number = 0.16;
 
+  public baseTitheAmount: number = 10;
+  public baseCryptoReturnAmount: number = 1;
+  public baseCredibilityRestoreRate: number = 0.25;
+
   public generateState (): GameState {
     const state: GameState = new GameState();
 
@@ -60,15 +64,17 @@ class GameConfig {
       'Non-Religious', 'Atheists and agnostics.',
       this.relNoneShare * this.worldPopulation));
 
-    // add hidden resources
-    state.addResource('creds', new Credibility());
-
     // add resources
-    state.addResource('money', new Money(3.50));
+    state.addResource('money', new Money(3.50,
+      this.baseTitheAmount, this.baseCryptoReturnAmount));
     state.addResource('crpto', new CryptoCurrency());
     state.addResource('tents', new Tent());
     state.addResource('house', new House());
     state.addResource('cmpnd', new Compound());
+
+    // add passive resources
+    state.addResource('creds', new Credibility(
+      this.baseCredibilityRestoreRate));
 
     return state;
   }

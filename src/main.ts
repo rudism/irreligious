@@ -22,6 +22,12 @@ function gameLoop (state: GameState, renderer: IRenderer): void {
 // run with default config at startup
 ((): void => {
   const config: GameConfig = new GameConfig();
+
+  // debug values to make the game play faster while testing
+  config.baseTitheAmount = 1000;
+  config.baseCryptoReturnAmount = 100;
+  config.baseCredibilityRestoreRate = 5;
+
   const renderer: IRenderer = new DebugRenderer();
   const state: GameState = config.generateState();
 

@@ -8,11 +8,13 @@ class Money extends Purchasable {
 
   constructor (
     public value: number,
+    private readonly _baseTitheAmount: number,
+    private readonly _baseCryptoReturnAmount: number
   ) {
     super('Money', 'Used to purchase goods and services.');
     this.clickText = 'Collect Tithes';
     this.clickDescription = 'Voluntary contributions from followers.';
-    this._baseMax = 1000000;
+    this._baseMax = 500000;
   }
 
   public isUnlocked (state: GameState): boolean {
@@ -21,7 +23,7 @@ class Money extends Purchasable {
 
   public inc (state: GameState): number {
     // crypto currency
-    return state.getResource('crpto').value * 0.5;
+    return state.getResource('crpto').value * this._baseCryptoReturnAmount;
   }
 
   protected _purchaseAmount (state: GameState): number {
@@ -36,7 +38,7 @@ class Money extends Purchasable {
       state.getResource('creds').value -= lost;
     }
     // each follower gives you $10
-    const tithings: number = plorg.value * 10;
+    const tithings: number = plorg.value * this._baseTitheAmount;
     this._lastCollectionTime = state.now;
     return tithings;
   }
@@ -44,5 +46,11 @@ class Money extends Purchasable {
   protected _purchaseLog (amount: number, state: GameState): string {
     const followers: number = state.getResource('plorg').value;
     return `You collected $${amount} from ${followers} followers.`;
+  }
+
+  public max (state: GameState): number | null {
+    let max: number = this._baseMax;
+    max += state.getResource('cmpnd').value * 500000;
+    return max;
   }
 }

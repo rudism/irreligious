@@ -5,7 +5,7 @@ class Tent extends Infrastructure {
     super('Tents',
       'Provides room to house 2 followers.');
     this.cost.money = 250;
-    this._costMultiplier.money = 1.1;
+    this._costMultiplier.money = 1.05;
     this._baseMax = 5;
   }
 

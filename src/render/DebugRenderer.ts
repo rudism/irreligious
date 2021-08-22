@@ -91,7 +91,8 @@ class DebugRenderer implements IRenderer {
           el.getElementsByClassName('resource-btn');
         if (elB.length > 0) {
           const enabled: boolean = state.isPurchasable(resource.cost)
-            && resource.value < resource.max(state);
+            && (resource.max(state) === null
+              || resource.value < resource.max(state));
           if (enabled) elB[0].removeAttribute('disabled');
           else elB[0].setAttribute('disabled', 'disabled');
         }

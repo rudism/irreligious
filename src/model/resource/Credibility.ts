@@ -3,7 +3,8 @@
 class Credibility extends Passive {
   private _lastValue: number = 100;
 
-  constructor () {
+  constructor (
+    private _baseRestoreRate: number) {
     super(
       'Credibility',
       'Affects your ability to recruit and retain followers.',
@@ -15,6 +16,6 @@ class Credibility extends Passive {
   }
 
   public inc (state: GameState): number {
-    return 0.25;
+    return this._baseRestoreRate;
   }
 }

@@ -5,6 +5,7 @@ class House extends Infrastructure {
     super('Houses',
       'Provides room to house 10 followers.');
     this.cost.money = 150000;
+    this._baseMax = 0;
     this._costMultiplier.money = 1.1;
   }
 
