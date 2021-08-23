@@ -9,6 +9,7 @@ class House extends Infrastructure {
   }
 
   public max (state: GameState): number {
+    // two houses per compound
     return state.getResource('cmpnd').value * 2;
   }
 
