@@ -35,6 +35,9 @@
     - higher makes recruitment harder
   - political influence
     - affects credibility, needed to enact policies
+  - global birth/death rates
+  - religious fanaticism
+    - affects follower growth/loss
 - consumable resource type
   - one-off actions that cost money
     - ad blitz to improve credibility
@@ -44,3 +47,6 @@
 - policies
   - can affect a wide range of stuff
   - costs political influence to enact and maintain
+- inter-religion relationships
+  - hostility between religiions
+  - holy wars (affects birth/death rate)

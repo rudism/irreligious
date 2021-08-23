@@ -112,9 +112,10 @@ class GameState {
       { value: 1e18, symbol: 'E' }
     ];
     const rx: RegExp = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    const item: vlookup =
-      lookup.slice().reverse()
-        .find((i: vlookup): boolean => num >= i.value);
+    let item: vlookup;
+    for (item of lookup.slice().reverse()) {
+      if (num >= item.value) break;
+    }
     return item
       ? (num / item.value).toFixed(this.numberFormatDigits)
         .replace(rx, '$1') + item.symbol
