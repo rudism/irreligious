@@ -61,3 +61,6 @@ body, html {
 #resource-container-passive .resource {
   background-color: #ffc;
 }
+#resource-container-research .resource {
+  background-color: #cff;
+}

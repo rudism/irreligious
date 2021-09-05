@@ -9,7 +9,9 @@ class Pastor extends Job {
   }
 
   public max (state: GameState): number {
-    return state.getResource('chrch').value * 2;
+    let max: number = state.getResource('chrch').value * 2;
+    max += state.getResource('mchch').value * 5;
+    return max;
   }
 
   public isUnlocked (state: GameState): boolean {

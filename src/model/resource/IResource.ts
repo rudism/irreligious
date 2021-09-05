@@ -3,6 +3,7 @@ enum ResourceType {
   Job = 'job',
   Consumable = 'consumable',
   Infrastructure = 'infrastructure',
+  Research = 'research',
   Passive = 'passive'
 }
 

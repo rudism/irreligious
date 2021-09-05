@@ -1,9 +1,11 @@
 /// <reference path="./GameState.ts" />
+/// <reference path="./resource/BuildingPermit.ts" />
 /// <reference path="./resource/Church.ts" />
 /// <reference path="./resource/Compound.ts" />
 /// <reference path="./resource/Credibility.ts" />
 /// <reference path="./resource/CryptoCurrency.ts" />
 /// <reference path="./resource/House.ts" />
+/// <reference path="./resource/MegaChurch.ts" />
 /// <reference path="./resource/Money.ts" />
 /// <reference path="./resource/Pastor.ts" />
 /// <reference path="./resource/PlayerOrg.ts" />
@@ -79,6 +81,8 @@ class GameConfig {
     state.addResource('house', new House());
     state.addResource('chrch', new Church());
     state.addResource('cmpnd', new Compound());
+    state.addResource('blpmt', new BuildingPermit());
+    state.addResource('mchch', new MegaChurch());
 
     // add passive resources
     state.addResource('creds', new Credibility());
