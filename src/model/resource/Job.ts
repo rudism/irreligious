@@ -1,10 +1,10 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Job implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.job;
-  public readonly valueInWholeNumbers: boolean = true;
-  public readonly clickText: string = 'Hire';
-  public readonly clickDescription: string = 'Promote one of your followers.';
+  public readonly resourceType = ResourceType.job;
+  public readonly valueInWholeNumbers = true;
+  public readonly clickText = 'Hire';
+  public readonly clickDescription = 'Promote one of your followers.';
   public value = 0;
   public readonly cost: { [key: string]: number } = { };
 
@@ -49,15 +49,15 @@ abstract class Job implements IResource {
 
   protected _availableJobs (state: GameState): number {
     // number of followers minus the number of filled jobs
-    const followers: number = state.getResource('plorg').value;
-    const hired: number = state.getResources().reduce(
+    const followers = state.getResource('plorg').value;
+    const hired = state.getResources().reduce(
       (tot: number, rkey: string): number => {
-        const res: IResource = state.getResource(rkey);
+        const res = state.getResource(rkey);
         return res.resourceType === ResourceType.job
           ? tot + res.value
           : tot;
       }, 0);
-    let max: number = followers - hired;
+    let max = followers - hired;
     if (max < 0) max = 0;
     return max;
   }

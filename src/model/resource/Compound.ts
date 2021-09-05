@@ -10,7 +10,7 @@ class Compound extends Infrastructure {
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    const tents: IResource = state.getResource('tents');
+    const tents = state.getResource('tents');
     if (tents.value >= 5) {
       this._isUnlocked = true;
     }

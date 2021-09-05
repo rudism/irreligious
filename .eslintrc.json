@@ -15,6 +15,7 @@
       "ignoreRegExpLiterals": true}],
     "@typescript-eslint/triple-slash-reference": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-inferrable-types": "warn",
     "@typescript-eslint/array-type": ["warn", {"default": "array-simple"}],
     "@typescript-eslint/consistent-indexed-object-style": ["warn", "index-signature"],
     "@typescript-eslint/consistent-type-assertions": ["warn", {

@@ -1,16 +1,16 @@
 /// <reference path="./IResource.ts" />
 
 class Religion implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.religion;
-  public readonly valueInWholeNumbers: boolean = true;
-  public readonly clickText: null = null;
-  public readonly clickDescription: null = null;
-  public readonly cost: null = null;
+  public readonly resourceType = ResourceType.religion;
+  public readonly valueInWholeNumbers = true;
+  public readonly clickText = null;
+  public readonly clickDescription = null;
+  public readonly cost = null;
 
-  public readonly max: null = null;
-  public readonly inc: null = null;
-  public readonly clickAction: null = null;
-  public readonly advanceAction: null = null;
+  public readonly max = null;
+  public readonly inc = null;
+  public readonly clickAction = null;
+  public readonly advanceAction = null;
 
   constructor (
     public readonly name: string,

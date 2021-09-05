@@ -1,18 +1,19 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Passive implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.passive;
-  public readonly valueInWholeNumbers: boolean = false;
-  public readonly clickText: null = null;
-  public readonly clickDescription: null = null;
+  public readonly resourceType = ResourceType.passive;
+  public readonly valueInWholeNumbers = false;
+  public readonly clickText = null;
+  public readonly clickDescription = null;
   public value = 0;
-  public readonly cost: null = null;
+  public readonly cost = null;
 
-  public readonly clickAction: null = null;
+  public readonly clickAction = null;
 
   public max: ((state: GameState) => number) | null = null;
   public inc: ((state: GameState) => number) | null = null;
-  public advanceAction: ((time: number, state: GameState) => void) | null = null;
+  public advanceAction: (
+    (time: number, state: GameState) => void) | null = null;
 
   constructor (
     public readonly name: string,

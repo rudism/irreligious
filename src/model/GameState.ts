@@ -7,11 +7,11 @@ class GameState {
 
   public now = 0;
 
-  private readonly _versionMaj: number = 0;
-  private readonly _versionMin: number = 1;
+  private readonly _versionMaj = 0;
+  private readonly _versionMin = 1;
 
   private _timeSinceSave = 0;
-  private readonly _timeBetweenSaves: number = 10000;
+  private readonly _timeBetweenSaves = 10000;
 
   private _resources: { [key: string]: IResource } = { };
   private readonly _resourceKeys: string[] = [];

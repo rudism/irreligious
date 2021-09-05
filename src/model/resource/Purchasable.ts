@@ -23,7 +23,7 @@ abstract class Purchasable implements IResource {
   public clickAction (state: GameState): void {
     if (this.max !== null && this.value >= this.max(state)) return;
     if (state.deductCost(this.cost)) {
-      const amount: number = this._purchaseAmount(state);
+      const amount = this._purchaseAmount(state);
       if (amount > 0) {
         this.value += amount;
         state.log(this._purchaseLog(amount, state));
@@ -45,15 +45,15 @@ abstract class Purchasable implements IResource {
     return this._isUnlocked;
   }
 
-  public advanceAction (time: number, state: GameState): void {
+  public advanceAction (_time: number, _state: GameState): void {
     return;
   }
 
-  protected _purchaseAmount (state: GameState): number {
+  protected _purchaseAmount (_state: GameState): number {
     return 1;
   }
 
-  protected _purchaseLog (amount: number, state: GameState): string {
+  protected _purchaseLog (amount: number, _state: GameState): string {
     return `You purchased ${amount} x ${this.name}.`;
   }
 }

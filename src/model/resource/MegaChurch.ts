@@ -13,7 +13,7 @@ class MegaChurch extends Infrastructure {
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    const permit: IResource = state.getResource('blpmt');
+    const permit = state.getResource('blpmt');
     if (permit.value > 0) {
       this._isUnlocked = true;
     }

@@ -9,7 +9,7 @@ class Pastor extends Job {
   }
 
   public max: (state: GameState) => number = (state) => {
-    let max: number = state.getResource('chrch').value * 2;
+    let max = state.getResource('chrch').value * 2;
     max += state.getResource('mchch').value * 5;
     return max;
   };
@@ -23,13 +23,13 @@ class Pastor extends Job {
   public advanceAction (time: number, state: GameState): void {
     this._timeSinceLastTithe += time;
     if (this._timeSinceLastTithe >= state.config.cfgTimeBetweenTithes) {
-      const money: IResource = state.getResource('money');
-      const plorg: IResource = state.getResource('plorg');
+      const money = state.getResource('money');
+      const plorg = state.getResource('plorg');
       // each pastor can collect from up to 100 followers
-      let tithed: number = this.value * 100;
+      let tithed = this.value * 100;
       if (Math.floor(plorg.value) < tithed)
         tithed = Math.floor(plorg.value);
-      let collected: number = tithed * state.config.cfgTitheAmount;
+      let collected = tithed * state.config.cfgTitheAmount;
       if (money.max !== null && collected > money.max(state) - money.value)
         collected = money.max(state) - money.value;
       if (collected > 0) {

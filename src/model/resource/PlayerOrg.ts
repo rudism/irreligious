@@ -1,14 +1,14 @@
 /// <reference path="./IResource.ts" />
 
 class PlayerOrg implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.religion;
-  public readonly name: string = 'Player';
-  public readonly description: string = 'In you they trust.';
-  public readonly valueInWholeNumbers: boolean = true;
-  public readonly clickText: string = 'Recruit';
-  public readonly clickDescription: string = 'Gather new followers.';
+  public readonly resourceType = ResourceType.religion;
+  public readonly name = 'Player';
+  public readonly description = 'In you they trust.';
+  public readonly valueInWholeNumbers = true;
+  public readonly clickText = 'Recruit';
+  public readonly clickDescription = 'Gather new followers.';
   public value = 0;
-  public readonly cost: null = null;
+  public readonly cost = null;
 
   private _timeSinceLastLost = 0;
   private _lastRecruitmentLog = 0;
@@ -16,7 +16,7 @@ class PlayerOrg implements IResource {
   private _followerDests: { [key: string]: number } = { };
 
   public max (state: GameState): number {
-    let max: number = state.config.cfgStartingPlayerMax;
+    let max = state.config.cfgStartingPlayerMax;
     max += state.getResource('tents').value * 2;
     max += state.getResource('house').value * 10;
     return max;
@@ -44,9 +44,9 @@ class PlayerOrg implements IResource {
     }
 
     // chance to fail increases as credibility decreases
-    const creds: IResource = state.getResource('creds');
+    const creds = state.getResource('creds');
     if (creds.max !== null) {
-      const ratio: number = Math.ceil(creds.value) / creds.max(state);
+      const ratio = Math.ceil(creds.value) / creds.max(state);
       if (Math.random() > ratio) {
         state.log('Your recruitment efforts failed.');
         return;
@@ -75,9 +75,9 @@ class PlayerOrg implements IResource {
     } else {
       // lost followers must return to other faiths
       for (let i = 0; i < diff * -1; i++) {
-        const dest: [string, IResource] = this._getRandomReligion(state);
+        const dest = this._getRandomReligion(state);
         dest[1].addValue(1, state);
-        const curFollowers: number = this._followerDests[dest[0]];
+        const curFollowers = this._followerDests[dest[0]];
         this._followerDests[dest[0]] = !isNaN(curFollowers)
           ? curFollowers + 1
           : 1;
@@ -96,9 +96,9 @@ class PlayerOrg implements IResource {
       if (this.value > 0) {
         const creds = state.getResource('creds');
         if (creds.max !== null) {
-          const ratio: number = Math.ceil(creds.value) / creds.max(state);
+          const ratio = Math.ceil(creds.value) / creds.max(state);
           if (Math.random() > ratio) {
-            const lost: number = Math.ceil(this.value / 25 * (1 - ratio));
+            const lost = Math.ceil(this.value / 25 * (1 - ratio));
             this.addValue(lost * -1, state);
           }
         }
@@ -115,7 +115,7 @@ class PlayerOrg implements IResource {
         let total = 0;
         for (const rkey of Object.keys(this._followerDests)) {
           if (msg !== '') msg += ', ';
-          const religion: IResource = state.getResource(rkey);
+          const religion = state.getResource(rkey);
           msg += `${state.formatNumber(this._followerDests[rkey])} to ${religion.name}`;
           total += this._followerDests[rkey];
           delete this._followerDests[rkey];
@@ -127,7 +127,7 @@ class PlayerOrg implements IResource {
         let total = 0;
         for (const rkey of Object.keys(this._followerSources)) {
           if (msg !== '') msg += ', ';
-          const religion: IResource = state.getResource(rkey);
+          const religion = state.getResource(rkey);
           msg +=
             `${state.formatNumber(this._followerSources[rkey])} from ${religion.name}`;
           total += this._followerSources[rkey];
@@ -140,9 +140,9 @@ class PlayerOrg implements IResource {
   }
 
   private _getRandomReligion (state: GameState): [string, IResource] {
-    const religs: string[] = ['xtian', 'islam', 'hindu',
+    const religs = ['xtian', 'islam', 'hindu',
       'buddh', 'sikhi', 'judah', 'other', 'agnos'];
-    const source: string = religs[Math.floor(Math.random() * 8)];
+    const source = religs[Math.floor(Math.random() * 8)];
     return [source, state.getResource(source)];
   }
 }

@@ -38,7 +38,7 @@ class GameConfig {
   public cfgPastorRecruitRate = 0.01;
 
   public generateState (): GameState {
-    const state: GameState = new GameState(this);
+    const state = new GameState(this);
 
     // create player organization
     state.addResource('plorg', new PlayerOrg());

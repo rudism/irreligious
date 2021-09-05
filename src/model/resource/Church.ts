@@ -13,7 +13,7 @@ class Church extends Infrastructure {
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    const compounds: IResource = state.getResource('cmpnd');
+    const compounds = state.getResource('cmpnd');
     if (compounds.value > 0) {
       this._isUnlocked = true;
     }

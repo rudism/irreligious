@@ -6,7 +6,7 @@ class DebugLogger implements ILogger {
   }
 
   public msg (text: string): void {
-    const p: HTMLElement = document.createElement('p');
+    const p = document.createElement('p');
     p.innerText = text;
     this._container.appendChild(p);
     if (this._container.parentElement !== null) {

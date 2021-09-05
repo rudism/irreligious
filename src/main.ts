@@ -27,7 +27,7 @@ function startGame (state: GameState, renderer: IRenderer): void {
 
 // run with default config at startup
 ((): void => {
-  const config: GameConfig = new GameConfig();
+  const config = new GameConfig();
 
   // debug values to make the game play faster while testing
   config.cfgTitheAmount = 1000;
@@ -36,8 +36,8 @@ function startGame (state: GameState, renderer: IRenderer): void {
   config.cfgCredibilityRestoreRate = 5;
   config.cfgPastorRecruitRate = 0.5;
 
-  const renderer: IRenderer = new DebugRenderer();
-  const state: GameState = config.generateState();
+  const renderer = new DebugRenderer();
+  const state = config.generateState();
 
   // re-run main loop immediately on user clicks
   state.onResourceClick.push((): void => {
