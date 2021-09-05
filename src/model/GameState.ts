@@ -4,7 +4,7 @@ class GameState {
 
   public config: GameConfig;
 
-  private _timeSinceSave: number = 0;
+  private _timeSinceSave = 0;
   private readonly _timeBetweenSaves: number = 10000;
 
   private _resources: Record<string, IResource> = { };
@@ -12,9 +12,9 @@ class GameState {
 
   public onResourceClick: (() => void)[] = [];
   public logger: ILogger = null;
-  public numberFormatDigits: number = 1;
+  public numberFormatDigits = 1;
 
-  public now: number = 0;
+  public now = 0;
 
   public addResource (key: string, resource: IResource): void {
     this._resourceKeys.push(key);
@@ -111,7 +111,7 @@ class GameState {
       { value: 1e15, symbol: 'P' },
       { value: 1e18, symbol: 'E' }
     ];
-    const rx: RegExp = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
     let item: vlookup;
     for (item of lookup.slice().reverse()) {
       if (num >= item.value) break;

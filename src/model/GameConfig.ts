@@ -11,23 +11,23 @@
 /// <reference path="./resource/Tent.ts" />
 
 class GameConfig {
-  public worldPopulation: number = 790000000;
+  public worldPopulation = 790000000;
 
   // religion configs
-  public relChristianityShare: number = 0.325;
-  public relIslamShare: number = 0.215;
-  public relHinduismShare: number = 0.16;
-  public relBuddhismShare: number = 0.06;
-  public relSikhismShare: number = 0.04;
-  public relJudaismShare: number = 0.02;
-  public relOtherShare: number = 0.02;
-  public relNoneShare: number = 0.16;
+  public relChristianitySharer = 0.325;
+  public relIslamShare = 0.215;
+  public relHinduismShare = 0.16;
+  public relBuddhismShare = 0.06;
+  public relSikhismShare = 0.04;
+  public relJudaismShare = 0.02;
+  public relOtherShare = 0.02;
+  public relNoneShare = 0.16;
 
-  public cfgTitheAmount: number = 10;
-  public cfgTimeBetweenTithes: number = 30000;
-  public cfgCryptoReturnAmount: number = 1;
-  public cfgCredibilityRestoreRate: number = 0.25;
-  public cfgPastorRecruitRate: number = 0.01;
+  public cfgTitheAmount = 10;
+  public cfgTimeBetweenTithes = 30000;
+  public cfgCryptoReturnAmount = 1;
+  public cfgCredibilityRestoreRate = 0.25;
+  public cfgPastorRecruitRate= 0.01;
 
   public generateState (): GameState {
     const state: GameState = new GameState();
@@ -39,7 +39,7 @@ class GameConfig {
     // create world religions
     state.addResource('xtian', new Religion(
       'Christianity', 'God, Jesus, Bible, churches.',
-      this.relChristianityShare * this.worldPopulation));
+      this.relChristianitySharer * this.worldPopulation));
 
     state.addResource('islam', new Religion(
       'Islam', 'God, Muhammad, Quran, mosques.',

@@ -2,15 +2,15 @@
 
 abstract class Purchasable implements IResource {
   public readonly resourceType: ResourceType = ResourceType.Consumable;
-  public valueInWholeNumbers: boolean = true;
-  public clickText: string = 'Purchase';
-  public clickDescription: string = 'Purchase';
-  public value: number = 0;
+  public valueInWholeNumbers = true;
+  public clickText = 'Purchase';
+  public clickDescription = 'Purchase';
+  public value = 0;
   public readonly cost: { [key: string]: number } = { };
 
   protected _costMultiplier: { [key: string]: number } = { };
   protected _baseMax: number | null = null;
-  protected _isUnlocked: boolean = false;
+  protected _isUnlocked = false;
 
   constructor (
     public readonly name: string,

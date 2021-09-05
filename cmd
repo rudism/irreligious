@@ -3,9 +3,9 @@
 cmd=$1
 
 if [ "$cmd" = "lint" ]; then
-  tslint --project .
+  eslint_d . --ext .ts
 elif [ "$cmd" = "build" ]; then
-  tslint --project . && tsc
+  eslint_d . --ext .ts && tsc
 elif [ "$cmd" = "run" ]; then
   firefox public/index.html &
 else

@@ -3,7 +3,7 @@
 class Money extends Purchasable {
   public readonly resourceType: ResourceType = ResourceType.Consumable;
 
-  private _lastCollectionTime: number = 0;
+  private _lastCollectionTime = 0;
 
   constructor (
     public value: number
@@ -23,7 +23,7 @@ class Money extends Purchasable {
   }
 
   public inc (state: GameState): number {
-    let inc: number = 0;
+    let inc = 0;
 
     // crypto currency
     inc += state.getResource('crpto').value

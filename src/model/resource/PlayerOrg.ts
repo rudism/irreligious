@@ -7,12 +7,12 @@ class PlayerOrg implements IResource {
   public readonly valueInWholeNumbers: boolean = true;
   public readonly clickText: string = 'Recruit';
   public readonly clickDescription: string = 'Gather new followers.';
-  public value: number = 0;
+  public value = 0;
   public readonly cost: null = null;
 
-  private _timeSinceLastLost: number = 0;
-  private _baseMax: number = 5;
-  private _lastRecruitmentLog: number = 0;
+  private _timeSinceLastLost = 0;
+  private _baseMax = 5;
+  private _lastRecruitmentLog = 0;
   private _followerSources: { [key: string]: number } = { };
   private _followerDests: { [key: string]: number } = { };
 
@@ -24,7 +24,7 @@ class PlayerOrg implements IResource {
   }
 
   public inc (state: GameState): number {
-    let inc: number = 0;
+    let inc = 0;
 
     // pastor recruiting
     const pastors: number = state.getResource('pstor').value;
@@ -63,7 +63,7 @@ class PlayerOrg implements IResource {
 
     if (diff > 0) {
       // gained followers must come from other faiths
-      for (let i: number = 0; i < diff; i++) {
+      for (let i = 0; i < diff; i++) {
         const source: [string, IResource] = this._getRandomReligion(state);
         source[1].addValue(-1, state);
         const curFollowers: number = this._followerSources[source[0]];
@@ -73,7 +73,7 @@ class PlayerOrg implements IResource {
       }
     } else {
       // lost followers must return to other faiths
-      for (let i: number = 0; i < diff * -1; i++) {
+      for (let i = 0; i < diff * -1; i++) {
         const dest: [string, IResource] = this._getRandomReligion(state);
         dest[1].addValue(1, state);
         const curFollowers: number = this._followerDests[dest[0]];
@@ -108,8 +108,8 @@ class PlayerOrg implements IResource {
       && (Object.keys(this._followerSources).length > 0
         || Object.keys(this._followerDests).length > 0)) {
       if (Object.keys(this._followerDests).length > 0) {
-        let msg: string = '';
-        let total: number = 0;
+        let msg = '';
+        let total = 0;
         for (const rkey of Object.keys(this._followerDests)) {
           if (msg !== '') msg += ', ';
           const religion: IResource = state.getResource(rkey);
@@ -121,8 +121,8 @@ class PlayerOrg implements IResource {
         state.log(`You lost ${state.formatNumber(total)} followers: ${msg}`);
       }
       if (Object.keys(this._followerSources).length > 0) {
-        let msg: string = '';
-        let total: number = 0;
+        let msg = '';
+        let total = 0;
         for (const rkey of Object.keys(this._followerSources)) {
           if (msg !== '') msg += ', ';
           const religion: IResource = state.getResource(rkey);

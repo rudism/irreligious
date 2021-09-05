@@ -1,7 +1,7 @@
 /// <reference path="./Job.ts" />
 
 class Pastor extends Job {
-  private _timeSinceLastTithe: number = 0;
+  private _timeSinceLastTithe = 0;
 
   constructor () {
     super('Pastors',

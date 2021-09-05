@@ -1,9 +1,9 @@
 /// <reference path="./model/GameConfig.ts" />
 /// <reference path="./render/DebugRenderer.ts" />
 
-let globalStartTime: number = 0;
+let globalStartTime = 0;
 let globalTimeout: number = null;
-let cycleLength: number = 250;
+const cycleLength = 250;
 
 function gameLoop (state: GameState, renderer: IRenderer): void {
   // figure out how much actual time has passed

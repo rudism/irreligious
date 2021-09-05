@@ -6,11 +6,11 @@ abstract class Job implements IResource {
   public readonly clickText: string = 'Hire';
   public readonly clickDescription: string =
     'Promote one of your followers.';
-  public value: number = 0;
+  public value = 0;
   public readonly cost: { [key: string]: number } = { };
 
   protected _costMultiplier: { [key: string]: number } = { };
-  protected _isUnlocked: boolean = false;
+  protected _isUnlocked = false;
 
   constructor (
     public readonly name: string,
@@ -21,7 +21,7 @@ abstract class Job implements IResource {
     return null;
   }
 
-  public inc (state: GameState): number | null {
+  public inc (): number | null {
     return null;
   }
 
@@ -31,7 +31,7 @@ abstract class Job implements IResource {
       return;
     }
     if (this.value < this.max(state) && state.deductCost(this.cost)) {
-      this.addValue(1, state);
+      this.addValue(1);
       state.log(this._hireLog(1, state));
       for (const rkey of Object.keys(this._costMultiplier)) {
         this.cost[rkey] *= this._costMultiplier[rkey];
@@ -39,7 +39,7 @@ abstract class Job implements IResource {
     }
   }
 
-  public addValue (amount: number, state: GameState): void {
+  public addValue (amount: number): void {
     this.value += amount;
   }
 

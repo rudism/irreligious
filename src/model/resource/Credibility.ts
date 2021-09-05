@@ -1,8 +1,6 @@
 /// <reference path="./Passive.ts" />
 
 class Credibility extends Passive {
-  private _lastValue: number = 100;
-
   constructor () {
     super(
       'Credibility',
@@ -11,7 +9,7 @@ class Credibility extends Passive {
     this.value = 100;
   }
 
-  public max (state: GameState): number {
+  public max (): number {
     return 100;
   }
 

@@ -1,8 +1,8 @@
 /// <reference path="../model/logging/DebugLogger.ts" />
 
 class DebugRenderer implements IRenderer {
-  private _initialized: boolean = false;
-  private _handleClick: boolean = true;
+  private _initialized = false;
+  private _handleClick = true;
 
   public render (state: GameState): void {
     const rkeys: string[] = state.getResources();
@@ -46,7 +46,7 @@ class DebugRenderer implements IRenderer {
         const el: HTMLElement = document.createElement('div');
         el.className = 'resource locked';
         el.id = `resource-details-${rkey}`;
-        let content: string = `
+        let content = `
           <span class='resource-title'
             title='${this._escape(resource.description)}'>
             ${this._escape(resource.name
@@ -148,13 +148,13 @@ class DebugRenderer implements IRenderer {
       "'": '&#x27;',
       '/': '&#x2F;'
     }
-    const escaper: RegExp = /[&<>"'\/]/g;
+    const escaper = /[&<>"'/]/g;
     return text.replace(escaper, (match: string): string =>
       escapes[match]);
   }
 
   private _getCostStr (resource: IResource, state: GameState): string {
-    let cost: string = '';
+    let cost = '';
     for (const rkey of state.getResources()) {
       if (resource.cost[rkey] !== undefined) {
         if (cost !== '') cost += ', ';
