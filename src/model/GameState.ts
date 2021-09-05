@@ -7,10 +7,10 @@ class GameState {
   private _timeSinceSave = 0;
   private readonly _timeBetweenSaves: number = 10000;
 
-  private _resources: Record<string, IResource> = { };
+  private _resources: {[key: string]: IResource} = { };
   private _resourceKeys: string[] = [];
 
-  public onResourceClick: (() => void)[] = [];
+  public onResourceClick: Array<() => void> = [];
   public logger: ILogger = null;
   public numberFormatDigits = 1;
 
@@ -129,7 +129,7 @@ class GameState {
   }
 
   public save (): void {
-    const saveObj: { [key: string]: any } = { };
+    const saveObj: any = { };
     saveObj.version = {
       maj: this._versionMaj,
       min: this._versionMin

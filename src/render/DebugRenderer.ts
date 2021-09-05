@@ -1,6 +1,6 @@
 /// <reference path="../model/logging/DebugLogger.ts" />
 
-class DebugRenderer implements IRenderer {
+class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-eslint/no-unused-vars
   private _initialized = false;
   private _handleClick = true;
 
@@ -32,7 +32,7 @@ class DebugRenderer implements IRenderer {
       for (const item in ResourceType) {
         if (isNaN(Number(item))) {
           const el: HTMLElement = document.createElement('div');
-          el.id = `resource-container-${ResourceType[item]}`;
+          el.id = `resource-container-${<string>ResourceType[item]}`;
           el.className = 'resource-type-container';
           resDiv.appendChild(el);
         }
