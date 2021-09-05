@@ -1,7 +1,7 @@
 /// <reference path="./IResource.ts" />
 
 class PlayerOrg implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.Religion;
+  public readonly resourceType: ResourceType = ResourceType.religion;
   public readonly name: string = 'Player';
   public readonly description: string = 'In you they trust.';
   public readonly valueInWholeNumbers: boolean = true;
@@ -11,13 +11,12 @@ class PlayerOrg implements IResource {
   public readonly cost: null = null;
 
   private _timeSinceLastLost = 0;
-  private _baseMax = 5;
   private _lastRecruitmentLog = 0;
   private _followerSources: { [key: string]: number } = { };
   private _followerDests: { [key: string]: number } = { };
 
   public max (state: GameState): number {
-    let max: number = this._baseMax;
+    let max: number = state.config.cfgStartingPlayerMax;
     max += state.getResource('tents').value * 2;
     max += state.getResource('house').value * 10;
     return max;
@@ -27,12 +26,12 @@ class PlayerOrg implements IResource {
     let inc = 0;
 
     // pastor recruiting
-    const pastors: number = state.getResource('pstor').value;
+    const pastors = state.getResource('pstor').value;
     inc += pastors * state.config.cfgPastorRecruitRate;
 
     // credibility adjustment
-    const creds: IResource = state.getResource('creds');
-    inc *= creds.value / creds.max(state);
+    const creds = state.getResource('creds');
+    if (creds.max !== null) inc *= creds.value / creds.max(state);
 
     return inc;
   }
@@ -46,10 +45,12 @@ class PlayerOrg implements IResource {
 
     // chance to fail increases as credibility decreases
     const creds: IResource = state.getResource('creds');
-    const ratio: number = Math.ceil(creds.value) / creds.max(state);
-    if (Math.random() > ratio) {
-      state.log('Your recruitment efforts failed.');
-      return;
+    if (creds.max !== null) {
+      const ratio: number = Math.ceil(creds.value) / creds.max(state);
+      if (Math.random() > ratio) {
+        state.log('Your recruitment efforts failed.');
+        return;
+      }
     }
 
     this._lastRecruitmentLog = 0; // always log on click
@@ -57,17 +58,17 @@ class PlayerOrg implements IResource {
   }
 
   public addValue (amount: number, state: GameState): void {
-    const oldValue: number = this.value;
+    const oldValue = this.value;
     this.value += amount;
-    const diff: number = Math.floor(this.value) - Math.floor(oldValue);
+    const diff = Math.floor(this.value) - Math.floor(oldValue);
 
     if (diff > 0) {
       // gained followers must come from other faiths
       for (let i = 0; i < diff; i++) {
-        const source: [string, IResource] = this._getRandomReligion(state);
+        const source = this._getRandomReligion(state);
         source[1].addValue(-1, state);
-        const curFollowers: number = this._followerSources[source[0]];
-        this._followerSources[source[0]] = curFollowers
+        const curFollowers = this._followerSources[source[0]];
+        this._followerSources[source[0]] = !isNaN(curFollowers)
           ? curFollowers + 1
           : 1;
       }
@@ -77,14 +78,14 @@ class PlayerOrg implements IResource {
         const dest: [string, IResource] = this._getRandomReligion(state);
         dest[1].addValue(1, state);
         const curFollowers: number = this._followerDests[dest[0]];
-        this._followerDests[dest[0]] = curFollowers
+        this._followerDests[dest[0]] = !isNaN(curFollowers)
           ? curFollowers + 1
           : 1;
       }
     }
   }
 
-  public isUnlocked (state: GameState): boolean {
+  public isUnlocked (_state: GameState): boolean {
     return true;
   }
 
@@ -93,11 +94,13 @@ class PlayerOrg implements IResource {
     this._timeSinceLastLost += time;
     if (this._timeSinceLastLost > 10000) {
       if (this.value > 0) {
-        const creds: IResource = state.getResource('creds');
-        const ratio: number = Math.ceil(creds.value) / creds.max(state);
-        if (Math.random() > ratio) {
-          const lost: number = Math.ceil(this.value / 25 * (1 - ratio));
-          this.addValue(lost * -1, state);
+        const creds = state.getResource('creds');
+        if (creds.max !== null) {
+          const ratio: number = Math.ceil(creds.value) / creds.max(state);
+          if (Math.random() > ratio) {
+            const lost: number = Math.ceil(this.value / 25 * (1 - ratio));
+            this.addValue(lost * -1, state);
+          }
         }
       }
       this._timeSinceLastLost = 0;
@@ -113,8 +116,7 @@ class PlayerOrg implements IResource {
         for (const rkey of Object.keys(this._followerDests)) {
           if (msg !== '') msg += ', ';
           const religion: IResource = state.getResource(rkey);
-          msg +=
-            `${state.formatNumber(this._followerDests[rkey])} to ${religion.name}`;
+          msg += `${state.formatNumber(this._followerDests[rkey])} to ${religion.name}`;
           total += this._followerDests[rkey];
           delete this._followerDests[rkey];
         }

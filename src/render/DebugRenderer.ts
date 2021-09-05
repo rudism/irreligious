@@ -1,38 +1,41 @@
 /// <reference path="../model/logging/DebugLogger.ts" />
 
-class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-eslint/no-unused-vars
+class DebugRenderer implements IRenderer {
   private _initialized = false;
   private _handleClick = true;
 
   public render (state: GameState): void {
     const rkeys: string[] = state.getResources();
+    const container = document.getElementById('irreligious-game');
     if (!this._initialized) {
-      const container: HTMLElement =
-        document.getElementById('irreligious-game');
+      if (container === null) {
+        console.error('could not find game container');
+        return;
+      }
       this._initialized = true;
       state.onResourceClick.push((): void => {
         this._handleClick = true;
       });
-      const style: HTMLElement = document.createElement('link');
+      const style = document.createElement('link');
       style.setAttribute('rel', 'stylesheet');
       style.setAttribute('href', 'css/debugger.css');
-      const head: HTMLElement = document.getElementsByTagName('head')[0];
+      const head = document.getElementsByTagName('head')[0];
       head.appendChild(style);
       // create resource area and logging area
-      const resDiv: HTMLElement = document.createElement('div');
+      const resDiv = document.createElement('div');
       resDiv.id = 'resource-section';
       container.appendChild(resDiv);
-      const logDiv: HTMLElement = document.createElement('div');
+      const logDiv = document.createElement('div');
       logDiv.id = 'logging-section';
       container.appendChild(logDiv);
-      const logContent: HTMLElement = document.createElement('div');
+      const logContent = document.createElement('div');
       logDiv.appendChild(logContent);
       state.logger = new DebugLogger(logContent);
       // create containers for each resource type
       for (const item in ResourceType) {
         if (isNaN(Number(item))) {
-          const el: HTMLElement = document.createElement('div');
-          el.id = `resource-container-${<string>ResourceType[item]}`;
+          const el = document.createElement('div');
+          el.id = `resource-container-${item.toString()}`;
           el.className = 'resource-type-container';
           resDiv.appendChild(el);
         }
@@ -40,23 +43,21 @@ class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-es
       // create containers for each resource
       for (const rkey of rkeys) {
         const resource: IResource = state.getResource(rkey);
-        const resContainer: HTMLElement =
-          document.getElementById(
-            `resource-container-${resource.resourceType}`);
-        const el: HTMLElement = document.createElement('div');
+        const resContainer = document.getElementById(
+          `resource-container-${resource.resourceType}`);
+        if (resContainer === null) continue;
+        const el = document.createElement('div');
         el.className = 'resource locked';
         el.id = `resource-details-${rkey}`;
         let content = `
           <span class='resource-title'
             title='${this._escape(resource.description)}'>
-            ${this._escape(resource.name
-              ? resource.name
-              : rkey)}</span><br>
+            ${this._escape(resource.name)}</span><br>
           <span class='resource-value'></span>
           <span class='resource-max'></span>
           <span class='resource-inc'></span>
         `;
-        if (resource.clickText !== null) {
+        if (resource.clickText !== null && resource.clickDescription !== null) {
           content += `<br>
             <button class='resource-btn'
               title='${this._escape(resource.clickDescription)}'>
@@ -71,31 +72,29 @@ class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-es
         if (resource.clickAction !== null) {
           const btn: Element =
             el.getElementsByClassName('resource-btn')[0];
-          btn.addEventListener('click', (): void =>
-            state.performClick(rkey));
+          btn.addEventListener('click', (): void => {
+            state.performClick(rkey);
+          });
         }
       }
       // create tools footer
-      const footer: HTMLElement = document.createElement('div');
+      const footer = document.createElement('div');
       footer.className = 'footer';
       footer.innerHTML = `
 <button id='dbg-btn-reset'>Reset Game</button>
       `;
       resDiv.appendChild(footer);
-      document.getElementById('dbg-btn-reset')
-        .addEventListener('click', (): void => {
+      document.getElementById('dbg-btn-reset')?.addEventListener('click',
+        (): void => {
           state.reset();
-          document.getElementById('irreligious-game').innerHTML = '';
+          container.innerHTML = '';
           this._initialized = false;
         });
     }
     for (const rkey of rkeys) {
       const resource: IResource = state.getResource(rkey);
-      const container: HTMLElement = document
-        .getElementById(`resource-container-${resource.resourceType}`);
-      const el: HTMLElement = document
-        .getElementById(`resource-details-${rkey}`);
-      if (resource.isUnlocked(state)) {
+      const el = document.getElementById(`resource-details-${rkey}`);
+      if (el !== null && resource.isUnlocked(state)) {
         if (el.className !== 'resource') el.className = 'resource';
         const elV: Element =
           el.getElementsByClassName('resource-value')[0];
@@ -106,15 +105,13 @@ class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-es
           : resource.value;
         elV.innerHTML = state.formatNumber(value);
         elT.innerHTML = resource.max !== null
-          && resource.max(state) !== null
           ? ` / ${state.formatNumber(resource.max(state))}`
           : '';
         const elB: HTMLCollectionOf<Element> =
           el.getElementsByClassName('resource-btn');
         if (elB.length > 0) {
           const enabled: boolean = state.isPurchasable(resource.cost)
-            && (resource.max(state) === null
-              || resource.value < resource.max(state));
+            && (resource.max === null || resource.value < resource.max(state));
           if (enabled) elB[0].removeAttribute('disabled');
           else elB[0].setAttribute('disabled', 'disabled');
         }
@@ -132,7 +129,7 @@ class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-es
           }
         }
       } else {
-        if (el.className !== 'resource locked')
+        if (el !== null && el.className !== 'resource locked')
           el.className = 'resource locked';
       }
     }
@@ -146,8 +143,8 @@ class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-es
       '>': '&gt;',
       '"': '&quot;',
       "'": '&#x27;',
-      '/': '&#x2F;'
-    }
+      '/': '&#x2F;',
+    };
     const escaper = /[&<>"'/]/g;
     return text.replace(escaper, (match: string): string =>
       escapes[match]);
@@ -155,8 +152,9 @@ class DebugRenderer implements IRenderer { // eslint-disable-line @typescript-es
 
   private _getCostStr (resource: IResource, state: GameState): string {
     let cost = '';
-    for (const rkey of state.getResources()) {
-      if (resource.cost[rkey] !== undefined) {
+    if (resource.cost !== null) {
+      for (const rkey of state.getResources()) {
+        if (isNaN(resource.cost[rkey])) continue;
         if (cost !== '') cost += ', ';
         if (rkey === 'money') {
           cost += `$${state.formatNumber(resource.cost[rkey])}`;

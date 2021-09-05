@@ -1,7 +1,7 @@
 /// <reference path="./IResource.ts" />
 
 class Religion implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.Religion;
+  public readonly resourceType: ResourceType = ResourceType.religion;
   public readonly valueInWholeNumbers: boolean = true;
   public readonly clickText: null = null;
   public readonly clickDescription: null = null;
@@ -18,11 +18,11 @@ class Religion implements IResource {
     public value: number,
   ) { }
 
-  public addValue (amount: number, state: GameState): void {
+  public addValue (amount: number, _state: GameState): void {
     this.value += amount;
   }
 
-  public isUnlocked (state: GameState): boolean {
+  public isUnlocked (_state: GameState): boolean {
     return true;
   }
 }

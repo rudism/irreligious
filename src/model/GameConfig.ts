@@ -25,15 +25,20 @@ class GameConfig {
   public relOtherShare = 0.02;
   public relNoneShare = 0.16;
 
+  public cfgStartingPlayerMax = 5;
+  public cfgStartingMoneyMax = 500000;
+  public cfgStartingTentMax = 5;
+  public cfgStartingCryptoMax = 1000;
+  public cfgStartingMegaChurchMax = 2;
+
   public cfgTitheAmount = 10;
   public cfgTimeBetweenTithes = 30000;
   public cfgCryptoReturnAmount = 1;
   public cfgCredibilityRestoreRate = 0.25;
-  public cfgPastorRecruitRate= 0.01;
+  public cfgPastorRecruitRate = 0.01;
 
   public generateState (): GameState {
-    const state: GameState = new GameState();
-    state.config = this;
+    const state: GameState = new GameState(this);
 
     // create player organization
     state.addResource('plorg', new PlayerOrg());

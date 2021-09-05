@@ -8,10 +8,8 @@ class Church extends Infrastructure {
     this._costMultiplier.money = 1.01;
   }
 
-  public max (state: GameState): number {
-    // one church per compound
-    return state.getResource('cmpnd').value;
-  }
+  public max: (state: GameState) => number = (state) =>
+    state.getResource('cmpnd').value;
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;

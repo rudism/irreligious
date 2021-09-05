@@ -1,3 +1,3 @@
 interface ILogger {
-  msg (text: string): void;
+  msg: (text: string) => void;
 }

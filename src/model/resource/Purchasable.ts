@@ -1,15 +1,17 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Purchasable implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.Consumable;
+  public readonly resourceType: ResourceType = ResourceType.consumable;
   public valueInWholeNumbers = true;
   public clickText = 'Purchase';
   public clickDescription = 'Purchase';
   public value = 0;
   public readonly cost: { [key: string]: number } = { };
 
+  public inc: ((state: GameState) => number) | null = null;
+  public max: ((_state: GameState) => number) | null = null;
+
   protected _costMultiplier: { [key: string]: number } = { };
-  protected _baseMax: number | null = null;
   protected _isUnlocked = false;
 
   constructor (
@@ -17,16 +19,9 @@ abstract class Purchasable implements IResource {
     public readonly description: string
   ) { }
 
-  public max (state: GameState): number | null {
-    return this._baseMax;
-  }
-
-  public inc (state: GameState): number | null {
-    return null;
-  }
 
   public clickAction (state: GameState): void {
-    if (this.max(state) !== null && this.value >= this.max(state)) return;
+    if (this.max !== null && this.value >= this.max(state)) return;
     if (state.deductCost(this.cost)) {
       const amount: number = this._purchaseAmount(state);
       if (amount > 0) {
@@ -39,7 +34,7 @@ abstract class Purchasable implements IResource {
     }
   }
 
-  public addValue (amount: number, state: GameState): void {
+  public addValue (amount: number, _state: GameState): void {
     this.value += amount;
   }
 

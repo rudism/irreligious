@@ -1,5 +1,5 @@
 /// <reference path="./Purchasable.ts" />
 
 abstract class Infrastructure extends Purchasable {
-  public readonly resourceType: ResourceType = ResourceType.Infrastructure;
+  public readonly resourceType: ResourceType = ResourceType.infrastructure;
 }

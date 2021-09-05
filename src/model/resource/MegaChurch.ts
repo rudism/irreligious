@@ -6,8 +6,10 @@ class MegaChurch extends Infrastructure {
       'Room for 5 pastors');
     this.cost.money = 7500000;
     this._costMultiplier.money = 1.01;
-    this._baseMax = 2;
   }
+
+  public max: (state: GameState) => number = (state) =>
+    state.config.cfgStartingMegaChurchMax;
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;

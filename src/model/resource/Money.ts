@@ -1,7 +1,7 @@
 /// <reference path="./Purchasable.ts" />
 
 class Money extends Purchasable {
-  public readonly resourceType: ResourceType = ResourceType.Consumable;
+  public readonly resourceType: ResourceType = ResourceType.consumable;
 
   private _lastCollectionTime = 0;
 
@@ -11,18 +11,17 @@ class Money extends Purchasable {
     super('Money', 'Used to purchase goods and services.');
     this.clickText = 'Collect Tithes';
     this.clickDescription = 'Voluntary contributions from followers.';
-    this._baseMax = 500000;
     this.valueInWholeNumbers = false;
     this._isUnlocked = true;
   }
 
-  public max (state: GameState): number | null {
-    let max: number = this._baseMax;
+  public max: (state: GameState) => number = (state: GameState) => {
+    let max: number = state.config.cfgStartingMoneyMax;
     max += state.getResource('cmpnd').value * 500000;
     return max;
-  }
+  };
 
-  public inc (state: GameState): number {
+  public inc: (state: GameState) => number = (state) => {
     let inc = 0;
 
     // crypto currency
@@ -30,7 +29,7 @@ class Money extends Purchasable {
       * state.config.cfgCryptoReturnAmount;
 
     return inc;
-  }
+  };
 
   protected _purchaseAmount (state: GameState): number {
     const plorg: IResource = state.getResource('plorg');

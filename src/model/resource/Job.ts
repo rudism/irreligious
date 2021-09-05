@@ -1,13 +1,15 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Job implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.Job;
+  public readonly resourceType: ResourceType = ResourceType.job;
   public readonly valueInWholeNumbers: boolean = true;
   public readonly clickText: string = 'Hire';
-  public readonly clickDescription: string =
-    'Promote one of your followers.';
+  public readonly clickDescription: string = 'Promote one of your followers.';
   public value = 0;
   public readonly cost: { [key: string]: number } = { };
+
+  public max: ((state: GameState) => number) | null = null;
+  public inc: ((state: GameState) => number) | null = null;
 
   protected _costMultiplier: { [key: string]: number } = { };
   protected _isUnlocked = false;
@@ -17,20 +19,14 @@ abstract class Job implements IResource {
     public readonly description: string
   ) { }
 
-  public max (state: GameState): number | null {
-    return null;
-  }
-
-  public inc (): number | null {
-    return null;
-  }
 
   public clickAction (state: GameState): void {
     if (this._availableJobs(state) <= 0) {
       state.log('You have no unemployed followers to promote.');
       return;
     }
-    if (this.value < this.max(state) && state.deductCost(this.cost)) {
+    if (this.max !== null && this.value < this.max(state)
+      && state.deductCost(this.cost)) {
       this.addValue(1);
       state.log(this._hireLog(1, state));
       for (const rkey of Object.keys(this._costMultiplier)) {
@@ -43,21 +39,21 @@ abstract class Job implements IResource {
     this.value += amount;
   }
 
-  public isUnlocked (state: GameState): boolean {
+  public isUnlocked (_state: GameState): boolean {
     return this._isUnlocked;
   }
 
-  public advanceAction (time: number, state: GameState): void {
+  public advanceAction (_time: number, _state: GameState): void {
     return;
   }
 
   protected _availableJobs (state: GameState): number {
     // number of followers minus the number of filled jobs
     const followers: number = state.getResource('plorg').value;
-    const hired: number = state.getResources()
-      .reduce((tot: number, rkey: string): number => {
+    const hired: number = state.getResources().reduce(
+      (tot: number, rkey: string): number => {
         const res: IResource = state.getResource(rkey);
-        return res.resourceType === ResourceType.Job
+        return res.resourceType === ResourceType.job
           ? tot + res.value
           : tot;
       }, 0);
@@ -66,7 +62,7 @@ abstract class Job implements IResource {
     return max;
   }
 
-  protected _hireLog (amount: number, state: GameState): string {
+  protected _hireLog (amount: number, _state: GameState): string {
     return `You hired ${amount} x ${this.name}.`;
   }
 }

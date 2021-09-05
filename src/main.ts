@@ -2,7 +2,7 @@
 /// <reference path="./render/DebugRenderer.ts" />
 
 let globalStartTime = 0;
-let globalTimeout: number = null;
+let globalTimeout: number | null = null;
 const cycleLength = 250;
 
 function gameLoop (state: GameState, renderer: IRenderer): void {
@@ -15,8 +15,9 @@ function gameLoop (state: GameState, renderer: IRenderer): void {
 
   // run again in 1sec
   globalStartTime = new Date().getTime();
-  globalTimeout = setTimeout((): void =>
-    gameLoop(state, renderer), cycleLength);
+  globalTimeout = setTimeout((): void => {
+    gameLoop(state, renderer);
+  }, cycleLength);
 }
 
 function startGame (state: GameState, renderer: IRenderer): void {
@@ -47,6 +48,7 @@ function startGame (state: GameState, renderer: IRenderer): void {
   });
 
   if (document.readyState !== 'loading') startGame(state, renderer);
-  else document.addEventListener('DOMContentLoaded', (): void =>
-    startGame(state, renderer));
+  else document.addEventListener('DOMContentLoaded', (): void => {
+    startGame(state, renderer);
+  });
 })();

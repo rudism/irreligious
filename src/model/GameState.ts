@@ -1,20 +1,25 @@
 class GameState {
+  public readonly config: GameConfig;
+
+  public onResourceClick: Array<() => void> = [];
+  public logger: ILogger | null = null;
+  public numberFormatDigits = 1;
+
+  public now = 0;
+
   private readonly _versionMaj: number = 0;
   private readonly _versionMin: number = 1;
-
-  public config: GameConfig;
 
   private _timeSinceSave = 0;
   private readonly _timeBetweenSaves: number = 10000;
 
-  private _resources: {[key: string]: IResource} = { };
-  private _resourceKeys: string[] = [];
+  private _resources: { [key: string]: IResource } = { };
+  private readonly _resourceKeys: string[] = [];
 
-  public onResourceClick: Array<() => void> = [];
-  public logger: ILogger = null;
-  public numberFormatDigits = 1;
 
-  public now = 0;
+  constructor (config: GameConfig) {
+    this.config = config;
+  }
 
   public addResource (key: string, resource: IResource): void {
     this._resourceKeys.push(key);
@@ -32,32 +37,29 @@ class GameState {
 
     // advance each resource
     for (const rkey of this._resourceKeys) {
-      if (this._resources[rkey].isUnlocked(this)
-        && this._resources[rkey].advanceAction !== null) {
-        this._resources[rkey].advanceAction(time, this);
+      const resource = this._resources[rkey];
+      if (this._resources[rkey].isUnlocked(this)) {
+        if (resource.advanceAction !== null)
+          resource.advanceAction(time, this);
       }
     }
 
     // perform auto increments
     for (const rkey of this._resourceKeys) {
-      if (!this._resources[rkey].isUnlocked(this)) continue;
+      const resource = this._resources[rkey];
+      if (!resource.isUnlocked(this)) continue;
 
-      const max: number = this._resources[rkey].max
-        ? this._resources[rkey].max(this)
-        : null;
-      const inc: number = this._resources[rkey].inc
-        ? this._resources[rkey].inc(this)
-        : 0;
-      if (inc > 0 && (max === null
-        || this._resources[rkey].value < max)) {
-        this._resources[rkey].addValue(inc * time / 1000, this);
+      if (resource.inc !== null && (resource.max === null
+        || this._resources[rkey].value < resource.max(this))) {
+        this._resources[rkey].addValue(resource.inc(this) * time / 1000, this);
       }
-      const val: number = this._resources[rkey].value;
-      if (max !== null && val > max) {
-        this._resources[rkey].addValue((val - max) * -1, this);
+
+      if (resource.max !== null && resource.value > resource.max(this)) {
+        this._resources[rkey].addValue(
+          (resource.value - resource.max(this)) * -1, this);
       }
-      if (val < 0) {
-        this._resources[rkey].addValue(val * -1, this);
+      if (resource.value < 0) {
+        this._resources[rkey].addValue(resource.value * -1, this);
       }
     }
   }
@@ -71,18 +73,19 @@ class GameState {
   }
 
   public performClick (resourceKey: string): void {
-    if (!this._resources[resourceKey].isUnlocked(this)) return;
+    const resource = this._resources[resourceKey];
+    if (!resource.isUnlocked(this)) return;
 
-    if (this._resources[resourceKey].clickAction !== null) {
-      this._resources[resourceKey].clickAction(this);
+    if (resource.clickAction !== null) {
+      resource.clickAction(this);
       for (const callback of this.onResourceClick) {
         callback();
       }
     }
   }
 
-  public deductCost (cost: { [rkey: string]: number }): boolean {
-    if (cost === null || Object.keys(cost) === null) return true;
+  public deductCost (cost: { [rkey: string]: number } | null): boolean {
+    if (cost === null) return true;
     if (!this.isPurchasable(cost)) return false;
     for (const rkey of Object.keys(cost)) {
       this._resources[rkey].addValue(cost[rkey] * -1, this);
@@ -90,8 +93,8 @@ class GameState {
     return true;
   }
 
-  public isPurchasable (cost: { [rkey: string]: number }): boolean {
-    if (cost === null || Object.keys(cost) === null) return true;
+  public isPurchasable (cost: { [rkey: string]: number } | null): boolean {
+    if (cost === null) return true;
     for (const rkey of Object.keys(cost)) {
       if (this._resources[rkey].value < cost[rkey]) {
         return false;
@@ -101,24 +104,24 @@ class GameState {
   }
 
   public formatNumber (num: number): string {
-    type vlookup = { value: number, symbol: string };
-    const lookup: vlookup[] = [
+    type UnitLookup = { value: number, symbol: string };
+    const lookup: UnitLookup[] = [
       { value: 1, symbol: '' },
       { value: 1e3, symbol: 'K' },
       { value: 1e6, symbol: 'M' },
       { value: 1e9, symbol: 'G' },
       { value: 1e12, symbol: 'T' },
       { value: 1e15, symbol: 'P' },
-      { value: 1e18, symbol: 'E' }
+      { value: 1e18, symbol: 'E' },
     ];
     const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    let item: vlookup;
+    let item: UnitLookup | undefined;
     for (item of lookup.slice().reverse()) {
       if (num >= item.value) break;
     }
-    return item
-      ? (num / item.value).toFixed(this.numberFormatDigits)
-        .replace(rx, '$1') + item.symbol
+    return item !== undefined
+      ? (num / item.value).toFixed(
+        this.numberFormatDigits).replace(rx, '$1') + item.symbol
       : num.toFixed(this.numberFormatDigits).replace(rx, '$1');
   }
 
@@ -129,15 +132,15 @@ class GameState {
   }
 
   public save (): void {
-    const saveObj: any = { };
+    const saveObj: SaveData = {};
     saveObj.version = {
       maj: this._versionMaj,
-      min: this._versionMin
+      min: this._versionMin,
     };
     for (const rkey of this._resourceKeys) {
       saveObj[rkey] = {
         value: this._resources[rkey].value,
-        cost: this._resources[rkey].cost
+        cost: this._resources[rkey].cost,
       };
     }
     const saveStr: string = btoa(JSON.stringify(saveObj));
@@ -145,33 +148,32 @@ class GameState {
   }
 
   public load (): void {
-    const saveStr: string = localStorage.getItem('savegame');
+    const saveStr: string | null = localStorage.getItem('savegame');
     if (saveStr !== null) {
       try {
-        const saveObj: { [key: string]: any } =
-          JSON.parse(atob(saveStr));
-        if (this._versionMaj === saveObj.version.maj) {
+        const saveObj: SaveData = <SaveData>JSON.parse(atob(saveStr));
+        if (this._versionMaj === saveObj.version?.maj) {
           for (const rkey of this._resourceKeys) {
-            if (saveObj[rkey] !== undefined
-              && saveObj[rkey].value !== undefined
-              && saveObj[rkey].cost !== undefined) {
-              // @ts-ignore
-              this._resources[rkey].value = saveObj[rkey].value;
-              // @ts-ignore
-              this._resources[rkey].cost = saveObj[rkey].cost;
+            const saveRes = <{
+              value: number;
+              cost: { [key: string]: number } | null;
+            } | undefined> saveObj[rkey];
+            if (saveRes !== undefined) {
+              // @ts-expect-error writing read-only value from save data
+              this._resources[rkey].value = saveRes.value;
+              // @ts-expect-error writing read-only cost from save data
+              this._resources[rkey].cost = saveRes.cost ?? null;
             }
           }
         } else {
           // tslint:disable-next-line
           console.log('The saved game is too old to load.');
         }
-      } catch (e) {
-        // tslint:disable-next-line
+      } catch (e: unknown) {
         console.log('There was an error loading the saved game.');
-        console.log(e); // tslint:disable-line
+        console.log(e);
       }
     } else {
-      // tslint:disable-next-line
       console.log('No save game was found.');
     }
   }
@@ -183,3 +185,11 @@ class GameState {
     this.log('Reset all game resources.');
   }
 }
+
+type SaveData = {
+  [key: string]: {
+    value: number;
+    cost: { [key: string]: number } | null;
+  } | { maj: number, min: number } | undefined;
+  version?: { maj: number, min: number };
+};

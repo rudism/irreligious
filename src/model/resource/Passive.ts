@@ -1,7 +1,7 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Passive implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.Passive;
+  public readonly resourceType: ResourceType = ResourceType.passive;
   public readonly valueInWholeNumbers: boolean = false;
   public readonly clickText: null = null;
   public readonly clickDescription: null = null;
@@ -10,31 +10,22 @@ abstract class Passive implements IResource {
 
   public readonly clickAction: null = null;
 
-  protected _baseMax: number | null;
-  protected _baseInc: number | null;
+  public max: ((state: GameState) => number) | null = null;
+  public inc: ((state: GameState) => number) | null = null;
+  public advanceAction: ((time: number, state: GameState) => void) | null = null;
 
   constructor (
     public readonly name: string,
     public readonly description: string
   ) { }
 
-  public max (state: GameState): number | null {
-    return this._baseMax;
-  }
 
-  public inc (state: GameState): number | null {
-    return this._baseInc;
-  }
-
-  public addValue (amount: number, state: GameState): void {
+  public addValue (amount: number, _state: GameState): void {
     this.value += amount;
   }
 
-  public isUnlocked (state: GameState): boolean {
+  public isUnlocked (_state: GameState): boolean {
     return true;
   }
 
-  public advanceAction (time: number, state: GameState): void {
-    return;
-  }
 }

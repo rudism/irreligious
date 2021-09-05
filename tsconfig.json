@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "noImplicitAny": false,
     "rootDir": "./src/",
     "outFile": "./public/js/irreligious.js",
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictPropertyInitialization": true,
     "target": "ES5",
     "module": "none",
     "plugins": [{"name": "typescript-eslint-language-service"}]

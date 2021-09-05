@@ -1,7 +1,7 @@
 /// <reference path="./Purchasable.ts" />
 
 abstract class Research extends Purchasable {
-  public readonly resourceType: ResourceType = ResourceType.Research;
+  public readonly resourceType: ResourceType = ResourceType.research;
 
   constructor (
     public readonly name: string,
@@ -9,8 +9,9 @@ abstract class Research extends Purchasable {
   ) {
     super(name, description);
     this.value = 0;
-    this._baseMax = 1;
     this.clickText = 'Learn';
-    this.clickDescription = 'Complete this research.'
+    this.clickDescription = 'Complete this research.';
   }
+
+  public max: (_state: GameState) => number = (_state) => 1;
 }

@@ -1,5 +1,5 @@
 class DebugLogger implements ILogger {
-  private _container: HTMLElement;
+  private readonly _container: HTMLElement;
 
   constructor (container: HTMLElement) {
     this._container = container;
@@ -9,7 +9,9 @@ class DebugLogger implements ILogger {
     const p: HTMLElement = document.createElement('p');
     p.innerText = text;
     this._container.appendChild(p);
-    this._container.parentElement.scrollTop =
-      this._container.parentElement.scrollHeight;
+    if (this._container.parentElement !== null) {
+      this._container.parentElement.scrollTop =
+        this._container.parentElement.scrollHeight;
+    }
   }
 }

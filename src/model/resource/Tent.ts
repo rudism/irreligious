@@ -6,13 +6,12 @@ class Tent extends Infrastructure {
       'Provides room to house 2 followers.');
     this.cost.money = 250;
     this._costMultiplier.money = 1.05;
-    this._baseMax = 5;
   }
 
-  public max (state: GameState): number {
+  public max: (state: GameState) => number = (state) => {
     // ten extra tents per compound
-    let max: number = this._baseMax;
+    let max: number = state.config.cfgStartingTentMax;
     max += state.getResource('cmpnd').value * 10;
     return max;
-  }
+  };
 }

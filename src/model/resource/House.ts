@@ -8,10 +8,9 @@ class House extends Infrastructure {
     this._costMultiplier.money = 1.01;
   }
 
-  public max (state: GameState): number {
-    // two houses per compound
-    return state.getResource('cmpnd').value * 2;
-  }
+  // two houses per compound
+  public max: (state: GameState) => number = (state) =>
+    state.getResource('cmpnd').value * 2;
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
