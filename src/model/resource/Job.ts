@@ -51,10 +51,10 @@ abstract class Job implements IResource {
 
   protected _availableJobs (state: GameState): number {
     // number of followers minus the number of filled jobs
-    const followers = state.getResource(ResourceKey.playerOrg)?.value ?? 0;
-    const hired = state.getResources().reduce(
+    const followers = state.resource.playerOrg?.value ?? 0;
+    const hired = state.resources.reduce(
       (tot: number, rkey: ResourceKey): number => {
-        const res = state.getResource(rkey);
+        const res = state.resource[rkey];
         return res?.resourceType === ResourceType.job
           ? tot + res.value
           : tot;

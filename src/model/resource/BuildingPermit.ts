@@ -9,8 +9,8 @@ class BuildingPermit extends Research {
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    const compounds = state.getResource(ResourceKey.compounds);
-    if (compounds !== null && compounds.value > 0) {
+    const compounds = state.resource.compounds;
+    if (compounds !== undefined && compounds.value > 0) {
       this._isUnlocked = true;
     }
     return this._isUnlocked;

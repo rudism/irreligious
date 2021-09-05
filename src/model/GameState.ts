@@ -15,9 +15,16 @@ class GameState {
   private _resources: { [key in ResourceKey]?: IResource } = { };
   private readonly _resourceKeys: ResourceKey[] = [];
 
-
   constructor (config: GameConfig) {
     this.config = config;
+  }
+
+  public get resource (): { [key in ResourceKey]?: IResource } {
+    return this._resources;
+  }
+
+  public get resources (): ResourceKey[] {
+    return this._resourceKeys;
   }
 
   public addResource (key: ResourceKey, resource: IResource): void {
@@ -60,15 +67,6 @@ class GameState {
         resource.addValue(resource.value * -1, this);
       }
     }
-  }
-
-  public getResources (): ResourceKey[] {
-    return this._resourceKeys;
-  }
-
-  public getResource (key: ResourceKey): IResource | null {
-    const resource = this._resources[key];
-    return resource !== undefined ? resource : null;
   }
 
   public performClick (resourceKey: ResourceKey): void {

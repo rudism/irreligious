@@ -10,8 +10,8 @@ class Compound extends Infrastructure {
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    const tents = state.getResource(ResourceKey.tents);
-    if (tents !== null && tents.value >= state.config.cfgTentStartingMax) {
+    const tents = state.resource.tents;
+    if (tents !== undefined && tents.value >= state.config.cfgTentStartingMax) {
       this._isUnlocked = true;
     }
     return this._isUnlocked;

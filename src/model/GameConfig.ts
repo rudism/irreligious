@@ -33,15 +33,17 @@ class GameConfig {
   public cfgCredibilityFollowerLossTime = 10000;
   public cfgCredibilityRestoreRate = 0.25;
 
+  public cfgPastorRecruitRate = 0.01;
+  public cfgPastorTitheCollectionFollowerMax = 100;
+  public cfgPastorSalary = 7.5;
+
   public cfgFollowerGainLossLogTimer = 10000;
   public cfgFollowerStartingMax = 5;
-  public cfgPastorRecruitRate = 0.01;
 
   public cfgTimeBetweenTithes = 30000;
   public cfgTitheAmount = 10;
   public cfgCryptoReturnAmount = 1;
   public cfgMoneyStartingMax = 500000;
-  public cfgPastorTitheCollectionFollowerMax = 100;
 
   public cfgBuildingPermitCost = 250000;
 
@@ -113,7 +115,7 @@ class GameConfig {
 
     // add resources
     state.addResource(ResourceKey.money, new Money(3.50));
-    state.addResource(ResourceKey.faithCoin, new CryptoCurrency(this));
+    state.addResource(ResourceKey.cryptoCurrency, new CryptoCurrency(this));
     state.addResource(ResourceKey.tents, new Tent(this));
     state.addResource(ResourceKey.houses, new House(this));
     state.addResource(ResourceKey.churches, new Church(this));

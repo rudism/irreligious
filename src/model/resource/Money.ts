@@ -17,7 +17,7 @@ class Money extends Purchasable {
 
   public max: (state: GameState) => number = (state: GameState) => {
     let max = state.config.cfgMoneyStartingMax;
-    max += (state.getResource(ResourceKey.compounds)?.value ?? 0)
+    max += (state.resource.compounds?.value ?? 0)
       * state.config.cfgCompoundMoneyCapacity;
     return max;
   };
@@ -26,24 +26,22 @@ class Money extends Purchasable {
     let inc = 0;
 
     // crypto currency
-    inc += (state.getResource(ResourceKey.faithCoin)?.value ?? 0)
+    inc += (state.resource.cryptoCurrency?.value ?? 0)
       * state.config.cfgCryptoReturnAmount;
-
-    // TODO: job salaries
 
     return inc;
   };
 
   protected _purchaseAmount (state: GameState): number {
-    const plorg = state.getResource(ResourceKey.playerOrg);
-    if (plorg === null || plorg.value === 0) {
+    const plorg = state.resource.playerOrg;
+    if (plorg === undefined || plorg.value === 0) {
       state.log('You have no followers to collect from!');
       return 0;
     }
     const diff = state.now - this._lastCollectionTime;
     if (diff < state.config.cfgTimeBetweenTithes) {
       const lost = state.config.cfgTimeBetweenTithes / diff / 3;
-      state.getResource(ResourceKey.credibility)?.addValue(lost * -1, state);
+      state.resource.credibility?.addValue(lost * -1, state);
     }
     const tithings = plorg.value * state.config.cfgTitheAmount;
     this._lastCollectionTime = state.now;
@@ -51,7 +49,7 @@ class Money extends Purchasable {
   }
 
   protected _purchaseLog (amount: number, state: GameState): string {
-    const followers = state.getResource(ResourceKey.playerOrg)?.value ?? 0;
+    const followers = state.resource.playerOrg?.value ?? 0;
     return `You collected $${state.config.formatNumber(amount)} from ${state.config.formatNumber(followers)} followers.`;
   }
 }

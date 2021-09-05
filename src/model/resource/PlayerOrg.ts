@@ -17,9 +17,9 @@ class PlayerOrg implements IResource {
 
   public max (state: GameState): number {
     let max = state.config.cfgFollowerStartingMax;
-    max += (state.getResource(ResourceKey.tents)?.value ?? 0)
+    max += (state.resource.tents?.value ?? 0)
       * state.config.cfgTentFollowerCapacity;
-    max += (state.getResource(ResourceKey.houses)?.value ?? 0)
+    max += (state.resource.houses?.value ?? 0)
       * state.config.cfgHouseFollowerCapacity;
     return max;
   }
@@ -28,11 +28,11 @@ class PlayerOrg implements IResource {
     let inc = 0;
 
     // pastor recruiting
-    const pastors = state.getResource(ResourceKey.pastors)?.value ?? 0;
+    const pastors = state.resource.pastors?.value ?? 0;
     inc += pastors * state.config.cfgPastorRecruitRate;
 
     // credibility adjustment
-    const creds = state.getResource(ResourceKey.credibility);
+    const creds = state.resource.credibility;
     if (creds?.max !== null) inc *=
         (creds?.value ?? 0) / (creds?.max(state) ?? state.config.cfgPassiveMax);
 
@@ -47,7 +47,7 @@ class PlayerOrg implements IResource {
     }
 
     // chance to fail increases as credibility decreases
-    const creds = state.getResource(ResourceKey.credibility);
+    const creds = state.resource.credibility;
     if (creds?.max !== null) {
       const ratio = Math.ceil(creds?.value ?? 0) / (creds?.max(state)
         ?? state.config.cfgPassiveMax);
@@ -98,7 +98,7 @@ class PlayerOrg implements IResource {
     this._timeSinceLastLost += time;
     if (this._timeSinceLastLost > state.config.cfgCredibilityFollowerLossTime) {
       if (this.value > 0) {
-        const creds = state.getResource(ResourceKey.credibility);
+        const creds = state.resource.credibility;
         if (creds?.max !== null) {
           const ratio =
             Math.ceil(creds?.value ?? 0) / (creds?.max(state)
@@ -124,9 +124,9 @@ class PlayerOrg implements IResource {
         let total = 0;
         for (const key in this._followerDests) {
           const rkey = <ResourceKey>key;
-          const religion = state.getResource(rkey);
+          const religion = state.resource[rkey];
           const followers = this._followerDests[rkey];
-          if (religion !== null && followers !== undefined) {
+          if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
             msg += `${state.config.formatNumber(followers)} to ${religion.name}`;
             total += followers;
@@ -140,9 +140,9 @@ class PlayerOrg implements IResource {
         let total = 0;
         for (const key in this._followerSources) {
           const rkey = <ResourceKey>key;
-          const religion = state.getResource(rkey);
+          const religion = state.resource[rkey];
           const followers = this._followerSources[rkey];
-          if (religion !== null && followers !== undefined) {
+          if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
             msg +=
               `${state.config.formatNumber(followers)} from ${religion.name}`;
@@ -162,7 +162,7 @@ class PlayerOrg implements IResource {
       ResourceKey.hinduism, ResourceKey.buddhism, ResourceKey.sikhism,
       ResourceKey.judaism, ResourceKey.other, ResourceKey.atheism];
     const source = religs[Math.floor(Math.random() * 8)];
-    const resource = state.getResource(source);
-    return resource !== null ? [source, resource] : null;
+    const resource = state.resource[source];
+    return resource !== undefined ? [source, resource] : null;
   }
 }

@@ -5,7 +5,7 @@ class DebugRenderer implements IRenderer {
   private _handleClick = true;
 
   public render (state: GameState): void {
-    const rkeys = state.getResources();
+    const rkeys = state.resources;
     const container = document.getElementById('irreligious-game');
     if (!this._initialized) {
       if (container === null) {
@@ -42,8 +42,8 @@ class DebugRenderer implements IRenderer {
       }
       // create containers for each resource
       for (const rkey of rkeys) {
-        const resource = state.getResource(rkey);
-        if (resource === null) continue;
+        const resource = state.resource[rkey];
+        if (resource === undefined) continue;
         const resContainer = document.getElementById(
           `resource-container-${resource.resourceType}`);
         if (resContainer === null) continue;
@@ -92,8 +92,8 @@ class DebugRenderer implements IRenderer {
         });
     }
     for (const rkey of rkeys) {
-      const resource = state.getResource(rkey);
-      if (resource === null) continue;
+      const resource = state.resource[rkey];
+      if (resource === undefined) continue;
       const el = document.getElementById(`resource-details-${rkey}`);
       if (el !== null && resource.isUnlocked(state)) {
         if (el.className !== 'resource') el.className = 'resource';
@@ -148,14 +148,14 @@ class DebugRenderer implements IRenderer {
 
   private _getCostStr (resource: IResource, state: GameState): string {
     let cost = '';
-    for (const rkey of state.getResources()) {
+    for (const rkey of state.resources) {
       if (resource.cost?.[rkey] !== undefined) {
         if (cost !== '') cost += ', ';
         if (rkey === ResourceKey.money) {
           cost += `$${state.config.formatNumber(resource.cost[rkey] ?? 0)}`;
         } else {
           cost += `${state.config.formatNumber(resource.cost[rkey] ?? 0)}
-            ${state.getResource(rkey)?.name ?? rkey}`;
+            ${state.resource[rkey]?.name ?? rkey}`;
         }
       }
     }
