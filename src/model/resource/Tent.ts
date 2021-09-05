@@ -1,17 +1,18 @@
 /// <reference path="./Infrastructure.ts" />
 
 class Tent extends Infrastructure {
-  constructor () {
+  constructor (config: GameConfig) {
     super('Tents',
-      'Provides room to house 2 followers.');
-    this.cost.money = 250;
-    this._costMultiplier.money = 1.05;
+      `Provides room to house ${config.formatNumber(config.cfgTentFollowerCapacity)} followers.`);
+    this.cost.money = config.cfgTentStartingCost;
+    this._costMultiplier.money = config.cfgTentCostMultiplier;
   }
 
   public max: (state: GameState) => number = (state) => {
     // ten extra tents per compound
-    let max = state.config.cfgStartingTentMax;
-    max += state.getResource('cmpnd').value * 10;
+    let max = state.config.cfgTentStartingMax;
+    max += (state.getResource(ResourceKey.compounds)?.value ?? 0)
+      * state.config.cfgCompoundTentCapacity;
     return max;
   };
 }

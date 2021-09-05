@@ -7,6 +7,28 @@ enum ResourceType {
   passive = 'passive',
 }
 
+enum ResourceKey {
+  playerOrg = 'plorg',
+  christianity = 'xtian',
+  islam = 'islam',
+  hinduism = 'hindu',
+  buddhism = 'buddh',
+  sikhism = 'sikhi',
+  judaism = 'judah',
+  other = 'other',
+  atheism = 'agnos',
+  pastors = 'pstor',
+  money = 'money',
+  faithCoin = 'crpto',
+  tents = 'tents',
+  houses = 'houses',
+  churches = 'chrch',
+  compounds = 'cmpnd',
+  buildingPermit = 'blpmt',
+  megaChurches = 'mchch',
+  credibility = 'creds',
+}
+
 interface IResource {
   readonly resourceType: ResourceType;
   readonly name: string;
@@ -17,7 +39,7 @@ interface IResource {
   // readonly altClickText?: string;
   // readonly altClickDescription?: string;
   readonly value: number;
-  readonly cost: { [key: string]: number } | null;
+  readonly cost: { [key in ResourceKey]?: number } | null;
 
   max: ((state: GameState) => number) | null;
   inc: ((state: GameState) => number) | null;

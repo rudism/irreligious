@@ -1,16 +1,16 @@
 /// <reference path="./Research.ts" />
 
 class BuildingPermit extends Research {
-  constructor () {
+  constructor (config: GameConfig) {
     super('Building Permit',
       'Unlocks several new buildings you can build outside of your compounds.');
-    this.cost.money = 250000;
+    this.cost.money = config.cfgBuildingPermitCost;
   }
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    const compounds = state.getResource('cmpnd');
-    if (compounds.value > 0) {
+    const compounds = state.getResource(ResourceKey.compounds);
+    if (compounds !== null && compounds.value > 0) {
       this._isUnlocked = true;
     }
     return this._isUnlocked;

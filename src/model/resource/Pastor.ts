@@ -9,32 +9,36 @@ class Pastor extends Job {
   }
 
   public max: (state: GameState) => number = (state) => {
-    let max = state.getResource('chrch').value * 2;
-    max += state.getResource('mchch').value * 5;
+    let max = (state.getResource(ResourceKey.churches)?.value ?? 0)
+      * state.config.cfgChurchPastorCapacity;
+    max += (state.getResource(ResourceKey.megaChurches)?.value ?? 0)
+      * state.config.cfgMegaChurchPastorCapacity;
     return max;
   };
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
-    this._isUnlocked = state.getResource('chrch').isUnlocked(state);
+    this._isUnlocked = state.getResource(
+      ResourceKey.churches)?.isUnlocked(state) === true;
     return this._isUnlocked;
   }
 
   public advanceAction (time: number, state: GameState): void {
     this._timeSinceLastTithe += time;
     if (this._timeSinceLastTithe >= state.config.cfgTimeBetweenTithes) {
-      const money = state.getResource('money');
-      const plorg = state.getResource('plorg');
-      // each pastor can collect from up to 100 followers
-      let tithed = this.value * 100;
-      if (Math.floor(plorg.value) < tithed)
-        tithed = Math.floor(plorg.value);
+      const money = state.getResource(ResourceKey.money);
+      const plorg = state.getResource(ResourceKey.playerOrg);
+      let tithed = this.value
+        * state.config.cfgPastorTitheCollectionFollowerMax;
+      if (Math.floor(plorg?.value ?? 0) < tithed)
+        tithed = Math.floor(plorg?.value ?? 0);
       let collected = tithed * state.config.cfgTitheAmount;
-      if (money.max !== null && collected > money.max(state) - money.value)
-        collected = money.max(state) - money.value;
+      if (money?.max !== null
+        && collected > (money?.max(state) ?? 0) - (money?.value ?? 0))
+        collected = (money?.max(state) ?? 0) - (money?.value ?? 0);
       if (collected > 0) {
-        money.addValue(collected, state);
-        state.log(`Your pastors collected $${state.formatNumber(collected)} in tithings from ${state.formatNumber(tithed)} followers.`);
+        money?.addValue(collected, state);
+        state.log(`Your pastors collected $${state.config.formatNumber(collected)} in tithings from ${state.config.formatNumber(tithed)} followers.`);
       }
       this._timeSinceLastTithe = 0;
     }

@@ -6,12 +6,12 @@ abstract class Job implements IResource {
   public readonly clickText = 'Hire';
   public readonly clickDescription = 'Promote one of your followers.';
   public value = 0;
-  public readonly cost: { [key: string]: number } = { };
+  public readonly cost: { [key in ResourceKey]?: number } = { };
 
   public max: ((state: GameState) => number) | null = null;
   public inc: ((state: GameState) => number) | null = null;
 
-  protected _costMultiplier: { [key: string]: number } = { };
+  protected _costMultiplier: { [key in ResourceKey]?: number } = { };
   protected _isUnlocked = false;
 
   constructor (
@@ -29,8 +29,10 @@ abstract class Job implements IResource {
       && state.deductCost(this.cost)) {
       this.addValue(1);
       state.log(this._hireLog(1, state));
-      for (const rkey of Object.keys(this._costMultiplier)) {
-        this.cost[rkey] *= this._costMultiplier[rkey];
+      for (const key in this._costMultiplier) {
+        const rkey = <ResourceKey>key;
+        this.cost[rkey] =
+          (this.cost[rkey] ?? 0) * (this._costMultiplier[rkey] ?? 1);
       }
     }
   }
@@ -49,11 +51,11 @@ abstract class Job implements IResource {
 
   protected _availableJobs (state: GameState): number {
     // number of followers minus the number of filled jobs
-    const followers = state.getResource('plorg').value;
+    const followers = state.getResource(ResourceKey.playerOrg)?.value ?? 0;
     const hired = state.getResources().reduce(
-      (tot: number, rkey: string): number => {
+      (tot: number, rkey: ResourceKey): number => {
         const res = state.getResource(rkey);
-        return res.resourceType === ResourceType.job
+        return res?.resourceType === ResourceType.job
           ? tot + res.value
           : tot;
       }, 0);

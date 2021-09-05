@@ -1,14 +1,14 @@
 /// <reference path="./Purchasable.ts" />
 
 class CryptoCurrency extends Purchasable {
-  constructor () {
+  constructor (config: GameConfig) {
     super('Faithcoin',
       "A crypto coin that can't be spent directly, but provides a steady stream of passive income.");
-    this.cost.money = 100;
-    this._costMultiplier.money = 1.1;
+    this.cost.money = config.cfgCryptoStartingCost;
+    this._costMultiplier.money = config.cfgCryptoCostMultiplier;
     this.valueInWholeNumbers = false;
   }
 
   public max: (state: GameState) => number = (state) =>
-    state.config.cfgStartingCryptoMax;
+    state.config.cfgCryptoStartingMax;
 }

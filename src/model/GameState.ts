@@ -3,7 +3,6 @@ class GameState {
 
   public onResourceClick: Array<() => void> = [];
   public logger: ILogger | null = null;
-  public numberFormatDigits = 1;
 
   public now = 0;
 
@@ -13,15 +12,15 @@ class GameState {
   private _timeSinceSave = 0;
   private readonly _timeBetweenSaves = 10000;
 
-  private _resources: { [key: string]: IResource } = { };
-  private readonly _resourceKeys: string[] = [];
+  private _resources: { [key in ResourceKey]?: IResource } = { };
+  private readonly _resourceKeys: ResourceKey[] = [];
 
 
   constructor (config: GameConfig) {
     this.config = config;
   }
 
-  public addResource (key: string, resource: IResource): void {
+  public addResource (key: ResourceKey, resource: IResource): void {
     this._resourceKeys.push(key);
     this._resources[key] = resource;
   }
@@ -38,7 +37,7 @@ class GameState {
     // advance each resource
     for (const rkey of this._resourceKeys) {
       const resource = this._resources[rkey];
-      if (this._resources[rkey].isUnlocked(this)) {
+      if (resource?.isUnlocked(this) === true) {
         if (resource.advanceAction !== null)
           resource.advanceAction(time, this);
       }
@@ -47,34 +46,34 @@ class GameState {
     // perform auto increments
     for (const rkey of this._resourceKeys) {
       const resource = this._resources[rkey];
-      if (!resource.isUnlocked(this)) continue;
+      if (resource === undefined || !resource.isUnlocked(this)) continue;
 
       if (resource.inc !== null && (resource.max === null
-        || this._resources[rkey].value < resource.max(this))) {
-        this._resources[rkey].addValue(resource.inc(this) * time / 1000, this);
+        || resource.value < resource.max(this))) {
+        resource.addValue(resource.inc(this) * time / 1000, this);
       }
 
       if (resource.max !== null && resource.value > resource.max(this)) {
-        this._resources[rkey].addValue(
-          (resource.value - resource.max(this)) * -1, this);
+        resource.addValue((resource.value - resource.max(this)) * -1, this);
       }
       if (resource.value < 0) {
-        this._resources[rkey].addValue(resource.value * -1, this);
+        resource.addValue(resource.value * -1, this);
       }
     }
   }
 
-  public getResources (): string[] {
+  public getResources (): ResourceKey[] {
     return this._resourceKeys;
   }
 
-  public getResource (key: string): IResource {
-    return this._resources[key];
+  public getResource (key: ResourceKey): IResource | null {
+    const resource = this._resources[key];
+    return resource !== undefined ? resource : null;
   }
 
-  public performClick (resourceKey: string): void {
+  public performClick (resourceKey: ResourceKey): void {
     const resource = this._resources[resourceKey];
-    if (!resource.isUnlocked(this)) return;
+    if (resource === undefined || !resource.isUnlocked(this)) return;
 
     if (resource.clickAction !== null) {
       resource.clickAction(this);
@@ -84,45 +83,29 @@ class GameState {
     }
   }
 
-  public deductCost (cost: { [rkey: string]: number } | null): boolean {
+  public deductCost (cost: { [key in ResourceKey]?: number } | null): boolean {
     if (cost === null) return true;
     if (!this.isPurchasable(cost)) return false;
-    for (const rkey of Object.keys(cost)) {
-      this._resources[rkey].addValue(cost[rkey] * -1, this);
+    for (const key in cost) {
+      const rkey = <ResourceKey>key;
+      const resource = this._resources[rkey];
+      const resCost = cost[rkey];
+      if (resource === undefined || resCost === undefined) continue;
+      resource.addValue(resCost * -1, this);
     }
     return true;
   }
 
-  public isPurchasable (cost: { [rkey: string]: number } | null): boolean {
+  public isPurchasable (
+    cost: { [key in ResourceKey]?: number } | null): boolean {
     if (cost === null) return true;
-    for (const rkey of Object.keys(cost)) {
-      if (this._resources[rkey].value < cost[rkey]) {
+    for (const key in cost) {
+      const rkey = <ResourceKey>key;
+      if ((this._resources[rkey]?.value ?? 0) < (cost[rkey] ?? 0)) {
         return false;
       }
     }
     return true;
-  }
-
-  public formatNumber (num: number): string {
-    type UnitLookup = { value: number, symbol: string };
-    const lookup: UnitLookup[] = [
-      { value: 1, symbol: '' },
-      { value: 1e3, symbol: 'K' },
-      { value: 1e6, symbol: 'M' },
-      { value: 1e9, symbol: 'G' },
-      { value: 1e12, symbol: 'T' },
-      { value: 1e15, symbol: 'P' },
-      { value: 1e18, symbol: 'E' },
-    ];
-    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    let item: UnitLookup | undefined;
-    for (item of lookup.slice().reverse()) {
-      if (num >= item.value) break;
-    }
-    return item !== undefined
-      ? (num / item.value).toFixed(
-        this.numberFormatDigits).replace(rx, '$1') + item.symbol
-      : num.toFixed(this.numberFormatDigits).replace(rx, '$1');
   }
 
   public log (text: string): void {
@@ -137,10 +120,11 @@ class GameState {
       maj: this._versionMaj,
       min: this._versionMin,
     };
-    for (const rkey of this._resourceKeys) {
+    for (const key in this._resources) {
+      const rkey = <ResourceKey>key;
       saveObj[rkey] = {
-        value: this._resources[rkey].value,
-        cost: this._resources[rkey].cost,
+        value: this._resources[rkey]?.value ?? 0,
+        cost: this._resources[rkey]?.cost ?? null,
       };
     }
     const saveStr: string = btoa(JSON.stringify(saveObj));
@@ -153,11 +137,12 @@ class GameState {
       try {
         const saveObj: SaveData = <SaveData>JSON.parse(atob(saveStr));
         if (this._versionMaj === saveObj.version?.maj) {
-          for (const rkey of this._resourceKeys) {
+          for (const key in this._resources) {
+            const rkey = <ResourceKey>key;
             const saveRes = <{
               value: number;
               cost: { [key: string]: number } | null;
-            } | undefined> saveObj[rkey];
+            } | undefined> saveObj[key];
             if (saveRes !== undefined) {
               // @ts-expect-error writing read-only value from save data
               this._resources[rkey].value = saveRes.value;

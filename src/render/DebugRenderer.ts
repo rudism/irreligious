@@ -5,7 +5,7 @@ class DebugRenderer implements IRenderer {
   private _handleClick = true;
 
   public render (state: GameState): void {
-    const rkeys: string[] = state.getResources();
+    const rkeys = state.getResources();
     const container = document.getElementById('irreligious-game');
     if (!this._initialized) {
       if (container === null) {
@@ -42,7 +42,8 @@ class DebugRenderer implements IRenderer {
       }
       // create containers for each resource
       for (const rkey of rkeys) {
-        const resource: IResource = state.getResource(rkey);
+        const resource = state.getResource(rkey);
+        if (resource === null) continue;
         const resContainer = document.getElementById(
           `resource-container-${resource.resourceType}`);
         if (resContainer === null) continue;
@@ -70,8 +71,7 @@ class DebugRenderer implements IRenderer {
         el.innerHTML = content;
         resContainer.appendChild(el);
         if (resource.clickAction !== null) {
-          const btn: Element =
-            el.getElementsByClassName('resource-btn')[0];
+          const btn = el.getElementsByClassName('resource-btn')[0];
           btn.addEventListener('click', (): void => {
             state.performClick(rkey);
           });
@@ -92,38 +92,34 @@ class DebugRenderer implements IRenderer {
         });
     }
     for (const rkey of rkeys) {
-      const resource: IResource = state.getResource(rkey);
+      const resource = state.getResource(rkey);
+      if (resource === null) continue;
       const el = document.getElementById(`resource-details-${rkey}`);
       if (el !== null && resource.isUnlocked(state)) {
         if (el.className !== 'resource') el.className = 'resource';
-        const elV: Element =
-          el.getElementsByClassName('resource-value')[0];
-        const elT: Element =
-          el.getElementsByClassName('resource-max')[0];
-        const value: number = resource.valueInWholeNumbers
+        const elV = el.getElementsByClassName('resource-value')[0];
+        const elT = el.getElementsByClassName('resource-max')[0];
+        const value = resource.valueInWholeNumbers
           ? Math.floor(resource.value)
           : resource.value;
-        elV.innerHTML = state.formatNumber(value);
+        elV.innerHTML = state.config.formatNumber(value);
         elT.innerHTML = resource.max !== null
-          ? ` / ${state.formatNumber(resource.max(state))}`
+          ? ` / ${state.config.formatNumber(resource.max(state))}`
           : '';
-        const elB: HTMLCollectionOf<Element> =
-          el.getElementsByClassName('resource-btn');
+        const elB = el.getElementsByClassName('resource-btn');
         if (elB.length > 0) {
-          const enabled: boolean = state.isPurchasable(resource.cost)
+          const enabled = state.isPurchasable(resource.cost)
             && (resource.max === null || resource.value < resource.max(state));
           if (enabled) elB[0].removeAttribute('disabled');
           else elB[0].setAttribute('disabled', 'disabled');
         }
         if (resource.inc !== null && resource.inc(state) > 0) {
-          const elI: Element =
-            el.getElementsByClassName('resource-inc')[0];
+          const elI = el.getElementsByClassName('resource-inc')[0];
           elI.innerHTML =
-            ` +${state.formatNumber(resource.inc(state))}/s`;
+            ` +${state.config.formatNumber(resource.inc(state))}/s`;
         }
         if (this._handleClick) {
-          const elC: HTMLCollectionOf<Element> =
-            el.getElementsByClassName('resource-cost');
+          const elC = el.getElementsByClassName('resource-cost');
           if (elC.length > 0) {
             elC[0].innerHTML = this._getCostStr(resource, state);
           }
@@ -152,15 +148,14 @@ class DebugRenderer implements IRenderer {
 
   private _getCostStr (resource: IResource, state: GameState): string {
     let cost = '';
-    if (resource.cost !== null) {
-      for (const rkey of state.getResources()) {
-        if (isNaN(resource.cost[rkey])) continue;
+    for (const rkey of state.getResources()) {
+      if (resource.cost?.[rkey] !== undefined) {
         if (cost !== '') cost += ', ';
-        if (rkey === 'money') {
-          cost += `$${state.formatNumber(resource.cost[rkey])}`;
+        if (rkey === ResourceKey.money) {
+          cost += `$${state.config.formatNumber(resource.cost[rkey] ?? 0)}`;
         } else {
-          cost += `${state.formatNumber(resource.cost[rkey])}
-            ${state.getResource(rkey).name}`;
+          cost += `${state.config.formatNumber(resource.cost[rkey] ?? 0)}
+            ${state.getResource(rkey)?.name ?? rkey}`;
         }
       }
     }

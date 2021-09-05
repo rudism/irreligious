@@ -6,12 +6,12 @@ abstract class Purchasable implements IResource {
   public clickText = 'Purchase';
   public clickDescription = 'Purchase';
   public value = 0;
-  public readonly cost: { [key: string]: number } = { };
+  public readonly cost: { [key in ResourceKey]?: number } = { };
 
   public inc: ((state: GameState) => number) | null = null;
   public max: ((_state: GameState) => number) | null = null;
 
-  protected _costMultiplier: { [key: string]: number } = { };
+  protected _costMultiplier: { [key in ResourceKey]?: number } = { };
   protected _isUnlocked = false;
 
   constructor (
@@ -27,8 +27,10 @@ abstract class Purchasable implements IResource {
       if (amount > 0) {
         this.value += amount;
         state.log(this._purchaseLog(amount, state));
-        for (const rkey of Object.keys(this._costMultiplier)) {
-          this.cost[rkey] *= this._costMultiplier[rkey];
+        for (const key in this._costMultiplier) {
+          const rkey = <ResourceKey>key;
+          this.cost[rkey] =
+            (this.cost[rkey] ?? 0) * (this._costMultiplier[rkey] ?? 1);
         }
       }
     }
