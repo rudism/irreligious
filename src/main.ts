@@ -8,13 +8,13 @@ const cycleLength = 250;
 function gameLoop (state: GameState, renderer: IRenderer): void {
   // figure out how much actual time has passed
   const elapsedTime: number = globalStartTime > 0
-    ? (new Date()).getTime() - globalStartTime : 0;
+    ? new Date().getTime() - globalStartTime : 0;
 
   state.advance(elapsedTime);
   renderer.render(state);
 
   // run again in 1sec
-  globalStartTime = (new Date()).getTime();
+  globalStartTime = new Date().getTime();
   globalTimeout = setTimeout((): void =>
     gameLoop(state, renderer), cycleLength);
 }

@@ -22,7 +22,7 @@ class GameState {
   }
 
   public advance (time: number): void {
-    this.now = (new Date()).getTime();
+    this.now = new Date().getTime();
 
     this._timeSinceSave += time;
     if (this._timeSinceSave >= this._timeBetweenSaves) {

@@ -15,6 +15,7 @@ class Pastor extends Job {
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
     this._isUnlocked = state.getResource('chrch').isUnlocked(state);
+    return this._isUnlocked;
   }
 
   public advanceAction (time: number, state: GameState): void {
