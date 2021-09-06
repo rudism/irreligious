@@ -1,3 +1,5 @@
+/// <reference path="./Utils.ts" />
+
 class GameState {
   public readonly config: GameConfig;
 
@@ -69,15 +71,17 @@ class GameState {
     }
   }
 
-  public performClick (resourceKey: ResourceKey): void {
+  public performAction (resourceKey: ResourceKey, actionIndex: number): void {
     const resource = this._resources[resourceKey];
-    if (resource === undefined || !resource.isUnlocked(this)) return;
+    if (resource === undefined || resource.userActions === undefined
+      || actionIndex > resource.userActions.length
+      || !resource.isUnlocked(this)) return;
 
-    if (resource.clickAction !== undefined) {
-      resource.clickAction(this);
-      for (const callback of this.onResourceClick) {
-        callback();
-      }
+    const action = resource.userActions[actionIndex];
+
+    action.performAction(this);
+    for (const callback of this.onResourceClick) {
+      callback();
     }
   }
 

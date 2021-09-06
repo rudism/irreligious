@@ -3,7 +3,8 @@
 class Credibility extends Passive {
   constructor (config: GameConfig) {
     super(
-      'Credibility',
+      'credibility',
+      'credibilities',
       'Affects your ability to recruit and retain followers.');
     this.value = config.cfgPassiveMax;
   }

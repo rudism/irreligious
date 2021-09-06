@@ -1,9 +1,11 @@
 /// <reference path="./Infrastructure.ts" />
 
-class MegaChurch extends Infrastructure {
+class Megachurch extends Infrastructure {
   constructor (config: GameConfig) {
-    super('MegaChurches',
-      `Room for ${config.formatNumber(config.cfgCapacity.megaChurches?.pastors ?? 0)} pastors`);
+    super(
+      'megachurch',
+      'megachurches',
+      `Room for ${formatNumber(config.cfgCapacity.megaChurches?.pastors ?? 0)} pastors`);
     this.cost.money = config.cfgInitialCost.megaChurches;
     this._costMultiplier.money = config.cfgCostMultiplier.megaChurches;
   }

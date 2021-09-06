@@ -4,27 +4,28 @@
 /// <reference path="./resource/Compound.ts" />
 /// <reference path="./resource/Credibility.ts" />
 /// <reference path="./resource/CryptoCurrency.ts" />
+/// <reference path="./resource/Follower.ts" />
 /// <reference path="./resource/House.ts" />
-/// <reference path="./resource/MegaChurch.ts" />
+/// <reference path="./resource/Megachurch.ts" />
 /// <reference path="./resource/Money.ts" />
 /// <reference path="./resource/Pastor.ts" />
-/// <reference path="./resource/PlayerOrg.ts" />
 /// <reference path="./resource/Religion.ts" />
 /// <reference path="./resource/Tent.ts" />
 
 class GameConfig {
   public worldPopulation = 790000000;
-  public numberFormatDigits = 1;
 
   // religion configs
-  public relChristianitySharer = 0.325;
-  public relIslamShare = 0.215;
-  public relHinduismShare = 0.16;
-  public relBuddhismShare = 0.06;
-  public relSikhismShare = 0.04;
-  public relJudaismShare = 0.02;
-  public relOtherShare = 0.02;
-  public relNoneShare = 0.16;
+  public cfgReligion: ResourceNumber = {
+    christianity: 0.325,
+    islam: 0.215,
+    hinduism: 0.16,
+    buddhism: 0.06,
+    sikhism: 0.04,
+    judaism: 0.02,
+    other: 0.02,
+    atheism: 0.16,
+  };
 
   // general configs
   public cfgInitialMax: ResourceNumber = {
@@ -81,40 +82,40 @@ class GameConfig {
     const state = new GameState(this);
 
     // create player organization
-    state.addResource(ResourceKey.playerOrg, new PlayerOrg());
+    state.addResource(ResourceKey.playerOrg, new Follower());
 
     // create world religions
     state.addResource(ResourceKey.christianity, new Religion(
-      'Christianity', 'God, Jesus, Bible, churches.',
-      this.relChristianitySharer * this.worldPopulation));
+      'christian', 'christians', 'God, Jesus, Bible, churches.',
+      (this.cfgReligion.christianity ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.islam, new Religion(
-      'Islam', 'God, Muhammad, Quran, mosques.',
-      this.relIslamShare * this.worldPopulation));
+      'muslim', 'muslims', 'God, Muhammad, Quran, mosques.',
+      (this.cfgReligion.islam ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.hinduism, new Religion(
-      'Hinduism', 'Dogma-free spiritualism.',
-      this.relHinduismShare * this.worldPopulation));
+      'hindu', 'hindus', 'Dogma-free spiritualism.',
+      (this.cfgReligion.hinduism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.buddhism, new Religion(
-      'Buddhism', 'The minimization of suffering.',
-      this.relBuddhismShare * this.worldPopulation));
+      'buddhist', 'buddhists', 'The minimization of suffering.',
+      (this.cfgReligion.buddhism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.sikhism, new Religion(
-      'Sikhism', 'Meditation and ten Gurus',
-      this.relSikhismShare * this.worldPopulation));
+      'sikh', 'sikhs', 'Meditation and ten Gurus',
+      (this.cfgReligion.sikhism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.judaism, new Religion(
-      'Judaism', 'God, Abraham, Torah, synagogues.',
-      this.relJudaismShare * this.worldPopulation));
+      'jew', 'jews', 'God, Abraham, Torah, synagogues.',
+      (this.cfgReligion.judaism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.other, new Religion(
-      'Other', 'A variety of belief systems.',
-      this.relOtherShare * this.worldPopulation));
+      'other', 'others', 'A variety of belief systems.',
+      (this.cfgReligion.other ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.atheism, new Religion(
-      'Non-Religious', 'Atheists and agnostics.',
-      this.relNoneShare * this.worldPopulation));
+      'atheist', 'atheists', 'Atheists and agnostics.',
+      (this.cfgReligion.atheism ?? 0) * this.worldPopulation));
 
     // add jobs
     state.addResource(ResourceKey.pastors, new Pastor());
@@ -126,7 +127,7 @@ class GameConfig {
     state.addResource(ResourceKey.houses, new House(this));
     state.addResource(ResourceKey.churches, new Church(this));
     state.addResource(ResourceKey.compounds, new Compound(this));
-    state.addResource(ResourceKey.megaChurches, new MegaChurch(this));
+    state.addResource(ResourceKey.megaChurches, new Megachurch(this));
 
     // add research
     state.addResource(ResourceKey.buildingPermit, new BuildingPermit(this));
@@ -135,27 +136,5 @@ class GameConfig {
     state.addResource(ResourceKey.credibility, new Credibility(this));
 
     return state;
-  }
-
-  public formatNumber (num: number): string {
-    type UnitLookup = { value: number, symbol: string };
-    const lookup: UnitLookup[] = [
-      { value: 1, symbol: '' },
-      { value: 1e3, symbol: 'K' },
-      { value: 1e6, symbol: 'M' },
-      { value: 1e9, symbol: 'G' },
-      { value: 1e12, symbol: 'T' },
-      { value: 1e15, symbol: 'P' },
-      { value: 1e18, symbol: 'E' },
-    ];
-    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    let item: UnitLookup | undefined;
-    for (item of lookup.slice().reverse()) {
-      if (num >= item.value) break;
-    }
-    return item !== undefined
-      ? (num / item.value).toFixed(
-        this.numberFormatDigits).replace(rx, '$1') + item.symbol
-      : num.toFixed(this.numberFormatDigits).replace(rx, '$1');
   }
 }

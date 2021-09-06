@@ -5,7 +5,8 @@ class Religion implements IResource {
   public readonly valueInWholeNumbers = true;
 
   constructor (
-    public readonly name: string,
+    public readonly singularName: string,
+    public readonly pluralName: string,
     public readonly description: string,
     public value: number,
   ) { }

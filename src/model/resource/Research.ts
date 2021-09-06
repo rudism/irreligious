@@ -5,13 +5,17 @@ abstract class Research extends Purchasable {
   public inc = undefined;
 
   constructor (
-    public readonly name: string,
+    public readonly singularName: string,
+    public readonly pluralName: string,
     public readonly description: string
   ) {
-    super(name, description);
+    super(
+      singularName,
+      pluralName,
+      description,
+      'Learn',
+      'Complete this research.');
     this.value = 0;
-    this.clickText = 'Learn';
-    this.clickDescription = 'Complete this research.';
   }
 
   public max: (state: GameState) => number = (_state) => 1;

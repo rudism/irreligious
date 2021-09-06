@@ -1,13 +1,23 @@
 /// <reference path="./IResource.ts" />
 
-class PlayerOrg implements IResource {
+class Follower implements IResource {
   public readonly resourceType = ResourceType.religion;
-  public readonly name = 'Player';
+  public readonly singularName = 'follower';
+  public readonly pluralName = 'followers';
   public readonly description = 'In you they trust.';
   public readonly valueInWholeNumbers = true;
-  public readonly clickText = 'Recruit';
-  public readonly clickDescription = 'Gather new followers.';
   public value = 0;
+
+  public userActions: ResourceAction[] = [
+    {
+      name: 'Recruit',
+      description: 'Gather new followers.',
+      isEnabled: (state: GameState): boolean => this.value < this.max(state),
+      performAction: (state: GameState): void => {
+        this._recruitFollower(state);
+      },
+    },
+  ];
 
   private _timeSinceLastLost = 0;
   private _lastRecruitmentLog = 0;
@@ -35,27 +45,6 @@ class PlayerOrg implements IResource {
     if (creds?.max !== undefined) inc *= creds.value / creds.max(state);
 
     return inc;
-  }
-
-  public clickAction (state: GameState): void {
-    // don't exceed max
-    if (this.value >= this.max(state)) {
-      state.log('You have no room for more followers.');
-      return;
-    }
-
-    // chance to fail increases as credibility decreases
-    const creds = state.resource.credibility;
-    if (creds?.max !== undefined) {
-      const ratio = Math.ceil(creds.value) / creds.max(state);
-      if (Math.random() > ratio) {
-        state.log('Your recruitment efforts failed.');
-        return;
-      }
-    }
-
-    this._lastRecruitmentLog = 0; // always log on click
-    this.addValue(1, state);
   }
 
   public addValue (amount: number, state: GameState): void {
@@ -124,12 +113,12 @@ class PlayerOrg implements IResource {
           const followers = this._followerDests[rkey];
           if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
-            msg += `${state.config.formatNumber(followers)} to ${religion.name}`;
+            msg += `${formatNumber(followers)} to ${religion.pluralName}`;
             total += followers;
             delete this._followerDests[rkey];
           }
         }
-        state.log(`You lost ${state.config.formatNumber(total)} followers: ${msg}`);
+        state.log(`You lost ${formatNumber(total)} followers: ${msg}`);
       }
       if (Object.keys(this._followerSources).length > 0) {
         let msg = '';
@@ -141,15 +130,36 @@ class PlayerOrg implements IResource {
           if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
             msg +=
-              `${state.config.formatNumber(followers)} from ${religion.name}`;
+              `${formatNumber(followers)} from ${religion.pluralName}`;
             total += followers;
             delete this._followerSources[rkey];
           }
         }
-        state.log(`You gained ${state.config.formatNumber(total)} followers: ${msg}`);
+        state.log(`You gained ${formatNumber(total)} followers: ${msg}`);
       }
       this._lastRecruitmentLog = state.now;
     }
+  }
+
+  private _recruitFollower (state: GameState): void {
+    // don't exceed max
+    if (this.value >= this.max(state)) {
+      state.log('You have no room for more followers.');
+      return;
+    }
+
+    // chance to fail increases as credibility decreases
+    const creds = state.resource.credibility;
+    if (creds?.max !== undefined) {
+      const ratio = Math.ceil(creds.value) / creds.max(state);
+      if (Math.random() > ratio) {
+        state.log('Your recruitment efforts failed.');
+        return;
+      }
+    }
+
+    this._lastRecruitmentLog = 0; // always log on click
+    this.addValue(1, state);
   }
 
   private _getRandomReligion (

@@ -53,17 +53,21 @@ class DebugRenderer implements IRenderer {
         let content = `
           <span class='resource-title'
             title='${this._escape(resource.description)}'>
-            ${this._escape(resource.name)}</span><br>
+            ${this._escape(resource.pluralName)}</span><br>
           <span class='resource-value'></span>
           <span class='resource-max'></span>
           <span class='resource-inc'></span>
         `;
-        if (resource.clickText !== undefined
-          && resource.clickDescription !== undefined) {
-          content += `<br>
-            <button class='resource-btn'
-              title='${this._escape(resource.clickDescription)}'>
-              ${this._escape(resource.clickText)}</button>`;
+        if (resource.userActions !== undefined) {
+          content += '<br>';
+          for (let i = 0; i < resource.userActions.length; i++) {
+            const action = resource.userActions[i];
+            content += `<button
+              id='resource-btn-${rkey}-${i}'
+              class='resource-btn'
+              title='${this._escape(action.description)}'>
+              ${this._escape(action.name)}</button>`;
+          }
         }
         if (resource.cost !== undefined
           && Object.keys(resource.cost).length !== 0) {
@@ -71,11 +75,14 @@ class DebugRenderer implements IRenderer {
         }
         el.innerHTML = content;
         resContainer.appendChild(el);
-        if (resource.clickAction !== undefined) {
-          const btn = el.getElementsByClassName('resource-btn')[0];
-          btn.addEventListener('click', (): void => {
-            state.performClick(rkey);
-          });
+        if (resource.userActions !== undefined) {
+          for (let i = 0; i < resource.userActions.length; i++) {
+            const action = resource.userActions[i];
+            const btn = document.getElementById(`resource-btn-${rkey}-${i}`);
+            btn?.addEventListener('click', (): void => {
+              state.performAction(rkey, i);
+            });
+          }
         }
       }
       // create tools footer
@@ -103,22 +110,25 @@ class DebugRenderer implements IRenderer {
         const value = resource.valueInWholeNumbers
           ? Math.floor(resource.value)
           : resource.value;
-        elV.innerHTML = state.config.formatNumber(value);
+        elV.innerHTML = formatNumber(value);
         elT.innerHTML = resource.max !== undefined
-          ? ` / ${state.config.formatNumber(resource.max(state))}`
+          ? ` / ${formatNumber(resource.max(state))}`
           : '';
-        const elB = el.getElementsByClassName('resource-btn');
-        if (elB.length > 0) {
-          const enabled = state.isPurchasable(resource.cost)
-            && (resource.max === undefined
-            || resource.value < resource.max(state));
-          if (enabled) elB[0].removeAttribute('disabled');
-          else elB[0].setAttribute('disabled', 'disabled');
+        if (resource.userActions !== undefined) {
+          for (let i = 0; i < resource.userActions.length; i++) {
+            const elB = document.getElementById(`resource-btn-${rkey}-${i}`);
+            if (elB === null) continue;
+            if (resource.userActions[i].isEnabled(state)) {
+              elB.removeAttribute('disabled');
+            } else {
+              elB.setAttribute('disabled', 'disabled');
+            }
+          }
         }
         if (resource.inc !== undefined && resource.inc(state) > 0) {
           const elI = el.getElementsByClassName('resource-inc')[0];
           elI.innerHTML =
-            ` +${state.config.formatNumber(resource.inc(state))}/s`;
+            ` +${formatNumber(resource.inc(state))}/s`;
         }
         if (this._handleClick) {
           const elC = el.getElementsByClassName('resource-cost');
@@ -154,10 +164,10 @@ class DebugRenderer implements IRenderer {
       if (resource.cost?.[rkey] !== undefined) {
         if (cost !== '') cost += ', ';
         if (rkey === ResourceKey.money) {
-          cost += `$${state.config.formatNumber(resource.cost[rkey] ?? 0)}`;
+          cost += `$${formatNumber(resource.cost[rkey] ?? 0)}`;
         } else {
-          cost += `${state.config.formatNumber(resource.cost[rkey] ?? 0)}
-            ${state.resource[rkey]?.name ?? rkey}`;
+          cost += `${formatNumber(resource.cost[rkey] ?? 0)}
+            ${state.resource[rkey]?.pluralName ?? rkey}`;
         }
       }
     }

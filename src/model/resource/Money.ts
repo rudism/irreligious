@@ -8,9 +8,12 @@ class Money extends Purchasable {
   constructor (
     public value: number
   ) {
-    super('Money', 'Used to purchase goods and services.');
-    this.clickText = 'Collect Tithes';
-    this.clickDescription = 'Voluntary contributions from followers.';
+    super(
+      'money',
+      'moneys',
+      'Used to purchase goods and services.',
+      'Collect Tithes',
+      'Voluntary contributions from followers.');
     this.valueInWholeNumbers = false;
     this._isUnlocked = true;
   }
@@ -54,6 +57,6 @@ class Money extends Purchasable {
 
   protected _purchaseLog (amount: number, state: GameState): string {
     const followers = state.resource.playerOrg?.value ?? 0;
-    return `You collected $${state.config.formatNumber(amount)} from ${state.config.formatNumber(followers)} followers.`;
+    return `You collected $${formatNumber(amount)} from ${formatNumber(followers)} followers.`;
   }
 }

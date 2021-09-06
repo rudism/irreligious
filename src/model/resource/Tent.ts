@@ -2,8 +2,10 @@
 
 class Tent extends Infrastructure {
   constructor (config: GameConfig) {
-    super('Tents',
-      `Provides room to house ${config.formatNumber(config.cfgCapacity.tents?.playerOrg ?? 0)} followers.`);
+    super(
+      'tent',
+      'tents',
+      `Provides room to house ${formatNumber(config.cfgCapacity.tents?.playerOrg ?? 0)} followers.`);
     this.cost.money = config.cfgInitialCost.tents;
     this._costMultiplier.money = config.cfgCostMultiplier.tents;
   }

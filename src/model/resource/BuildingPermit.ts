@@ -2,7 +2,9 @@
 
 class BuildingPermit extends Research {
   constructor (config: GameConfig) {
-    super('Building Permit',
+    super(
+      'building permit',
+      'building permits',
       'Unlocks several new buildings you can build outside of your compounds.');
     this.cost.money = config.cfgInitialMax.buildingPermit;
   }

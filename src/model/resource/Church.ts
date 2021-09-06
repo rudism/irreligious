@@ -2,8 +2,10 @@
 
 class Church extends Infrastructure {
   constructor (config: GameConfig) {
-    super('Churches',
-      `Preaching grounds for ${config.formatNumber(config.cfgCapacity.churches?.pastors ?? 0)} pastors.`);
+    super(
+      'church',
+      'churches',
+      `Preaching grounds for ${formatNumber(config.cfgCapacity.churches?.pastors ?? 0)} pastors.`);
     this.cost.money = config.cfgInitialCost.churches;
     this._costMultiplier.money = config.cfgCostMultiplier.churches;
   }

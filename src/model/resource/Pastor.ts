@@ -4,7 +4,9 @@ class Pastor extends Job {
   private _timeSinceLastTithe = 0;
 
   constructor () {
-    super('Pastors',
+    super(
+      'pastor',
+      'pastors',
       'Collect tithings for you and recruit new members from other faiths automatically.');
   }
 
@@ -38,7 +40,7 @@ class Pastor extends Job {
         collected = money.max(state) - money.value;
       if (collected > 0) {
         money?.addValue(collected, state);
-        state.log(`Your pastors collected $${state.config.formatNumber(collected)} in tithings from ${state.config.formatNumber(tithed)} followers.`);
+        state.log(`Your pastors collected $${formatNumber(collected)} in tithings from ${formatNumber(tithed)} followers.`);
       }
       this._timeSinceLastTithe = 0;
     }
