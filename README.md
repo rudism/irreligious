@@ -19,3 +19,10 @@ npm install
 npm run build
 firefox public/index.html
 ```
+
+## Development Philosophy
+
+- Keep it client-side&mdash;it runs in a web browser, even offline.
+- Keep it lean&mdash;no third-party libraries of any kind.
+- Keep it clean with strict typescript rules and linting.
+- Compile to a single file&mdash;no module loaders or other fancy schmancy nonsense of that sort.
