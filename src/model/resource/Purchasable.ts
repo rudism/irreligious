@@ -53,7 +53,7 @@ abstract class Purchasable implements IResource {
   }
 
   protected _purchaseLog (amount: number, _state: GameState): string {
-    return `You purchased ${amount} x ${this.pluralName}.`;
+    return `You purchased ${amount} ${amount > 1 ? this.pluralName : this.singularName}.`;
   }
 
   private _purchase (state: GameState): void {

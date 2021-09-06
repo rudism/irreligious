@@ -40,7 +40,7 @@ class Money extends Purchasable {
   };
 
   protected _purchaseAmount (state: GameState): number {
-    const plorg = state.resource.playerOrg;
+    const plorg = state.resource.followers;
     if (plorg === undefined || plorg.value === 0) {
       state.log('You have no followers to collect from!');
       return 0;
@@ -56,7 +56,10 @@ class Money extends Purchasable {
   }
 
   protected _purchaseLog (amount: number, state: GameState): string {
-    const followers = state.resource.playerOrg?.value ?? 0;
-    return `You collected $${formatNumber(amount)} from ${formatNumber(followers)} followers.`;
+    const followers = state.resource.followers;
+    if (followers !== undefined) {
+      return `You collected $${formatNumber(amount)} from ${formatNumber(followers.value)} ${followers.value > 1 ? followers.pluralName : followers.singularName}.`;
+    }
+    return `You collected $${formatNumber(amount)} in tithings.`;
   }
 }

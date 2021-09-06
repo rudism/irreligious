@@ -29,18 +29,20 @@ class Pastor extends Job {
     this._timeSinceLastTithe += time;
     if (this._timeSinceLastTithe >= state.config.cfgTimeBetweenTithes) {
       const money = state.resource.money;
-      const plorg = state.resource.playerOrg;
+      const followers = state.resource.followers;
       let tithed = Math.floor(this.value
         * state.config.cfgPastorTitheCollectionFollowerMax);
-      if (Math.floor(plorg?.value ?? 0) < tithed)
-        tithed = Math.floor(plorg?.value ?? 0);
+      if (Math.floor(followers?.value ?? 0) < tithed)
+        tithed = Math.floor(followers?.value ?? 0);
       let collected = tithed * state.config.cfgTitheAmount;
       if (money?.max !== undefined
         && collected > money.max(state) - money.value)
         collected = money.max(state) - money.value;
       if (collected > 0) {
         money?.addValue(collected, state);
-        state.log(`Your pastors collected $${formatNumber(collected)} in tithings from ${formatNumber(tithed)} followers.`);
+        if (followers !== undefined) {
+          state.log(`Your pastors collected $${formatNumber(collected)} in tithings from ${formatNumber(tithed)} ${tithed > 1 ? followers.pluralName : followers.singularName}.`);
+        }
       }
       this._timeSinceLastTithe = 0;
     }

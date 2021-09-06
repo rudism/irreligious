@@ -5,7 +5,7 @@ class House extends Infrastructure {
     super(
       'house',
       'houses',
-      `Provides room to house ${formatNumber(config.cfgCapacity.houses?.playerOrg ?? 0)} followers.`);
+      `Provides room to house ${formatNumber(config.cfgCapacity.houses?.followers ?? 0)} followers.`);
     this.cost.money = config.cfgInitialCost.houses;
     this._costMultiplier.money = config.cfgCostMultiplier.houses;
   }

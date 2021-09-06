@@ -5,7 +5,7 @@ class Tent extends Infrastructure {
     super(
       'tent',
       'tents',
-      `Provides room to house ${formatNumber(config.cfgCapacity.tents?.playerOrg ?? 0)} followers.`);
+      `Provides room to house ${formatNumber(config.cfgCapacity.tents?.followers ?? 0)} followers.`);
     this.cost.money = config.cfgInitialCost.tents;
     this._costMultiplier.money = config.cfgCostMultiplier.tents;
   }

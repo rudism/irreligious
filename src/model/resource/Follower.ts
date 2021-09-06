@@ -25,11 +25,11 @@ class Follower implements IResource {
   private _followerDests: ResourceNumber = { };
 
   public max (state: GameState): number {
-    let max = state.config.cfgInitialMax.playerOrg ?? 0;
+    let max = state.config.cfgInitialMax.followers ?? 0;
     max += (state.resource.tents?.value ?? 0)
-      * (state.config.cfgCapacity.tents?.playerOrg ?? 0);
+      * (state.config.cfgCapacity.tents?.followers ?? 0);
     max += (state.resource.houses?.value ?? 0)
-      * (state.config.cfgCapacity.houses?.playerOrg ?? 0);
+      * (state.config.cfgCapacity.houses?.followers ?? 0);
     return max;
   }
 
@@ -113,12 +113,12 @@ class Follower implements IResource {
           const followers = this._followerDests[rkey];
           if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
-            msg += `${formatNumber(followers)} to ${religion.pluralName}`;
+            msg += `${formatNumber(followers)} ${followers > 1 ? religion.pluralName : religion.singularName}`;
             total += followers;
             delete this._followerDests[rkey];
           }
         }
-        state.log(`You lost ${formatNumber(total)} followers: ${msg}`);
+        state.log(`You lost ${formatNumber(total)} ${total > 1 ? this.pluralName : this.singularName}: ${msg}`);
       }
       if (Object.keys(this._followerSources).length > 0) {
         let msg = '';
@@ -130,12 +130,12 @@ class Follower implements IResource {
           if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
             msg +=
-              `${formatNumber(followers)} from ${religion.pluralName}`;
+              `${formatNumber(followers)} ${followers > 1 ? religion.pluralName : religion.singularName}`;
             total += followers;
             delete this._followerSources[rkey];
           }
         }
-        state.log(`You gained ${formatNumber(total)} followers: ${msg}`);
+        state.log(`You gained ${formatNumber(total)} ${total > 1 ? this.pluralName : this.singularName}: ${msg}`);
       }
       this._lastRecruitmentLog = state.now;
     }

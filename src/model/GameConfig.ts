@@ -32,7 +32,7 @@ class GameConfig {
     cryptoCurrency: 1000,
     megaChurches: 2,
     money: 500000,
-    playerOrg: 5,
+    followers: 5,
     tents: 5,
   };
 
@@ -62,9 +62,9 @@ class GameConfig {
   public cfgCapacity: { [key in ResourceKey]?: ResourceNumber } = {
     churches: { pastors: 2 },
     compounds: { churches: 1, houses: 2, money: 500000, tents: 10 },
-    houses: { playerOrg: 10 },
+    houses: { followers: 10 },
     megaChurches: { pastors: 5 },
-    tents: { playerOrg: 2 },
+    tents: { followers: 2 },
   };
 
   public cfgCredibilityFollowerLossRatio = 0.04;
@@ -82,7 +82,7 @@ class GameConfig {
     const state = new GameState(this);
 
     // create player organization
-    state.addResource(ResourceKey.playerOrg, new Follower());
+    state.addResource(ResourceKey.followers, new Follower());
 
     // create world religions
     state.addResource(ResourceKey.christianity, new Religion(

@@ -20,6 +20,14 @@ abstract class Job implements IResource {
         this._promoteFollower(state);
       },
     },
+    {
+      name: 'Fire',
+      description: "You're fired.",
+      isEnabled: (_state: GameState): boolean => this.value > 0,
+      performAction: (state: GameState): void => {
+        this._demoteFollower(state);
+      },
+    },
   ];
 
   protected _costMultiplier: { [key in ResourceKey]?: number } = { };
@@ -51,7 +59,7 @@ abstract class Job implements IResource {
 
   protected _availableJobs (state: GameState): number {
     // number of followers minus the number of filled jobs
-    const followers = state.resource.playerOrg?.value ?? 0;
+    const followers = state.resource.followers?.value ?? 0;
     const hired = state.resources.reduce(
       (tot: number, rkey: ResourceKey): number => {
         const res = state.resource[rkey];
@@ -64,7 +72,7 @@ abstract class Job implements IResource {
 
   protected _totalPayroll (state: GameState): number {
     // number of followers minus the number of filled jobs
-    const followers = state.resource.playerOrg?.value ?? 0;
+    const followers = state.resource.followers?.value ?? 0;
     const hired = state.resources.reduce(
       (tot: number, rkey: ResourceKey): number => {
         const res = state.resource[rkey];
@@ -76,14 +84,13 @@ abstract class Job implements IResource {
   }
 
   protected _hireLog (amount: number, _state: GameState): string {
-    return `You hired ${amount} x ${this.pluralName}.`;
+    return amount > 0
+      ? `You hired ${amount} ${amount > 1 ? this.pluralName : this.singularName}.`
+      : `You fired ${amount * -1} ${amount * -1 > 1 ? this.pluralName : this.singularName}.`;
   }
 
   private _promoteFollower (state: GameState): void {
-    if (this._availableJobs(state) <= 0) {
-      state.log('You have no unemployed followers to promote.');
-      return;
-    }
+    if (this._availableJobs(state) <= 0) return;
     if (this.max !== undefined && this.value < this.max(state)
       && state.deductCost(this.cost)) {
       this.addValue(1);
@@ -93,6 +100,17 @@ abstract class Job implements IResource {
         this.cost[rkey] =
           (this.cost[rkey] ?? 0) * (this._costMultiplier[rkey] ?? 1);
       }
+    }
+  }
+
+  private _demoteFollower (state: GameState): void {
+    if (this.value <= 0) return;
+    this.addValue(-1);
+    state.log(this._hireLog(-1, state));
+    for (const key in this._costMultiplier) {
+      const rkey = <ResourceKey>key;
+      this.cost[rkey] =
+        (this.cost[rkey] ?? 0) / (this._costMultiplier[rkey] ?? 1);
     }
   }
 }

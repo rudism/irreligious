@@ -10,7 +10,7 @@ enum ResourceType {
 }
 
 enum ResourceKey {
-  playerOrg = 'playerOrg',
+  followers = 'followers',
   christianity = 'christianity',
   islam = 'islam',
   hinduism = 'hinduism',
