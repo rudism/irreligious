@@ -80,15 +80,18 @@ class Money implements IResource {
     }
   }
 
-  protected _purchaseLog(amount: number, state: GameState): string {
+  protected _purchaseLog(amount: number, state: GameState): void {
     const followers = state.resource.followers;
     if (followers !== undefined) {
-      return `You collected $${formatNumber(amount)} from ${formatNumber(
-        followers.value
-      )} ${
-        followers.value > 1 ? followers.pluralName : followers.singularName
-      }.`;
+      state.log(
+        `You collected $${formatNumber(amount)} from ${formatNumber(
+          followers.value
+        )} ${
+          followers.value > 1 ? followers.pluralName : followers.singularName
+        }.`
+      );
+    } else {
+      state.log(`You collected $${formatNumber(amount)} in tithings.`);
     }
-    return `You collected $${formatNumber(amount)} in tithings.`;
   }
 }
