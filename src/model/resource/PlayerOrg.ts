@@ -8,7 +8,6 @@ class PlayerOrg implements IResource {
   public readonly clickText = 'Recruit';
   public readonly clickDescription = 'Gather new followers.';
   public value = 0;
-  public readonly cost = null;
 
   private _timeSinceLastLost = 0;
   private _lastRecruitmentLog = 0;
@@ -33,8 +32,7 @@ class PlayerOrg implements IResource {
 
     // credibility adjustment
     const creds = state.resource.credibility;
-    if (creds?.max !== null) inc *=
-        (creds?.value ?? 0) / (creds?.max(state) ?? state.config.cfgPassiveMax);
+    if (creds?.max !== undefined) inc *= creds.value / creds.max(state);
 
     return inc;
   }
@@ -48,9 +46,8 @@ class PlayerOrg implements IResource {
 
     // chance to fail increases as credibility decreases
     const creds = state.resource.credibility;
-    if (creds?.max !== null) {
-      const ratio = Math.ceil(creds?.value ?? 0) / (creds?.max(state)
-        ?? state.config.cfgPassiveMax);
+    if (creds?.max !== undefined) {
+      const ratio = Math.ceil(creds.value) / creds.max(state);
       if (Math.random() > ratio) {
         state.log('Your recruitment efforts failed.');
         return;
@@ -99,10 +96,9 @@ class PlayerOrg implements IResource {
     if (this._timeSinceLastLost > state.config.cfgCredibilityFollowerLossTime) {
       if (this.value > 0) {
         const creds = state.resource.credibility;
-        if (creds?.max !== null) {
+        if (creds?.max !== undefined) {
           const ratio =
-            Math.ceil(creds?.value ?? 0) / (creds?.max(state)
-              ?? state.config.cfgPassiveMax);
+            Math.ceil(creds.value) / creds.max(state);
           if (Math.random() > ratio) {
             const lost = Math.ceil(this.value
               * state.config.cfgCredibilityFollowerLossRatio

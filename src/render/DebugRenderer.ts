@@ -58,19 +58,20 @@ class DebugRenderer implements IRenderer {
           <span class='resource-max'></span>
           <span class='resource-inc'></span>
         `;
-        if (resource.clickText !== null && resource.clickDescription !== null) {
+        if (resource.clickText !== undefined
+          && resource.clickDescription !== undefined) {
           content += `<br>
             <button class='resource-btn'
               title='${this._escape(resource.clickDescription)}'>
               ${this._escape(resource.clickText)}</button>`;
         }
-        if (resource.cost !== null
+        if (resource.cost !== undefined
           && Object.keys(resource.cost).length !== 0) {
           content += "<br>Cost: <span class='resource-cost'></span>";
         }
         el.innerHTML = content;
         resContainer.appendChild(el);
-        if (resource.clickAction !== null) {
+        if (resource.clickAction !== undefined) {
           const btn = el.getElementsByClassName('resource-btn')[0];
           btn.addEventListener('click', (): void => {
             state.performClick(rkey);
@@ -103,17 +104,18 @@ class DebugRenderer implements IRenderer {
           ? Math.floor(resource.value)
           : resource.value;
         elV.innerHTML = state.config.formatNumber(value);
-        elT.innerHTML = resource.max !== null
+        elT.innerHTML = resource.max !== undefined
           ? ` / ${state.config.formatNumber(resource.max(state))}`
           : '';
         const elB = el.getElementsByClassName('resource-btn');
         if (elB.length > 0) {
           const enabled = state.isPurchasable(resource.cost)
-            && (resource.max === null || resource.value < resource.max(state));
+            && (resource.max === undefined
+            || resource.value < resource.max(state));
           if (enabled) elB[0].removeAttribute('disabled');
           else elB[0].setAttribute('disabled', 'disabled');
         }
-        if (resource.inc !== null && resource.inc(state) > 0) {
+        if (resource.inc !== undefined && resource.inc(state) > 0) {
           const elI = el.getElementsByClassName('resource-inc')[0];
           elI.innerHTML =
             ` +${state.config.formatNumber(resource.inc(state))}/s`;

@@ -9,7 +9,8 @@ class Church extends Infrastructure {
   }
 
   public max: (state: GameState) => number = (state) =>
-    state.resource.compounds?.value ?? 0;
+    (state.resource.compounds?.value ?? 0)
+      *  state.config.cfgCompoundChurchCapacity;
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;

@@ -8,8 +8,8 @@ abstract class Purchasable implements IResource {
   public value = 0;
   public readonly cost: { [key in ResourceKey]?: number } = { };
 
-  public inc: ((state: GameState) => number) | null = null;
-  public max: ((_state: GameState) => number) | null = null;
+  public inc?: (state: GameState) => number = undefined;
+  public max?: (_state: GameState) => number = undefined;
 
   protected _costMultiplier: { [key in ResourceKey]?: number } = { };
   protected _isUnlocked = false;
@@ -21,7 +21,7 @@ abstract class Purchasable implements IResource {
 
 
   public clickAction (state: GameState): void {
-    if (this.max !== null && this.value >= this.max(state)) return;
+    if (this.max !== undefined && this.value >= this.max(state)) return;
     if (state.deductCost(this.cost)) {
       const amount = this._purchaseAmount(state);
       if (amount > 0) {

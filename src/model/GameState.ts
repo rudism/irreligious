@@ -45,7 +45,7 @@ class GameState {
     for (const rkey of this._resourceKeys) {
       const resource = this._resources[rkey];
       if (resource?.isUnlocked(this) === true) {
-        if (resource.advanceAction !== null)
+        if (resource.advanceAction !== undefined)
           resource.advanceAction(time, this);
       }
     }
@@ -55,12 +55,12 @@ class GameState {
       const resource = this._resources[rkey];
       if (resource === undefined || !resource.isUnlocked(this)) continue;
 
-      if (resource.inc !== null && (resource.max === null
+      if (resource.inc !== undefined && (resource.max === undefined
         || resource.value < resource.max(this))) {
         resource.addValue(resource.inc(this) * time / 1000, this);
       }
 
-      if (resource.max !== null && resource.value > resource.max(this)) {
+      if (resource.max !== undefined && resource.value > resource.max(this)) {
         resource.addValue((resource.value - resource.max(this)) * -1, this);
       }
       if (resource.value < 0) {
@@ -73,7 +73,7 @@ class GameState {
     const resource = this._resources[resourceKey];
     if (resource === undefined || !resource.isUnlocked(this)) return;
 
-    if (resource.clickAction !== null) {
+    if (resource.clickAction !== undefined) {
       resource.clickAction(this);
       for (const callback of this.onResourceClick) {
         callback();
@@ -95,8 +95,8 @@ class GameState {
   }
 
   public isPurchasable (
-    cost: { [key in ResourceKey]?: number } | null): boolean {
-    if (cost === null) return true;
+    cost?: { [key in ResourceKey]?: number }): boolean {
+    if (cost === undefined) return true;
     for (const key in cost) {
       const rkey = <ResourceKey>key;
       if ((this._resources[rkey]?.value ?? 0) < (cost[rkey] ?? 0)) {
@@ -120,9 +120,11 @@ class GameState {
     };
     for (const key in this._resources) {
       const rkey = <ResourceKey>key;
+      const resource = this._resources[rkey];
+      if (resource === undefined) continue;
       saveObj[rkey] = {
-        value: this._resources[rkey]?.value ?? 0,
-        cost: this._resources[rkey]?.cost ?? null,
+        value: resource.value,
+        cost: resource.cost,
       };
     }
     const saveStr: string = btoa(JSON.stringify(saveObj));
@@ -139,13 +141,13 @@ class GameState {
             const rkey = <ResourceKey>key;
             const saveRes = <{
               value: number;
-              cost: { [key: string]: number } | null;
+              cost?: { [key: string]: number };
             } | undefined> saveObj[key];
             if (saveRes !== undefined) {
               // @ts-expect-error writing read-only value from save data
               this._resources[rkey].value = saveRes.value;
               // @ts-expect-error writing read-only cost from save data
-              this._resources[rkey].cost = saveRes.cost ?? null;
+              this._resources[rkey].cost = saveRes.cost;
             }
           }
         } else {
@@ -172,7 +174,7 @@ class GameState {
 type SaveData = {
   [key: string]: {
     value: number;
-    cost: { [key: string]: number } | null;
+    cost?: { [key: string]: number };
   } | { maj: number, min: number } | undefined;
   version?: { maj: number, min: number };
 };

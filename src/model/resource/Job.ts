@@ -8,8 +8,8 @@ abstract class Job implements IResource {
   public value = 0;
   public readonly cost: { [key in ResourceKey]?: number } = { };
 
-  public max: ((state: GameState) => number) | null = null;
-  public inc: ((state: GameState) => number) | null = null;
+  public max?: (state: GameState) => number = undefined;
+  public inc?: (state: GameState) => number = undefined;
 
   protected _costMultiplier: { [key in ResourceKey]?: number } = { };
   protected _isUnlocked = false;
@@ -19,13 +19,12 @@ abstract class Job implements IResource {
     public readonly description: string
   ) { }
 
-
   public clickAction (state: GameState): void {
     if (this._availableJobs(state) <= 0) {
       state.log('You have no unemployed followers to promote.');
       return;
     }
-    if (this.max !== null && this.value < this.max(state)
+    if (this.max !== undefined && this.value < this.max(state)
       && state.deductCost(this.cost)) {
       this.addValue(1);
       state.log(this._hireLog(1, state));

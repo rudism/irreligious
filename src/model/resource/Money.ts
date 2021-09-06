@@ -29,6 +29,10 @@ class Money extends Purchasable {
     inc += (state.resource.cryptoCurrency?.value ?? 0)
       * state.config.cfgCryptoReturnAmount;
 
+    // salaries
+    inc -= (state.resource.pastors?.value ?? 0)
+      * state.config.cfgPastorSalary;
+
     return inc;
   };
 

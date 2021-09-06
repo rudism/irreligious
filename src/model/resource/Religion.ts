@@ -3,14 +3,6 @@
 class Religion implements IResource {
   public readonly resourceType = ResourceType.religion;
   public readonly valueInWholeNumbers = true;
-  public readonly clickText = null;
-  public readonly clickDescription = null;
-  public readonly cost = null;
-
-  public readonly max = null;
-  public readonly inc = null;
-  public readonly clickAction = null;
-  public readonly advanceAction = null;
 
   constructor (
     public readonly name: string,

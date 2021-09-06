@@ -8,6 +8,7 @@ class Pastor extends Job {
       'Collect tithings for you and recruit new members from other faiths automatically.');
   }
 
+
   public max: (state: GameState) => number = (state) => {
     let max = (state.resource.churches?.value ?? 0)
       * state.config.cfgChurchPastorCapacity;
@@ -32,9 +33,9 @@ class Pastor extends Job {
       if (Math.floor(plorg?.value ?? 0) < tithed)
         tithed = Math.floor(plorg?.value ?? 0);
       let collected = tithed * state.config.cfgTitheAmount;
-      if (money?.max !== null
-        && collected > (money?.max(state) ?? 0) - (money?.value ?? 0))
-        collected = (money?.max(state) ?? 0) - (money?.value ?? 0);
+      if (money?.max !== undefined
+        && collected > money.max(state) - money.value)
+        collected = money.max(state) - money.value;
       if (collected > 0) {
         money?.addValue(collected, state);
         state.log(`Your pastors collected $${state.config.formatNumber(collected)} in tithings from ${state.config.formatNumber(tithed)} followers.`);

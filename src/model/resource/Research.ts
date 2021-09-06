@@ -2,6 +2,7 @@
 
 abstract class Research extends Purchasable {
   public readonly resourceType = ResourceType.research;
+  public inc = undefined;
 
   constructor (
     public readonly name: string,

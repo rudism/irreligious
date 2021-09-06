@@ -34,18 +34,21 @@ interface IResource {
   readonly name: string;
   readonly description: string;
   readonly valueInWholeNumbers: boolean;
-  readonly clickText: string | null;
-  readonly clickDescription: string | null;
+
+  readonly value: number;
+  readonly cost?: { [key in ResourceKey]?: number };
+
+  readonly clickText?: string;
+  readonly clickDescription?: string;
   // readonly altClickText?: string;
   // readonly altClickDescription?: string;
-  readonly value: number;
-  readonly cost: { [key in ResourceKey]?: number } | null;
 
-  max: ((state: GameState) => number) | null;
-  inc: ((state: GameState) => number) | null;
-  clickAction: ((state: GameState) => void) | null;
+  max?: (state: GameState) => number;
+  inc?: (state: GameState) => number;
+  clickAction?: (state: GameState) => void;
   // altClickAction (state: GameState): void;
+  advanceAction?: (time: number, state: GameState) => void;
+
   addValue: (amount: number, state: GameState) => void;
   isUnlocked: (state: GameState) => boolean;
-  advanceAction: ((time: number, state: GameState) => void) | null;
 }
