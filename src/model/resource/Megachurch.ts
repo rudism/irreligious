@@ -3,6 +3,7 @@
 class Megachurch extends Infrastructure {
   constructor (config: GameConfig) {
     super(
+      'Megachurches',
       'megachurch',
       'megachurches',
       `Room for ${formatNumber(config.cfgCapacity.megaChurches?.pastors ?? 0)} pastors`);

@@ -3,6 +3,7 @@
 class Tent extends Infrastructure {
   constructor (config: GameConfig) {
     super(
+      'Tents',
       'tent',
       'tents',
       `Provides room to house ${formatNumber(config.cfgCapacity.tents?.followers ?? 0)} followers.`);

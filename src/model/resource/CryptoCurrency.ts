@@ -4,7 +4,8 @@ class CryptoCurrency extends Purchasable {
   constructor (config: GameConfig) {
     super(
       'FaithCoin',
-      'FaithCoins',
+      'faithcoin',
+      'faithcoins',
       "A crypto coin that can't be spent directly, but provides a steady stream of passive income.");
     this.cost.money = config.cfgInitialCost.cryptoCurrency;
     this._costMultiplier.money = config.cfgCostMultiplier.cryptoCurrency;

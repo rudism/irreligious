@@ -3,6 +3,7 @@
 class Compound extends Infrastructure {
   constructor (config: GameConfig) {
     super(
+      'Compounds',
       'compound',
       'compounds',
       'Provides space for tents, houses, and churches and a place to hide more money.');

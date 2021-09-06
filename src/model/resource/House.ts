@@ -3,6 +3,7 @@
 class House extends Infrastructure {
   constructor (config: GameConfig) {
     super(
+      'Houses',
       'house',
       'houses',
       `Provides room to house ${formatNumber(config.cfgCapacity.houses?.followers ?? 0)} followers.`);

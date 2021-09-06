@@ -1,6 +1,8 @@
-/// <reference path="../model/logging/DebugLogger.ts" />
+/// <reference path="../logging/DebugLogger.ts" />
 
 class DebugRenderer implements IRenderer {
+  public onInitialRender?: (state: GameState) => void;
+
   private _initialized = false;
   private _handleClick = true;
 
@@ -12,7 +14,6 @@ class DebugRenderer implements IRenderer {
         console.error('could not find game container');
         return;
       }
-      this._initialized = true;
       state.onResourceClick.push((): void => {
         this._handleClick = true;
       });
@@ -43,7 +44,7 @@ class DebugRenderer implements IRenderer {
       // create containers for each resource
       for (const rkey of rkeys) {
         const resource = state.resource[rkey];
-        if (resource === undefined) continue;
+        if (resource === undefined || resource.label === undefined) continue;
         const resContainer = document.getElementById(
           `resource-container-${resource.resourceType}`);
         if (resContainer === null) continue;
@@ -53,7 +54,7 @@ class DebugRenderer implements IRenderer {
         let content = `
           <span class='resource-title'
             title='${this._escape(resource.description)}'>
-            ${this._escape(resource.pluralName)}</span><br>
+            ${this._escape(resource.label)}</span><br>
           <span class='resource-value'></span>
           <span class='resource-max'></span>
           <span class='resource-inc'></span>
@@ -142,6 +143,11 @@ class DebugRenderer implements IRenderer {
       }
     }
     this._handleClick = false;
+
+    if (!this._initialized && this.onInitialRender !== undefined) {
+      this.onInitialRender(state);
+    }
+    this._initialized = true;
   }
 
   private _escape (text: string): string {

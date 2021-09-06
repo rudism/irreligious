@@ -5,6 +5,7 @@ class Pastor extends Job {
 
   constructor () {
     super(
+      'Pastors',
       'pastor',
       'pastors',
       'Collect tithings for you and recruit new members from other faiths automatically.');

@@ -9,8 +9,9 @@ class Money extends Purchasable {
     public value: number
   ) {
     super(
-      'money',
-      'moneys',
+      'Money',
+      '${}',
+      '${}',
       'Used to purchase goods and services.',
       'Collect Tithes',
       'Voluntary contributions from followers.');

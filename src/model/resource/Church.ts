@@ -3,6 +3,7 @@
 class Church extends Infrastructure {
   constructor (config: GameConfig) {
     super(
+      'Churches',
       'church',
       'churches',
       `Preaching grounds for ${formatNumber(config.cfgCapacity.churches?.pastors ?? 0)} pastors.`);

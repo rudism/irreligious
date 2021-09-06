@@ -5,11 +5,13 @@ abstract class Research extends Purchasable {
   public inc = undefined;
 
   constructor (
+    public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string
   ) {
     super(
+      label,
       singularName,
       pluralName,
       description,

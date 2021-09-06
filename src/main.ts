@@ -25,6 +25,17 @@ function startGame (state: GameState, renderer: IRenderer): void {
   gameLoop(state, renderer); // start the main loop
 }
 
+function initialRender (state: GameState): void {
+  if (state.logger === null) return;
+  state.logger.unsafeMsg(`<strong>Welcome to irreligio.us!</strong>
+<br><br>
+The game is still in an active state of development and nowhere near its final form. This is a debugging interface that can show all resources even before they're unlocked, and many factors may be sped up significantly to aid in development. There is a chance that playing it now may spoil aspects of the game for you later when it's closer to being finished.
+<br><br>
+Additionally, the game has not been as is not in any kind of state to be playtested or balanced in any way, and even though it auto-saves and resumes, it's changing so much that save data may become corrupt and force you to clear cookies and localstorage and lose all progress before the game loads again. If you want to actually play a fun incremental game, this isn't really ready yet.
+<br><br>
+The game's source code on <a href='https://github.com/rudism/irreligious'>Github</a> is likely further along than this. Have fun!<br><br>`);
+}
+
 // run with default config at startup
 ((): void => {
   const config = new GameConfig();
@@ -37,6 +48,7 @@ function startGame (state: GameState, renderer: IRenderer): void {
   config.cfgPastorRecruitRate = 0.5;
 
   const renderer = new DebugRenderer();
+  renderer.onInitialRender = initialRender;
   const state = config.generateState();
 
   // re-run main loop immediately on user clicks

@@ -8,6 +8,7 @@ abstract class Passive implements IResource {
   public advanceAction?: (time: number, state: GameState) => void = undefined;
 
   constructor (
+    public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string

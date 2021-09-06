@@ -86,35 +86,35 @@ class GameConfig {
 
     // create world religions
     state.addResource(ResourceKey.christianity, new Religion(
-      'christian', 'christians', 'God, Jesus, Bible, churches.',
+      'Christianity', 'christian', 'christians', 'God, Jesus, Bible, churches.',
       (this.cfgReligion.christianity ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.islam, new Religion(
-      'muslim', 'muslims', 'God, Muhammad, Quran, mosques.',
+      'Islam', 'muslim', 'muslims', 'God, Muhammad, Quran, mosques.',
       (this.cfgReligion.islam ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.hinduism, new Religion(
-      'hindu', 'hindus', 'Dogma-free spiritualism.',
+      'Hinduism', 'hindu', 'hindus', 'Dogma-free spiritualism.',
       (this.cfgReligion.hinduism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.buddhism, new Religion(
-      'buddhist', 'buddhists', 'The minimization of suffering.',
+      'Buddhism', 'buddhist', 'buddhists', 'The minimization of suffering.',
       (this.cfgReligion.buddhism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.sikhism, new Religion(
-      'sikh', 'sikhs', 'Meditation and ten Gurus',
+      'Sikhism', 'sikh', 'sikhs', 'Meditation and ten Gurus',
       (this.cfgReligion.sikhism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.judaism, new Religion(
-      'jew', 'jews', 'God, Abraham, Torah, synagogues.',
+      'Judaism', 'jew', 'jews', 'God, Abraham, Torah, synagogues.',
       (this.cfgReligion.judaism ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.other, new Religion(
-      'other', 'others', 'A variety of belief systems.',
+      'Other', 'person from other faiths', 'people from other faiths', 'A variety of belief systems.',
       (this.cfgReligion.other ?? 0) * this.worldPopulation));
 
     state.addResource(ResourceKey.atheism, new Religion(
-      'atheist', 'atheists', 'Atheists and agnostics.',
+      'Non-Religious', 'atheist', 'atheists', 'Atheists and agnostics.',
       (this.cfgReligion.atheism ?? 0) * this.worldPopulation));
 
     // add jobs

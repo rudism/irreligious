@@ -2,6 +2,7 @@
 
 interface IResource {
   readonly resourceType: ResourceType;
+  readonly label?: string;
   readonly singularName: string;
   readonly pluralName: string;
   readonly description: string;

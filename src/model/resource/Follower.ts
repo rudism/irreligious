@@ -2,6 +2,7 @@
 
 class Follower implements IResource {
   public readonly resourceType = ResourceType.religion;
+  public readonly label = 'Your Followers';
   public readonly singularName = 'follower';
   public readonly pluralName = 'followers';
   public readonly description = 'In you they trust.';

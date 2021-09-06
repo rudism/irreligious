@@ -15,7 +15,7 @@ abstract class Job implements IResource {
       description: 'Promote one of your followers.',
       isEnabled: (state: GameState): boolean =>
         (this.max === undefined || this.value < this.max(state))
-        && this.value < this._availableJobs(state),
+        && this._availableJobs(state) > 0,
       performAction: (state: GameState): void => {
         this._promoteFollower(state);
       },
@@ -34,6 +34,7 @@ abstract class Job implements IResource {
   protected _isUnlocked = false;
 
   constructor (
+    public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string

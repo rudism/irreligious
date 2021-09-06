@@ -26,6 +26,7 @@ abstract class Purchasable implements IResource {
   protected _isUnlocked = false;
 
   constructor (
+    public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string,
