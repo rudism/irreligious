@@ -81,7 +81,7 @@ class GameState {
     }
   }
 
-  public deductCost (cost: { [key in ResourceKey]?: number } | null): boolean {
+  public deductCost (cost: ResourceNumber | null): boolean {
     if (cost === null) return true;
     if (!this.isPurchasable(cost)) return false;
     for (const key in cost) {
@@ -94,8 +94,7 @@ class GameState {
     return true;
   }
 
-  public isPurchasable (
-    cost?: { [key in ResourceKey]?: number }): boolean {
+  public isPurchasable (cost?: ResourceNumber): boolean {
     if (cost === undefined) return true;
     for (const key in cost) {
       const rkey = <ResourceKey>key;

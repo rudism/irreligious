@@ -8,12 +8,11 @@ class Pastor extends Job {
       'Collect tithings for you and recruit new members from other faiths automatically.');
   }
 
-
   public max: (state: GameState) => number = (state) => {
     let max = (state.resource.churches?.value ?? 0)
-      * state.config.cfgChurchPastorCapacity;
+      * (state.config.cfgCapacity.churches?.pastors ?? 0);
     max += (state.resource.megaChurches?.value ?? 0)
-      * state.config.cfgMegaChurchPastorCapacity;
+      * (state.config.cfgCapacity.megaChurches?.pastors ?? 0);
     return max;
   };
 
@@ -24,12 +23,13 @@ class Pastor extends Job {
   }
 
   public advanceAction (time: number, state: GameState): void {
+    super.advanceAction(time, state);
     this._timeSinceLastTithe += time;
     if (this._timeSinceLastTithe >= state.config.cfgTimeBetweenTithes) {
       const money = state.resource.money;
       const plorg = state.resource.playerOrg;
-      let tithed = this.value
-        * state.config.cfgPastorTitheCollectionFollowerMax;
+      let tithed = Math.floor(this.value
+        * state.config.cfgPastorTitheCollectionFollowerMax);
       if (Math.floor(plorg?.value ?? 0) < tithed)
         tithed = Math.floor(plorg?.value ?? 0);
       let collected = tithed * state.config.cfgTitheAmount;

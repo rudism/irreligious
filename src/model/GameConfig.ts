@@ -27,49 +27,55 @@ class GameConfig {
   public relNoneShare = 0.16;
 
   // general configs
-  public cfgPassiveMax = 100;
+  public cfgInitialMax: ResourceNumber = {
+    cryptoCurrency: 1000,
+    megaChurches: 2,
+    money: 500000,
+    playerOrg: 5,
+    tents: 5,
+  };
+
+  public cfgInitialCost: ResourceNumber = {
+    buildingPermit: 250000,
+    churches: 150000,
+    compounds: 15000,
+    cryptoCurrency: 100,
+    houses: 75000,
+    megaChurches: 750000,
+    tents: 250,
+  };
+
+  public cfgCostMultiplier: ResourceNumber = {
+    churches: 1.01,
+    compounds: 1.5,
+    cryptoCurrency: 1.1,
+    houses: 1.01,
+    megaChurches: 1.01,
+    tents: 1.05,
+  };
+
+  public cfgSalary: ResourceNumber = {
+    pastors: 7.5,
+  };
+
+  public cfgCapacity: { [key in ResourceKey]?: ResourceNumber } = {
+    churches: { pastors: 2 },
+    compounds: { churches: 1, houses: 2, money: 500000, tents: 10 },
+    houses: { playerOrg: 10 },
+    megaChurches: { pastors: 5 },
+    tents: { playerOrg: 2 },
+  };
 
   public cfgCredibilityFollowerLossRatio = 0.04;
   public cfgCredibilityFollowerLossTime = 10000;
   public cfgCredibilityRestoreRate = 0.25;
-
+  public cfgCryptoReturnAmount = 1;
+  public cfgFollowerGainLossLogTimer = 10000;
+  public cfgPassiveMax = 100;
   public cfgPastorRecruitRate = 0.01;
   public cfgPastorTitheCollectionFollowerMax = 100;
-  public cfgPastorSalary = 7.5;
-
-  public cfgFollowerGainLossLogTimer = 10000;
-  public cfgFollowerStartingMax = 5;
-
   public cfgTimeBetweenTithes = 30000;
   public cfgTitheAmount = 10;
-  public cfgCryptoReturnAmount = 1;
-  public cfgMoneyStartingMax = 500000;
-
-  public cfgBuildingPermitCost = 250000;
-
-  public cfgChurchCostMultiplier = 1.01;
-  public cfgChurchPastorCapacity = 2;
-  public cfgChurchStartingCost = 150000;
-  public cfgCompoundChurchCapacity = 1;
-  public cfgCompoundCostMultiplier = 1.5;
-  public cfgCompoundHouseCapacity = 2;
-  public cfgCompoundMoneyCapacity = 500000;
-  public cfgCompoundStartingCost = 15000;
-  public cfgCompoundTentCapacity = 10;
-  public cfgCryptoCostMultiplier = 1.1;
-  public cfgCryptoStartingCost = 100;
-  public cfgCryptoStartingMax = 1000;
-  public cfgHouseCostMultiplier = 1.01;
-  public cfgHouseFollowerCapacity = 10;
-  public cfgHouseStartingCost = 75000;
-  public cfgMegaChurchCostMultiplier = 1.01;
-  public cfgMegaChurchPastorCapacity = 5;
-  public cfgMegaChurchStartingCost = 7500000;
-  public cfgMegaChurchStartingMax = 2;
-  public cfgTentCostMultiplier = 1.05;
-  public cfgTentFollowerCapacity = 2;
-  public cfgTentStartingCost = 250;
-  public cfgTentStartingMax = 5;
 
   public generateState (): GameState {
     const state = new GameState(this);

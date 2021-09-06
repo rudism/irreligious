@@ -6,12 +6,12 @@ abstract class Purchasable implements IResource {
   public clickText = 'Purchase';
   public clickDescription = 'Purchase';
   public value = 0;
-  public readonly cost: { [key in ResourceKey]?: number } = { };
+  public readonly cost: ResourceNumber = { };
 
   public inc?: (state: GameState) => number = undefined;
   public max?: (_state: GameState) => number = undefined;
 
-  protected _costMultiplier: { [key in ResourceKey]?: number } = { };
+  protected _costMultiplier: ResourceNumber = { };
   protected _isUnlocked = false;
 
   constructor (

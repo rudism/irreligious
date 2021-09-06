@@ -16,9 +16,9 @@ class Money extends Purchasable {
   }
 
   public max: (state: GameState) => number = (state: GameState) => {
-    let max = state.config.cfgMoneyStartingMax;
+    let max = state.config.cfgInitialMax.money ?? 0;
     max += (state.resource.compounds?.value ?? 0)
-      * state.config.cfgCompoundMoneyCapacity;
+      * (state.config.cfgCapacity.compounds?.money ?? 0);
     return max;
   };
 
@@ -31,7 +31,7 @@ class Money extends Purchasable {
 
     // salaries
     inc -= (state.resource.pastors?.value ?? 0)
-      * state.config.cfgPastorSalary;
+      * (state.config.cfgSalary.pastors ?? 0);
 
     return inc;
   };

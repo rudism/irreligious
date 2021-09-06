@@ -6,7 +6,7 @@ abstract class Job implements IResource {
   public readonly clickText = 'Hire';
   public readonly clickDescription = 'Promote one of your followers.';
   public value = 0;
-  public readonly cost: { [key in ResourceKey]?: number } = { };
+  public readonly cost: ResourceNumber = { };
 
   public max?: (state: GameState) => number = undefined;
   public inc?: (state: GameState) => number = undefined;
@@ -38,13 +38,19 @@ abstract class Job implements IResource {
 
   public addValue (amount: number): void {
     this.value += amount;
+    if (this.value < 0) this.value = 0;
   }
 
   public isUnlocked (_state: GameState): boolean {
     return this._isUnlocked;
   }
 
-  public advanceAction (_time: number, _state: GameState): void {
+  public advanceAction (_time: number, state: GameState): void {
+    // if we're out of followers then the jobs also vacate
+    const avail = this._availableJobs(state);
+    if (avail < 0 && this.value > 0) {
+      this.addValue(avail);
+    }
     return;
   }
 
@@ -58,9 +64,20 @@ abstract class Job implements IResource {
           ? tot + res.value
           : tot;
       }, 0);
-    let max = followers - hired;
-    if (max < 0) max = 0;
-    return max;
+    return followers - hired;
+  }
+
+  protected _totalPayroll (state: GameState): number {
+    // number of followers minus the number of filled jobs
+    const followers = state.resource.playerOrg?.value ?? 0;
+    const hired = state.resources.reduce(
+      (tot: number, rkey: ResourceKey): number => {
+        const res = state.resource[rkey];
+        return res?.resourceType === ResourceType.job
+          ? tot + res.value
+          : tot;
+      }, 0);
+    return followers - hired;
   }
 
   protected _hireLog (amount: number, _state: GameState): string {

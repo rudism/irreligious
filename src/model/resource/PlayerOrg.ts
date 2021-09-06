@@ -11,15 +11,15 @@ class PlayerOrg implements IResource {
 
   private _timeSinceLastLost = 0;
   private _lastRecruitmentLog = 0;
-  private _followerSources: { [key in ResourceKey]?: number } = { };
-  private _followerDests: { [key in ResourceKey]?: number } = { };
+  private _followerSources: ResourceNumber = { };
+  private _followerDests: ResourceNumber = { };
 
   public max (state: GameState): number {
-    let max = state.config.cfgFollowerStartingMax;
+    let max = state.config.cfgInitialMax.playerOrg ?? 0;
     max += (state.resource.tents?.value ?? 0)
-      * state.config.cfgTentFollowerCapacity;
+      * (state.config.cfgCapacity.tents?.playerOrg ?? 0);
     max += (state.resource.houses?.value ?? 0)
-      * state.config.cfgHouseFollowerCapacity;
+      * (state.config.cfgCapacity.houses?.playerOrg ?? 0);
     return max;
   }
 

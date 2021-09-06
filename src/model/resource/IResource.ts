@@ -29,6 +29,8 @@ enum ResourceKey {
   credibility = 'credibility',
 }
 
+type ResourceNumber = { [key in ResourceKey]?: number };
+
 interface IResource {
   readonly resourceType: ResourceType;
   readonly name: string;
@@ -36,7 +38,7 @@ interface IResource {
   readonly valueInWholeNumbers: boolean;
 
   readonly value: number;
-  readonly cost?: { [key in ResourceKey]?: number };
+  readonly cost?: ResourceNumber;
 
   readonly clickText?: string;
   readonly clickDescription?: string;

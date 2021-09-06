@@ -3,13 +3,13 @@
 class MegaChurch extends Infrastructure {
   constructor (config: GameConfig) {
     super('MegaChurches',
-      `Room for ${config.formatNumber(config.cfgMegaChurchPastorCapacity)} pastors`);
-    this.cost.money = config.cfgMegaChurchStartingCost;
-    this._costMultiplier.money = config.cfgMegaChurchCostMultiplier;
+      `Room for ${config.formatNumber(config.cfgCapacity.megaChurches?.pastors ?? 0)} pastors`);
+    this.cost.money = config.cfgInitialCost.megaChurches;
+    this._costMultiplier.money = config.cfgCostMultiplier.megaChurches;
   }
 
   public max: (state: GameState) => number = (state) =>
-    state.config.cfgMegaChurchStartingMax;
+    state.config.cfgInitialMax.megaChurches ?? 0;
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;

@@ -3,14 +3,14 @@
 class House extends Infrastructure {
   constructor (config: GameConfig) {
     super('Houses',
-      `Provides room to house ${config.formatNumber(config.cfgHouseFollowerCapacity)} followers.`);
-    this.cost.money = config.cfgHouseStartingCost;
-    this._costMultiplier.money = config.cfgHouseCostMultiplier;
+      `Provides room to house ${config.formatNumber(config.cfgCapacity.houses?.playerOrg ?? 0)} followers.`);
+    this.cost.money = config.cfgInitialCost.houses;
+    this._costMultiplier.money = config.cfgCostMultiplier.houses;
   }
 
   public max: (state: GameState) => number = (state) =>
     (state.resource.compounds?.value ?? 0)
-      * state.config.cfgCompoundHouseCapacity;
+      * (state.config.cfgCapacity.compounds?.houses ?? 0);
 
   public isUnlocked (state: GameState): boolean {
     if (this._isUnlocked) return true;
