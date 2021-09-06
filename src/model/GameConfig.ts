@@ -77,6 +77,7 @@ class GameConfig {
   public cfgPastorTitheCollectionFollowerMax = 100;
   public cfgTimeBetweenTithes = 30000;
   public cfgTitheAmount = 10;
+  public cfgTitheCredibilityHitFactor = 3;
 
   public generateState (): GameState {
     const state = new GameState(this);

@@ -49,10 +49,6 @@ abstract class Purchasable implements IResource {
     return;
   }
 
-  protected _purchaseAmount (_state: GameState): number {
-    return 1;
-  }
-
   protected _purchaseLog (amount: number, _state: GameState): string {
     return `You purchased ${amount} ${amount > 1 ? this.pluralName : this.singularName}.`;
   }
@@ -60,15 +56,12 @@ abstract class Purchasable implements IResource {
   private _purchase (state: GameState): void {
     if (this.max !== undefined && this.value >= this.max(state)) return;
     if (state.deductCost(this.cost)) {
-      const amount = this._purchaseAmount(state);
-      if (amount > 0) {
-        this.value += amount;
-        state.log(this._purchaseLog(amount, state));
-        for (const key in this._costMultiplier) {
-          const rkey = <ResourceKey>key;
-          this.cost[rkey] =
-            (this.cost[rkey] ?? 0) * (this._costMultiplier[rkey] ?? 1);
-        }
+      this.value += 1;
+      state.log(this._purchaseLog(1, state));
+      for (const key in this._costMultiplier) {
+        const rkey = <ResourceKey>key;
+        this.cost[rkey] =
+          (this.cost[rkey] ?? 0) * (this._costMultiplier[rkey] ?? 1);
       }
     }
   }

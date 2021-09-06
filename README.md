@@ -4,9 +4,15 @@ An incremental game in which you start a cult and must grow it into the dominant
 
 ## Current State
 
-It can be run and played through a not-very-pretty debugging interface. To make testing easier, default configuration is massively sped up from what the final game will use, and the relationships between resources have not been play-tested or balanced in any meaningful way.
+Playable, but lightyears from complete and not very pretty or fun yet.
 
-## Build and Run
+## Play Online
+
+[https://irreligio.us/](https://irreligio.us)
+
+The online version may be behind what's in the repository.
+
+## Build and Run Locally
 
 ```
 npm install

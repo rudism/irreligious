@@ -1,22 +1,36 @@
 /// <reference path="./Purchasable.ts" />
 
-class Money extends Purchasable {
+class Money implements IResource {
   public readonly resourceType = ResourceType.consumable;
+  public readonly label = 'Money';
+  public readonly singularName = '${}';
+  public readonly pluralName = '${}';
+  public readonly description = 'Used to purchase goods and services.';
+  public readonly valueInWholeNumbers = false;
+
+  public userActions: ResourceAction[] = [
+    {
+      name: 'Collect Tithes',
+      description: 'Voluntary contributions from followers.',
+      isEnabled: (state: GameState): boolean =>
+        this.value <= this.max(state)
+        && (state.resource.followers?.value ?? 0) >= 1,
+      performAction: (state: GameState): void => {
+        this._collectTithes(state);
+      },
+    },
+  ];
 
   private _lastCollectionTime = 0;
 
   constructor (
     public value: number
-  ) {
-    super(
-      'Money',
-      '${}',
-      '${}',
-      'Used to purchase goods and services.',
-      'Collect Tithes',
-      'Voluntary contributions from followers.');
-    this.valueInWholeNumbers = false;
-    this._isUnlocked = true;
+  ) {}
+
+  public isUnlocked = (_state: GameState): boolean => true;
+
+  public addValue (amount: number, _state: GameState): void {
+    this.value += amount;
   }
 
   public max: (state: GameState) => number = (state: GameState) => {
@@ -40,20 +54,27 @@ class Money extends Purchasable {
     return inc;
   };
 
-  protected _purchaseAmount (state: GameState): number {
-    const plorg = state.resource.followers;
-    if (plorg === undefined || plorg.value === 0) {
-      state.log('You have no followers to collect from!');
-      return 0;
-    }
+  protected _collectTithes (state: GameState): void {
+    if (this.value >= this.max(state)) return;
+
+    const followers = state.resource.followers?.value ?? 0;
+    if (followers <= 0) return;
+
+    // collecting too frequently hurts credibility
     const diff = state.now - this._lastCollectionTime;
     if (diff < state.config.cfgTimeBetweenTithes) {
-      const lost = state.config.cfgTimeBetweenTithes / diff / 3;
+      const lost = state.config.cfgTimeBetweenTithes
+        / diff / state.config.cfgTitheCredibilityHitFactor;
       state.resource.credibility?.addValue(lost * -1, state);
     }
-    const tithings = plorg.value * state.config.cfgTitheAmount;
+
+    const tithings = followers * state.config.cfgTitheAmount;
     this._lastCollectionTime = state.now;
-    return tithings;
+
+    if (tithings > 0) {
+      this.addValue(tithings, state);
+      this._purchaseLog(tithings, state);
+    }
   }
 
   protected _purchaseLog (amount: number, state: GameState): string {

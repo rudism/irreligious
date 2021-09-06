@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "build": "eslint src/ && tsc",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "build": "npm run lint && tsc",
+    "deploy": "aws s3 sync --delete public/ \"$(grep AWS_S3_BUCKET .env | cut -d '=' -f2)\" && aws cloudfront create-invalidation --distribution-id \"$(grep AWS_CLOUDFRONT_ID .env | cut -d '=' -f2)\" --paths=/*"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.30.0",

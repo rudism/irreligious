@@ -1,2 +1,3 @@
 public/js/irreligious.js
 node_modules/*
+.env
