@@ -13,7 +13,7 @@ class Money implements IResource {
       name: 'Collect Tithes',
       description: 'Voluntary contributions from followers.',
       isEnabled: (state: GameState): boolean =>
-        this.value <= this.max(state)
+        this.value < this.max(state)
         && (state.resource.followers?.value ?? 0) >= 1,
       performAction: (state: GameState): void => {
         this._collectTithes(state);

@@ -8,9 +8,6 @@ class GameState {
 
   public now = 0;
 
-  private readonly _versionMaj = 0;
-  private readonly _versionMin = 1;
-
   private _timeSinceSave = 0;
   private readonly _timeBetweenSaves = 10000;
 
@@ -116,19 +113,25 @@ class GameState {
   }
 
   public save (): void {
-    const saveObj: SaveData = {};
-    saveObj.version = {
-      maj: this._versionMaj,
-      min: this._versionMin,
+    const saveObj: SaveData = {
+      version: {
+        maj: this.config.versionMajor,
+        min: this.config.versionMinor,
+      },
+      resources: {},
     };
     for (const key in this._resources) {
       const rkey = <ResourceKey>key;
       const resource = this._resources[rkey];
       if (resource === undefined) continue;
-      saveObj[rkey] = {
+      const resSav: ResourceConfig = {
         value: resource.value,
         cost: resource.cost,
       };
+      if (resource.emitConfig !== undefined) {
+        resSav.config = resource.emitConfig();
+      }
+      saveObj.resources[rkey] = resSav;
     }
     const saveStr: string = btoa(JSON.stringify(saveObj));
     localStorage.setItem('savegame', saveStr);
@@ -139,18 +142,21 @@ class GameState {
     if (saveStr !== null) {
       try {
         const saveObj: SaveData = <SaveData>JSON.parse(atob(saveStr));
-        if (this._versionMaj === saveObj.version?.maj) {
+        if (this.config.versionMajor === saveObj.version.maj) {
           for (const key in this._resources) {
             const rkey = <ResourceKey>key;
-            const saveRes = <{
-              value: number;
-              cost?: { [key: string]: number };
-            } | undefined> saveObj[key];
+            const resource = this._resources[rkey];
+            if (resource === undefined) continue;
+            const saveRes = saveObj.resources[rkey];
             if (saveRes !== undefined) {
               // @ts-expect-error writing read-only value from save data
-              this._resources[rkey].value = saveRes.value;
+              resource.value = saveRes.value;
               // @ts-expect-error writing read-only cost from save data
-              this._resources[rkey].cost = saveRes.cost;
+              resource.cost = saveRes.cost;
+              if (saveRes.config !== undefined
+                && resource.restoreConfig !== undefined) {
+                resource.restoreConfig(saveRes.config);
+              }
             }
           }
         } else {
@@ -173,11 +179,3 @@ class GameState {
     this.log('Reset all game resources.');
   }
 }
-
-type SaveData = {
-  [key: string]: {
-    value: number;
-    cost?: { [key: string]: number };
-  } | { maj: number, min: number } | undefined;
-  version?: { maj: number, min: number };
-};

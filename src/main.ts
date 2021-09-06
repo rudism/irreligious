@@ -1,6 +1,9 @@
 /// <reference path="./model/GameConfig.ts" />
 /// <reference path="./render/DebugRenderer.ts" />
 
+const versionMajor = 2;
+const versionMinor = 0;
+
 let globalStartTime = 0;
 let globalTimeout: number | null = null;
 const cycleLength = 250;
@@ -27,7 +30,7 @@ function startGame (state: GameState, renderer: IRenderer): void {
 
 function initialRender (state: GameState): void {
   if (state.logger === null) return;
-  state.logger.unsafeMsg(`<strong>Welcome to irreligio.us!</strong>
+  state.logger.unsafeMsg(`<strong>Welcome to irreligio.us!</strong> <em>alpha v${versionMajor}.${versionMinor}</em>
 <br><br>
 The game is still in an active state of development and nowhere near its final form. This is a debugging interface that can show all resources even before they're unlocked, and many factors may be sped up significantly to aid in development. There is a chance that playing it now may spoil aspects of the game for you later when it's closer to being finished.
 <br><br>
@@ -38,7 +41,7 @@ The game's source code on <a href='https://github.com/rudism/irreligious'>Github
 
 // run with default config at startup
 ((): void => {
-  const config = new GameConfig();
+  const config = new GameConfig(versionMajor, versionMinor);
 
   // debug values to make the game play faster while testing
   config.cfgTitheAmount = 1000;

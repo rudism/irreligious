@@ -79,6 +79,11 @@ class GameConfig {
   public cfgTitheAmount = 10;
   public cfgTitheCredibilityHitFactor = 3;
 
+  constructor (
+    public versionMajor: number,
+    public versionMinor: number,
+  ) {}
+
   public generateState (): GameState {
     const state = new GameState(this);
 

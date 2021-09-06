@@ -18,4 +18,8 @@ interface IResource {
 
   addValue: (amount: number, state: GameState) => void;
   isUnlocked: (state: GameState) => boolean;
+
+  emitConfig?: () => { [key: string]: string | number | boolean };
+  restoreConfig?: (
+    config: { [key: string]: string | number | boolean }) => void;
 }

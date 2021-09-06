@@ -39,3 +39,14 @@ type ResourceAction = {
   isEnabled: (state: GameState) => boolean;
   performAction: (state: GameState) => void;
 };
+
+type ResourceConfig = {
+  value: number;
+  cost?: ResourceNumber;
+  config?: { [key: string]: string | number | boolean };
+};
+
+type SaveData = {
+  version: { maj: number, min: number };
+  resources: { [key in ResourceKey]?: ResourceConfig };
+};
