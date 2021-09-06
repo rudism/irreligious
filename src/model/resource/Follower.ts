@@ -22,19 +22,21 @@ class Follower implements IResource {
 
   private _timeSinceLastLost = 0;
   private _lastRecruitmentLog = 0;
-  private _followerSources: ResourceNumber = { };
-  private _followerDests: ResourceNumber = { };
+  private _followerSources: ResourceNumber = {};
+  private _followerDests: ResourceNumber = {};
 
-  public max (state: GameState): number {
+  public max(state: GameState): number {
     let max = state.config.cfgInitialMax.followers ?? 0;
-    max += (state.resource.tents?.value ?? 0)
-      * (state.config.cfgCapacity.tents?.followers ?? 0);
-    max += (state.resource.houses?.value ?? 0)
-      * (state.config.cfgCapacity.houses?.followers ?? 0);
+    max +=
+      (state.resource.tents?.value ?? 0) *
+      (state.config.cfgCapacity.tents?.followers ?? 0);
+    max +=
+      (state.resource.houses?.value ?? 0) *
+      (state.config.cfgCapacity.houses?.followers ?? 0);
     return max;
   }
 
-  public inc (state: GameState): number {
+  public inc(state: GameState): number {
     let inc = 0;
 
     // pastor recruiting
@@ -48,7 +50,7 @@ class Follower implements IResource {
     return inc;
   }
 
-  public addValue (amount: number, state: GameState): void {
+  public addValue(amount: number, state: GameState): void {
     const oldValue = this.value;
     this.value += amount;
     const diff = Math.floor(this.value) - Math.floor(oldValue);
@@ -76,23 +78,24 @@ class Follower implements IResource {
     }
   }
 
-  public isUnlocked (_state: GameState): boolean {
+  public isUnlocked(_state: GameState): boolean {
     return true;
   }
 
-  public advanceAction (time: number, state: GameState): void {
+  public advanceAction(time: number, state: GameState): void {
     // chance to lose some followers every 10s if credibility < 100%
     this._timeSinceLastLost += time;
     if (this._timeSinceLastLost > state.config.cfgCredibilityFollowerLossTime) {
       if (this.value > 0) {
         const creds = state.resource.credibility;
         if (creds?.max !== undefined) {
-          const ratio =
-            Math.ceil(creds.value) / creds.max(state);
+          const ratio = Math.ceil(creds.value) / creds.max(state);
           if (Math.random() > ratio) {
-            const lost = Math.ceil(this.value
-              * state.config.cfgCredibilityFollowerLossRatio
-              * (1 - ratio));
+            const lost = Math.ceil(
+              this.value *
+                state.config.cfgCredibilityFollowerLossRatio *
+                (1 - ratio)
+            );
             this.addValue(lost * -1, state);
           }
         }
@@ -101,10 +104,12 @@ class Follower implements IResource {
     }
 
     // log lost and gained followers every 10s
-    if (state.now
-          - this._lastRecruitmentLog > state.config.cfgFollowerGainLossLogTimer
-      && (Object.keys(this._followerSources).length > 0
-        || Object.keys(this._followerDests).length > 0)) {
+    if (
+      state.now - this._lastRecruitmentLog >
+        state.config.cfgFollowerGainLossLogTimer &&
+      (Object.keys(this._followerSources).length > 0 ||
+        Object.keys(this._followerDests).length > 0)
+    ) {
       if (Object.keys(this._followerDests).length > 0) {
         let msg = '';
         let total = 0;
@@ -114,12 +119,18 @@ class Follower implements IResource {
           const followers = this._followerDests[rkey];
           if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
-            msg += `${formatNumber(followers)} ${followers > 1 ? religion.pluralName : religion.singularName}`;
+            msg += `${formatNumber(followers)} ${
+              followers > 1 ? religion.pluralName : religion.singularName
+            }`;
             total += followers;
             delete this._followerDests[rkey];
           }
         }
-        state.log(`You lost ${formatNumber(total)} ${total > 1 ? this.pluralName : this.singularName}: ${msg}`);
+        state.log(
+          `You lost ${formatNumber(total)} ${
+            total > 1 ? this.pluralName : this.singularName
+          }: ${msg}`
+        );
       }
       if (Object.keys(this._followerSources).length > 0) {
         let msg = '';
@@ -130,19 +141,24 @@ class Follower implements IResource {
           const followers = this._followerSources[rkey];
           if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
-            msg +=
-              `${formatNumber(followers)} ${followers > 1 ? religion.pluralName : religion.singularName}`;
+            msg += `${formatNumber(followers)} ${
+              followers > 1 ? religion.pluralName : religion.singularName
+            }`;
             total += followers;
             delete this._followerSources[rkey];
           }
         }
-        state.log(`You gained ${formatNumber(total)} ${total > 1 ? this.pluralName : this.singularName}: ${msg}`);
+        state.log(
+          `You gained ${formatNumber(total)} ${
+            total > 1 ? this.pluralName : this.singularName
+          }: ${msg}`
+        );
       }
       this._lastRecruitmentLog = state.now;
     }
   }
 
-  private _recruitFollower (state: GameState): void {
+  private _recruitFollower(state: GameState): void {
     // don't exceed max
     if (this.value >= this.max(state)) {
       state.log('You have no room for more followers.');
@@ -163,11 +179,19 @@ class Follower implements IResource {
     this.addValue(1, state);
   }
 
-  private _getRandomReligion (
-    state: GameState): [ResourceKey, IResource] | null {
-    const religs = [ResourceKey.christianity, ResourceKey.islam,
-      ResourceKey.hinduism, ResourceKey.buddhism, ResourceKey.sikhism,
-      ResourceKey.judaism, ResourceKey.other, ResourceKey.atheism];
+  private _getRandomReligion(
+    state: GameState
+  ): [ResourceKey, IResource] | null {
+    const religs = [
+      ResourceKey.christianity,
+      ResourceKey.islam,
+      ResourceKey.hinduism,
+      ResourceKey.buddhism,
+      ResourceKey.sikhism,
+      ResourceKey.judaism,
+      ResourceKey.other,
+      ResourceKey.atheism,
+    ];
     const source = religs[Math.floor(Math.random() * 8)];
     const resource = state.resource[source];
     return resource !== undefined ? [source, resource] : null;

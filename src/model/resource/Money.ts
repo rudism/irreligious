@@ -13,8 +13,8 @@ class Money implements IResource {
       name: 'Collect Tithes',
       description: 'Voluntary contributions from followers.',
       isEnabled: (state: GameState): boolean =>
-        this.value < this.max(state)
-        && (state.resource.followers?.value ?? 0) >= 1,
+        this.value < this.max(state) &&
+        (state.resource.followers?.value ?? 0) >= 1,
       performAction: (state: GameState): void => {
         this._collectTithes(state);
       },
@@ -23,20 +23,19 @@ class Money implements IResource {
 
   private _lastCollectionTime = 0;
 
-  constructor (
-    public value: number
-  ) {}
+  constructor(public value: number) {}
 
   public isUnlocked = (_state: GameState): boolean => true;
 
-  public addValue (amount: number, _state: GameState): void {
+  public addValue(amount: number, _state: GameState): void {
     this.value += amount;
   }
 
   public max: (state: GameState) => number = (state: GameState) => {
     let max = state.config.cfgInitialMax.money ?? 0;
-    max += (state.resource.compounds?.value ?? 0)
-      * (state.config.cfgCapacity.compounds?.money ?? 0);
+    max +=
+      (state.resource.compounds?.value ?? 0) *
+      (state.config.cfgCapacity.compounds?.money ?? 0);
     return max;
   };
 
@@ -44,17 +43,19 @@ class Money implements IResource {
     let inc = 0;
 
     // crypto currency
-    inc += (state.resource.cryptoCurrency?.value ?? 0)
-      * state.config.cfgCryptoReturnAmount;
+    inc +=
+      (state.resource.cryptoCurrency?.value ?? 0) *
+      state.config.cfgCryptoReturnAmount;
 
     // salaries
-    inc -= (state.resource.pastors?.value ?? 0)
-      * (state.config.cfgSalary.pastors ?? 0);
+    inc -=
+      (state.resource.pastors?.value ?? 0) *
+      (state.config.cfgSalary.pastors ?? 0);
 
     return inc;
   };
 
-  protected _collectTithes (state: GameState): void {
+  protected _collectTithes(state: GameState): void {
     if (this.value >= this.max(state)) return;
 
     const followers = state.resource.followers?.value ?? 0;
@@ -63,8 +64,10 @@ class Money implements IResource {
     // collecting too frequently hurts credibility
     const diff = state.now - this._lastCollectionTime;
     if (diff < state.config.cfgTimeBetweenTithes) {
-      const lost = state.config.cfgTimeBetweenTithes
-        / diff / state.config.cfgTitheCredibilityHitFactor;
+      const lost =
+        state.config.cfgTimeBetweenTithes /
+        diff /
+        state.config.cfgTitheCredibilityHitFactor;
       state.resource.credibility?.addValue(lost * -1, state);
     }
 
@@ -77,10 +80,14 @@ class Money implements IResource {
     }
   }
 
-  protected _purchaseLog (amount: number, state: GameState): string {
+  protected _purchaseLog(amount: number, state: GameState): string {
     const followers = state.resource.followers;
     if (followers !== undefined) {
-      return `You collected $${formatNumber(amount)} from ${formatNumber(followers.value)} ${followers.value > 1 ? followers.pluralName : followers.singularName}.`;
+      return `You collected $${formatNumber(amount)} from ${formatNumber(
+        followers.value
+      )} ${
+        followers.value > 1 ? followers.pluralName : followers.singularName
+      }.`;
     }
     return `You collected $${formatNumber(amount)} in tithings.`;
   }

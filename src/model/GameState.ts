@@ -11,27 +11,27 @@ class GameState {
   private _timeSinceSave = 0;
   private readonly _timeBetweenSaves = 10000;
 
-  private _resources: { [key in ResourceKey]?: IResource } = { };
+  private _resources: { [key in ResourceKey]?: IResource } = {};
   private readonly _resourceKeys: ResourceKey[] = [];
 
-  constructor (config: GameConfig) {
+  constructor(config: GameConfig) {
     this.config = config;
   }
 
-  public get resource (): { [key in ResourceKey]?: IResource } {
+  public get resource(): { [key in ResourceKey]?: IResource } {
     return this._resources;
   }
 
-  public get resources (): ResourceKey[] {
+  public get resources(): ResourceKey[] {
     return this._resourceKeys;
   }
 
-  public addResource (key: ResourceKey, resource: IResource): void {
+  public addResource(key: ResourceKey, resource: IResource): void {
     this._resourceKeys.push(key);
     this._resources[key] = resource;
   }
 
-  public advance (time: number): void {
+  public advance(time: number): void {
     this.now = new Date().getTime();
 
     this._timeSinceSave += time;
@@ -54,9 +54,11 @@ class GameState {
       const resource = this._resources[rkey];
       if (resource === undefined || !resource.isUnlocked(this)) continue;
 
-      if (resource.inc !== undefined && (resource.max === undefined
-        || resource.value < resource.max(this))) {
-        resource.addValue(resource.inc(this) * time / 1000, this);
+      if (
+        resource.inc !== undefined &&
+        (resource.max === undefined || resource.value < resource.max(this))
+      ) {
+        resource.addValue((resource.inc(this) * time) / 1000, this);
       }
 
       if (resource.max !== undefined && resource.value > resource.max(this)) {
@@ -68,11 +70,15 @@ class GameState {
     }
   }
 
-  public performAction (resourceKey: ResourceKey, actionIndex: number): void {
+  public performAction(resourceKey: ResourceKey, actionIndex: number): void {
     const resource = this._resources[resourceKey];
-    if (resource === undefined || resource.userActions === undefined
-      || actionIndex > resource.userActions.length
-      || !resource.isUnlocked(this)) return;
+    if (
+      resource === undefined ||
+      resource.userActions === undefined ||
+      actionIndex > resource.userActions.length ||
+      !resource.isUnlocked(this)
+    )
+      return;
 
     const action = resource.userActions[actionIndex];
 
@@ -82,7 +88,7 @@ class GameState {
     }
   }
 
-  public deductCost (cost: ResourceNumber | null): boolean {
+  public deductCost(cost: ResourceNumber | null): boolean {
     if (cost === null) return true;
     if (!this.isPurchasable(cost)) return false;
     for (const key in cost) {
@@ -95,7 +101,7 @@ class GameState {
     return true;
   }
 
-  public isPurchasable (cost?: ResourceNumber): boolean {
+  public isPurchasable(cost?: ResourceNumber): boolean {
     if (cost === undefined) return true;
     for (const key in cost) {
       const rkey = <ResourceKey>key;
@@ -106,13 +112,13 @@ class GameState {
     return true;
   }
 
-  public log (text: string): void {
+  public log(text: string): void {
     if (this.logger !== null) {
       this.logger.msg(text);
     }
   }
 
-  public save (): void {
+  public save(): void {
     const saveObj: SaveData = {
       version: {
         maj: this.config.versionMajor,
@@ -137,7 +143,7 @@ class GameState {
     localStorage.setItem('savegame', saveStr);
   }
 
-  public load (): void {
+  public load(): void {
     const saveStr: string | null = localStorage.getItem('savegame');
     if (saveStr !== null) {
       try {
@@ -153,8 +159,10 @@ class GameState {
               resource.value = saveRes.value;
               // @ts-expect-error writing read-only cost from save data
               resource.cost = saveRes.cost;
-              if (saveRes.config !== undefined
-                && resource.restoreConfig !== undefined) {
+              if (
+                saveRes.config !== undefined &&
+                resource.restoreConfig !== undefined
+              ) {
                 resource.restoreConfig(saveRes.config);
               }
             }
@@ -172,7 +180,7 @@ class GameState {
     }
   }
 
-  public reset (): void {
+  public reset(): void {
     const newState: GameState = this.config.generateState();
     localStorage.clear();
     this._resources = newState._resources;

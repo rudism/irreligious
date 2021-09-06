@@ -47,6 +47,6 @@ type ResourceConfig = {
 };
 
 type SaveData = {
-  version: { maj: number, min: number };
+  version: { maj: number; min: number };
   resources: { [key in ResourceKey]?: ResourceConfig };
 };

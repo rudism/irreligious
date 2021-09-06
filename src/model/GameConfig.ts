@@ -79,55 +79,108 @@ class GameConfig {
   public cfgTitheAmount = 10;
   public cfgTitheCredibilityHitFactor = 3;
 
-  constructor (
-    public versionMajor: number,
-    public versionMinor: number,
-  ) {}
+  constructor(public versionMajor: number, public versionMinor: number) {}
 
-  public generateState (): GameState {
+  public generateState(): GameState {
     const state = new GameState(this);
 
     // create player organization
     state.addResource(ResourceKey.followers, new Follower());
 
     // create world religions
-    state.addResource(ResourceKey.christianity, new Religion(
-      'Christianity', 'christian', 'christians', 'God, Jesus, Bible, churches.',
-      (this.cfgReligion.christianity ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.christianity,
+      new Religion(
+        'Christianity',
+        'christian',
+        'christians',
+        'God, Jesus, Bible, churches.',
+        (this.cfgReligion.christianity ?? 0) * this.worldPopulation
+      )
+    );
 
-    state.addResource(ResourceKey.islam, new Religion(
-      'Islam', 'muslim', 'muslims', 'God, Muhammad, Quran, mosques.',
-      (this.cfgReligion.islam ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.islam,
+      new Religion(
+        'Islam',
+        'muslim',
+        'muslims',
+        'God, Muhammad, Quran, mosques.',
+        (this.cfgReligion.islam ?? 0) * this.worldPopulation
+      )
+    );
 
-    state.addResource(ResourceKey.hinduism, new Religion(
-      'Hinduism', 'hindu', 'hindus', 'Dogma-free spiritualism.',
-      (this.cfgReligion.hinduism ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.hinduism,
+      new Religion(
+        'Hinduism',
+        'hindu',
+        'hindus',
+        'Dogma-free spiritualism.',
+        (this.cfgReligion.hinduism ?? 0) * this.worldPopulation
+      )
+    );
 
-    state.addResource(ResourceKey.buddhism, new Religion(
-      'Buddhism', 'buddhist', 'buddhists', 'The minimization of suffering.',
-      (this.cfgReligion.buddhism ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.buddhism,
+      new Religion(
+        'Buddhism',
+        'buddhist',
+        'buddhists',
+        'The minimization of suffering.',
+        (this.cfgReligion.buddhism ?? 0) * this.worldPopulation
+      )
+    );
 
-    state.addResource(ResourceKey.sikhism, new Religion(
-      'Sikhism', 'sikh', 'sikhs', 'Meditation and ten Gurus',
-      (this.cfgReligion.sikhism ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.sikhism,
+      new Religion(
+        'Sikhism',
+        'sikh',
+        'sikhs',
+        'Meditation and ten Gurus',
+        (this.cfgReligion.sikhism ?? 0) * this.worldPopulation
+      )
+    );
 
-    state.addResource(ResourceKey.judaism, new Religion(
-      'Judaism', 'jew', 'jews', 'God, Abraham, Torah, synagogues.',
-      (this.cfgReligion.judaism ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.judaism,
+      new Religion(
+        'Judaism',
+        'jew',
+        'jews',
+        'God, Abraham, Torah, synagogues.',
+        (this.cfgReligion.judaism ?? 0) * this.worldPopulation
+      )
+    );
 
-    state.addResource(ResourceKey.other, new Religion(
-      'Other', 'person from other faiths', 'people from other faiths', 'A variety of belief systems.',
-      (this.cfgReligion.other ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.other,
+      new Religion(
+        'Other',
+        'person from other faiths',
+        'people from other faiths',
+        'A variety of belief systems.',
+        (this.cfgReligion.other ?? 0) * this.worldPopulation
+      )
+    );
 
-    state.addResource(ResourceKey.atheism, new Religion(
-      'Non-Religious', 'atheist', 'atheists', 'Atheists and agnostics.',
-      (this.cfgReligion.atheism ?? 0) * this.worldPopulation));
+    state.addResource(
+      ResourceKey.atheism,
+      new Religion(
+        'Non-Religious',
+        'atheist',
+        'atheists',
+        'Atheists and agnostics.',
+        (this.cfgReligion.atheism ?? 0) * this.worldPopulation
+      )
+    );
 
     // add jobs
     state.addResource(ResourceKey.pastors, new Pastor());
 
     // add resources
-    state.addResource(ResourceKey.money, new Money(3.50));
+    state.addResource(ResourceKey.money, new Money(3.5));
     state.addResource(ResourceKey.cryptoCurrency, new CryptoCurrency(this));
     state.addResource(ResourceKey.tents, new Tent(this));
     state.addResource(ResourceKey.houses, new House(this));

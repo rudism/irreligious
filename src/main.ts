@@ -8,10 +8,10 @@ let globalStartTime = 0;
 let globalTimeout: number | null = null;
 const cycleLength = 250;
 
-function gameLoop (state: GameState, renderer: IRenderer): void {
+function gameLoop(state: GameState, renderer: IRenderer): void {
   // figure out how much actual time has passed
-  const elapsedTime: number = globalStartTime > 0
-    ? new Date().getTime() - globalStartTime : 0;
+  const elapsedTime: number =
+    globalStartTime > 0 ? new Date().getTime() - globalStartTime : 0;
 
   state.advance(elapsedTime);
   renderer.render(state);
@@ -23,14 +23,15 @@ function gameLoop (state: GameState, renderer: IRenderer): void {
   }, cycleLength);
 }
 
-function startGame (state: GameState, renderer: IRenderer): void {
+function startGame(state: GameState, renderer: IRenderer): void {
   state.load(); // load saved game if one exists
   gameLoop(state, renderer); // start the main loop
 }
 
-function initialRender (state: GameState): void {
+function initialRender(state: GameState): void {
   if (state.logger === null) return;
-  state.logger.unsafeMsg(`<strong>Welcome to irreligio.us!</strong> <em>alpha v${versionMajor}.${versionMinor}</em>
+  state.logger
+    .unsafeMsg(`<strong>Welcome to irreligio.us!</strong> <em>alpha v${versionMajor}.${versionMinor}</em>
 <br><br>
 The game is still in an active state of development and nowhere near its final form. This is a debugging interface that can show all resources even before they're unlocked, and many factors may be sped up significantly to aid in development. There is a chance that playing it now may spoil aspects of the game for you later when it's closer to being finished.
 <br><br>
@@ -63,7 +64,8 @@ The game's source code on <a href='https://github.com/rudism/irreligious'>Github
   });
 
   if (document.readyState !== 'loading') startGame(state, renderer);
-  else document.addEventListener('DOMContentLoaded', (): void => {
-    startGame(state, renderer);
-  });
+  else
+    document.addEventListener('DOMContentLoaded', (): void => {
+      startGame(state, renderer);
+    });
 })();

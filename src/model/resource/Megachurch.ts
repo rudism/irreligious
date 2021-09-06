@@ -1,12 +1,15 @@
 /// <reference path="./Infrastructure.ts" />
 
 class Megachurch extends Infrastructure {
-  constructor (config: GameConfig) {
+  constructor(config: GameConfig) {
     super(
       'Megachurches',
       'megachurch',
       'megachurches',
-      `Room for ${formatNumber(config.cfgCapacity.megaChurches?.pastors ?? 0)} pastors`);
+      `Room for ${formatNumber(
+        config.cfgCapacity.megaChurches?.pastors ?? 0
+      )} pastors`
+    );
     this.cost.money = config.cfgInitialCost.megaChurches;
     this._costMultiplier.money = config.cfgCostMultiplier.megaChurches;
   }
@@ -14,7 +17,7 @@ class Megachurch extends Infrastructure {
   public max: (state: GameState) => number = (state) =>
     state.config.cfgInitialMax.megaChurches ?? 0;
 
-  public isUnlocked (state: GameState): boolean {
+  public isUnlocked(state: GameState): boolean {
     if (this._isUnlocked) return true;
     const permit = state.resource.buildingPermit;
     if (permit !== undefined && permit.value > 0) {

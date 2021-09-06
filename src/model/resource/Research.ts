@@ -4,7 +4,7 @@ abstract class Research extends Purchasable {
   public readonly resourceType = ResourceType.research;
   public inc = undefined;
 
-  constructor (
+  constructor(
     public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
@@ -16,7 +16,8 @@ abstract class Research extends Purchasable {
       pluralName,
       description,
       'Learn',
-      'Complete this research.');
+      'Complete this research.'
+    );
     this.value = 0;
   }
 

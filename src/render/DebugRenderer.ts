@@ -6,7 +6,7 @@ class DebugRenderer implements IRenderer {
   private _initialized = false;
   private _handleClick = true;
 
-  public render (state: GameState): void {
+  public render(state: GameState): void {
     const rkeys = state.resources;
     const container = document.getElementById('irreligious-game');
     if (!this._initialized) {
@@ -46,7 +46,8 @@ class DebugRenderer implements IRenderer {
         const resource = state.resource[rkey];
         if (resource === undefined || resource.label === undefined) continue;
         const resContainer = document.getElementById(
-          `resource-container-${resource.resourceType}`);
+          `resource-container-${resource.resourceType}`
+        );
         if (resContainer === null) continue;
         const el = document.createElement('div');
         el.className = 'resource locked';
@@ -70,8 +71,10 @@ class DebugRenderer implements IRenderer {
               ${this._escape(action.name)}</button>`;
           }
         }
-        if (resource.cost !== undefined
-          && Object.keys(resource.cost).length !== 0) {
+        if (
+          resource.cost !== undefined &&
+          Object.keys(resource.cost).length !== 0
+        ) {
           content += "<br>Cost: <span class='resource-cost'></span>";
         }
         el.innerHTML = content;
@@ -93,8 +96,9 @@ class DebugRenderer implements IRenderer {
 <button id='dbg-btn-reset'>Reset Game</button>
       `;
       resDiv.appendChild(footer);
-      document.getElementById('dbg-btn-reset')?.addEventListener('click',
-        (): void => {
+      document
+        .getElementById('dbg-btn-reset')
+        ?.addEventListener('click', (): void => {
           state.reset();
           container.innerHTML = '';
           this._initialized = false;
@@ -112,9 +116,10 @@ class DebugRenderer implements IRenderer {
           ? Math.floor(resource.value)
           : resource.value;
         elV.innerHTML = formatNumber(value);
-        elT.innerHTML = resource.max !== undefined
-          ? ` / ${formatNumber(resource.max(state))}`
-          : '';
+        elT.innerHTML =
+          resource.max !== undefined
+            ? ` / ${formatNumber(resource.max(state))}`
+            : '';
         if (resource.userActions !== undefined) {
           for (let i = 0; i < resource.userActions.length; i++) {
             const elB = document.getElementById(`resource-btn-${rkey}-${i}`);
@@ -128,8 +133,7 @@ class DebugRenderer implements IRenderer {
         }
         if (resource.inc !== undefined && resource.inc(state) > 0) {
           const elI = el.getElementsByClassName('resource-inc')[0];
-          elI.innerHTML =
-            ` +${formatNumber(resource.inc(state))}/s`;
+          elI.innerHTML = ` +${formatNumber(resource.inc(state))}/s`;
         }
         if (this._handleClick) {
           const elC = el.getElementsByClassName('resource-cost');
@@ -150,7 +154,7 @@ class DebugRenderer implements IRenderer {
     this._initialized = true;
   }
 
-  private _escape (text: string): string {
+  private _escape(text: string): string {
     const escapes: { [key: string]: string } = {
       '&': '&amp;',
       '<': '&lt;',
@@ -160,11 +164,10 @@ class DebugRenderer implements IRenderer {
       '/': '&#x2F;',
     };
     const escaper = /[&<>"'/]/g;
-    return text.replace(escaper, (match: string): string =>
-      escapes[match]);
+    return text.replace(escaper, (match: string): string => escapes[match]);
   }
 
-  private _getCostStr (resource: IResource, state: GameState): string {
+  private _getCostStr(resource: IResource, state: GameState): string {
     let cost = '';
     for (const rkey of state.resources) {
       if (resource.cost?.[rkey] !== undefined) {

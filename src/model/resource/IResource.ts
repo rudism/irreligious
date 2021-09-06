@@ -20,6 +20,7 @@ interface IResource {
   isUnlocked: (state: GameState) => boolean;
 
   emitConfig?: () => { [key: string]: string | number | boolean };
-  restoreConfig?: (
-    config: { [key: string]: string | number | boolean }) => void;
+  restoreConfig?: (config: {
+    [key: string]: string | number | boolean;
+  }) => void;
 }

@@ -1,19 +1,19 @@
 class DebugLogger implements ILogger {
   private readonly _container: HTMLElement;
 
-  constructor (container: HTMLElement) {
+  constructor(container: HTMLElement) {
     this._container = container;
   }
 
-  public msg (text: string): void {
+  public msg(text: string): void {
     this._doMsg(text, true);
   }
 
-  public unsafeMsg (text: string): void {
+  public unsafeMsg(text: string): void {
     this._doMsg(text, false);
   }
 
-  private _doMsg (text: string, safe: boolean): void {
+  private _doMsg(text: string, safe: boolean): void {
     const el = document.createElement('p');
     if (safe) {
       el.innerText = text;

@@ -1,7 +1,7 @@
 const numberFormatDigits = 1;
 
-function formatNumber (num: number): string {
-  type UnitLookup = { value: number, symbol: string };
+function formatNumber(num: number): string {
+  type UnitLookup = { value: number; symbol: string };
   const lookup: UnitLookup[] = [
     { value: 1, symbol: '' },
     { value: 1e3, symbol: 'K' },
@@ -17,7 +17,7 @@ function formatNumber (num: number): string {
     if (num >= item.value) break;
   }
   return item !== undefined
-    ? (num / item.value).toFixed(
-      numberFormatDigits).replace(rx, '$1') + item.symbol
+    ? (num / item.value).toFixed(numberFormatDigits).replace(rx, '$1') +
+        item.symbol
     : num.toFixed(numberFormatDigits).replace(rx, '$1');
 }
