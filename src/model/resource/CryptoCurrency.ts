@@ -14,6 +14,8 @@ class CryptoCurrency extends Purchasable {
     this.valueInWholeNumbers = false;
   }
 
-  public max: (state: GameState) => number = (state) =>
+  public isUnlocked = (_state: GameState): boolean => true;
+
+  public max = (state: GameState): number =>
     state.config.cfgInitialMax.cryptoCurrency ?? 0;
 }

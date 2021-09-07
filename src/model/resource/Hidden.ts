@@ -1,12 +1,11 @@
 /// <reference path="./IResource.ts" />
 
-abstract class Passive implements IResource {
+abstract class Hidden implements IResource {
   public readonly resourceType = ResourceType.passive;
   public readonly valueInWholeNumbers = false;
   public value = 0;
 
   constructor(
-    public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string

@@ -4,6 +4,7 @@
 /// <reference path="./resource/Compound.ts" />
 /// <reference path="./resource/Credibility.ts" />
 /// <reference path="./resource/CryptoCurrency.ts" />
+/// <reference path="./resource/CryptoMarket.ts" />
 /// <reference path="./resource/Follower.ts" />
 /// <reference path="./resource/House.ts" />
 /// <reference path="./resource/Megachurch.ts" />
@@ -29,7 +30,8 @@ class GameConfig {
 
   // general configs
   public cfgInitialMax: ResourceNumber = {
-    cryptoCurrency: 1000,
+    cryptoCurrency: 10000,
+    cryptoMarket: 100000000,
     megaChurches: 2,
     money: 500000,
     followers: 5,
@@ -70,7 +72,10 @@ class GameConfig {
   public cfgCredibilityFollowerLossRatio = 0.04;
   public cfgCredibilityFollowerLossTime = 10000;
   public cfgCredibilityRestoreRate = 0.25;
-  public cfgCryptoReturnAmount = 1;
+  public cfgCryptoCurrencyMinimumValue = 1;
+  public cfgCryptoMarketAdjustAmount = 0.1;
+  public cfgCryptoMarketAdjustPeriod = 30000;
+  public cfgCryptoMarketGrowthBias = 0.1;
   public cfgDefaultSellMultiplier = 0.5;
   public cfgFollowerGainLossLogTimer = 10000;
   public cfgPassiveMax = 100;
@@ -194,6 +199,7 @@ class GameConfig {
 
     // add passive resources
     state.addResource(ResourceKey.credibility, new Credibility(this));
+    state.addResource(ResourceKey.cryptoMarket, new CryptoMarket(this));
 
     return state;
   }

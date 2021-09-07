@@ -3,7 +3,7 @@
 class GameState {
   public readonly config: GameConfig;
 
-  public onResourceClick: Array<() => void> = [];
+  public onAction: Array<() => void> = [];
   public logger: ILogger | null = null;
 
   public now = 0;
@@ -70,6 +70,12 @@ class GameState {
     }
   }
 
+  public autoAction(): void {
+    for (const callback of this.onAction) {
+      callback();
+    }
+  }
+
   public performAction(resourceKey: ResourceKey, actionIndex: number): void {
     const resource = this._resources[resourceKey];
     if (
@@ -83,7 +89,7 @@ class GameState {
     const action = resource.userActions[actionIndex];
 
     action.performAction(this);
-    for (const callback of this.onResourceClick) {
+    for (const callback of this.onAction) {
       callback();
     }
   }

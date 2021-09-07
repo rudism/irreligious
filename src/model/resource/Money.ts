@@ -42,11 +42,6 @@ class Money implements IResource {
   public inc: (state: GameState) => number = (state) => {
     let inc = 0;
 
-    // crypto currency
-    inc +=
-      (state.resource.cryptoCurrency?.value ?? 0) *
-      state.config.cfgCryptoReturnAmount;
-
     // salaries
     inc -=
       (state.resource.pastors?.value ?? 0) *

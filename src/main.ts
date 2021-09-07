@@ -2,7 +2,7 @@
 /// <reference path="./render/DebugRenderer.ts" />
 
 const versionMajor = 2;
-const versionMinor = 0;
+const versionMinor = 1;
 
 let globalStartTime = 0;
 let globalTimeout: number | null = null;
@@ -45,18 +45,17 @@ The game's source code on <a href='https://github.com/rudism/irreligious'>Github
   const config = new GameConfig(versionMajor, versionMinor);
 
   // debug values to make the game play faster while testing
-  config.cfgTitheAmount = 1000;
-  config.cfgTimeBetweenTithes = 5000;
-  config.cfgCryptoReturnAmount = 100;
   config.cfgCredibilityRestoreRate = 5;
   config.cfgPastorRecruitRate = 0.5;
+  config.cfgTimeBetweenTithes = 5000;
+  config.cfgTitheAmount = 1000;
 
   const renderer = new DebugRenderer();
   renderer.onInitialRender = initialRender;
   const state = config.generateState();
 
   // re-run main loop immediately on user clicks
-  state.onResourceClick.push((): void => {
+  state.onAction.push((): void => {
     if (globalTimeout !== null) {
       clearTimeout(globalTimeout);
       gameLoop(state, renderer);

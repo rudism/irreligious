@@ -22,6 +22,7 @@ enum ResourceKey {
   pastors = 'pastors',
   money = 'money',
   cryptoCurrency = 'cryptoCurrency',
+  cryptoMarket = 'cryptoMarket',
   tents = 'tents',
   houses = 'houses',
   churches = 'churches',

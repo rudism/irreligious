@@ -14,7 +14,7 @@ class DebugRenderer implements IRenderer {
         console.error('could not find game container');
         return;
       }
-      state.onResourceClick.push((): void => {
+      state.onAction.push((): void => {
         this._handleClick = true;
       });
       const style = document.createElement('link');
