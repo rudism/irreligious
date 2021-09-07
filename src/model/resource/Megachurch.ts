@@ -8,7 +8,8 @@ class Megachurch extends Infrastructure {
       'megachurches',
       `Room for ${formatNumber(
         config.cfgCapacity.megaChurches?.pastors ?? 0
-      )} pastors`
+      )} pastors`,
+      true
     );
     this.cost.money = config.cfgInitialCost.megaChurches;
     this._costMultiplier.money = config.cfgCostMultiplier.megaChurches;

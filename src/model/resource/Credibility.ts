@@ -6,7 +6,7 @@ class Credibility extends Passive {
       'Credibility',
       'credibility',
       'credibilities',
-      'Affects your ability to recruit and retain followers.'
+      'Affects your ability to retain followers and collect tithes.'
     );
     this.value = config.cfgPassiveMax;
   }

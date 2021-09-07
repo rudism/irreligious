@@ -44,8 +44,9 @@ class Follower implements IResource {
     inc += pastors * state.config.cfgPastorRecruitRate;
 
     // credibility adjustment
-    const creds = state.resource.credibility;
-    if (creds?.max !== undefined) inc *= creds.value / creds.max(state);
+    // this should be based on notoriety instead
+    /*const creds = state.resource.credibility;
+    if (creds?.max !== undefined) inc *= creds.value / creds.max(state);*/
 
     return inc;
   }
@@ -119,8 +120,8 @@ class Follower implements IResource {
           const followers = this._followerDests[rkey];
           if (religion !== undefined && followers !== undefined) {
             if (msg !== '') msg += ', ';
-            msg += `${formatNumber(followers)} ${
-              followers > 1 ? religion.pluralName : religion.singularName
+            msg += `${formatNumber(followers)} became ${
+              followers > 1 ? religion.pluralName : 'a ' + religion.singularName
             }`;
             total += followers;
             delete this._followerDests[rkey];
@@ -166,14 +167,15 @@ class Follower implements IResource {
     }
 
     // chance to fail increases as credibility decreases
-    const creds = state.resource.credibility;
+    // this should be based on notoriety instead
+    /*const creds = state.resource.credibility;
     if (creds?.max !== undefined) {
       const ratio = Math.ceil(creds.value) / creds.max(state);
       if (Math.random() > ratio) {
         state.log('Your recruitment efforts failed.');
         return;
       }
-    }
+    }*/
 
     this._lastRecruitmentLog = 0; // always log on click
     this.addValue(1, state);

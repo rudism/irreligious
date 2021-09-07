@@ -71,6 +71,7 @@ class GameConfig {
   public cfgCredibilityFollowerLossTime = 10000;
   public cfgCredibilityRestoreRate = 0.25;
   public cfgCryptoReturnAmount = 1;
+  public cfgDefaultSellMultiplier = 0.5;
   public cfgFollowerGainLossLogTimer = 10000;
   public cfgPassiveMax = 100;
   public cfgPastorRecruitRate = 0.01;

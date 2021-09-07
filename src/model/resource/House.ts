@@ -8,7 +8,8 @@ class House extends Infrastructure {
       'houses',
       `Provides room to house ${formatNumber(
         config.cfgCapacity.houses?.followers ?? 0
-      )} followers.`
+      )} followers.`,
+      true
     );
     this.cost.money = config.cfgInitialCost.houses;
     this._costMultiplier.money = config.cfgCostMultiplier.houses;

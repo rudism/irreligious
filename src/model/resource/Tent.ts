@@ -8,7 +8,8 @@ class Tent extends Infrastructure {
       'tents',
       `Provides room to house ${formatNumber(
         config.cfgCapacity.tents?.followers ?? 0
-      )} followers.`
+      )} followers.`,
+      true
     );
     this.cost.money = config.cfgInitialCost.tents;
     this._costMultiplier.money = config.cfgCostMultiplier.tents;

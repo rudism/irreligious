@@ -79,9 +79,9 @@
 ## Short-Term Todos
 
 - [ ] add `disabledHint` to `userActions` to generate hint about how to enable an action
-- [ ] add an action to sell purchasables and regain some portion of their cost
+- [x] add an action to sell purchasables and regain some portion of their cost
 - [ ] add a `policy` resource type that can be toggled on or off
-- [ ] remove recruitment effects of credibility (that will be for notoriety instead)
+- [x] remove recruitment effects of credibility (that will be for notoriety instead)
 
 ## Long-Term Ideas
 

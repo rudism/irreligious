@@ -8,7 +8,10 @@ class Church extends Infrastructure {
       'churches',
       `Preaching grounds for ${formatNumber(
         config.cfgCapacity.churches?.pastors ?? 0
-      )} pastors.`
+      )} pastors.`,
+      true,
+      undefined,
+      undefined
     );
     this.cost.money = config.cfgInitialCost.churches;
     this._costMultiplier.money = config.cfgCostMultiplier.churches;

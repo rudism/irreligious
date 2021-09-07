@@ -34,11 +34,16 @@ class Pastor extends Job {
     if (this._timeSinceLastTithe >= state.config.cfgTimeBetweenTithes) {
       const money = state.resource.money;
       const followers = state.resource.followers;
+      let tithable = Math.floor((followers?.value ?? 0) - this.value);
+      // bad credibility makes people not tithe
+      const creds = state.resource.credibility;
+      if (creds?.max !== undefined) {
+        tithable = Math.floor(tithable * (creds.value / creds.max(state)));
+      }
       let tithed = Math.floor(
         this.value * state.config.cfgPastorTitheCollectionFollowerMax
       );
-      if (Math.floor(followers?.value ?? 0) < tithed)
-        tithed = Math.floor(followers?.value ?? 0);
+      if (tithable < tithed) tithed = tithable;
       let collected = tithed * state.config.cfgTitheAmount;
       if (
         money?.max !== undefined &&

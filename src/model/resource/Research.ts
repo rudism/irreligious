@@ -15,6 +15,7 @@ abstract class Research extends Purchasable {
       singularName,
       pluralName,
       description,
+      false,
       'Learn',
       'Complete this research.'
     );

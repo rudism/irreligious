@@ -6,7 +6,8 @@ class Compound extends Infrastructure {
       'Compounds',
       'compound',
       'compounds',
-      'Provides space for tents, houses, and churches and a place to hide more money.'
+      'Provides space for tents, houses, and churches and a place to hide more money.',
+      true
     );
     this.cost.money = config.cfgInitialCost.compounds;
     this._costMultiplier.money = config.cfgCostMultiplier.compounds;

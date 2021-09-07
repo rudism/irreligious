@@ -85,9 +85,11 @@ class Money implements IResource {
     if (followers !== undefined) {
       state.log(
         `You collected $${formatNumber(amount)} from ${formatNumber(
-          followers.value
+          Math.floor(followers.value)
         )} ${
-          followers.value > 1 ? followers.pluralName : followers.singularName
+          Math.floor(followers.value) > 1
+            ? followers.pluralName
+            : followers.singularName
         }.`
       );
     } else {
