@@ -10,7 +10,6 @@ class CryptoCurrency extends Purchasable {
       true
     );
     this.cost.money = config.cfgInitialCost.cryptoCurrency;
-    this._costMultiplier.money = config.cfgCostMultiplier.cryptoCurrency;
     this.valueInWholeNumbers = false;
   }
 
