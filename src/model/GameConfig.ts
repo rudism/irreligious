@@ -2,6 +2,7 @@
 /// <reference path="./resource/BuildingPermit.ts" />
 /// <reference path="./resource/Church.ts" />
 /// <reference path="./resource/Compound.ts" />
+/// <reference path="./resource/CompoundManager.ts" />
 /// <reference path="./resource/Credibility.ts" />
 /// <reference path="./resource/CryptoCurrency.ts" />
 /// <reference path="./resource/CryptoMarket.ts" />
@@ -58,12 +59,19 @@ class GameConfig {
   };
 
   public cfgSalary: ResourceNumber = {
-    pastors: 7.5,
+    pastors: 250,
+    compoundManagers: 1000,
   };
 
   public cfgCapacity: { [key in ResourceKey]?: ResourceNumber } = {
     churches: { pastors: 2 },
-    compounds: { churches: 1, houses: 2, money: 500000, tents: 10 },
+    compounds: {
+      churches: 1,
+      compoundManagers: 1,
+      houses: 2,
+      money: 500000,
+      tents: 10,
+    },
     houses: { followers: 10 },
     megaChurches: { pastors: 5 },
     tents: { followers: 2 },
@@ -78,6 +86,8 @@ class GameConfig {
   public cfgCryptoMarketGrowthBias = 0.1;
   public cfgDefaultSellMultiplier = 0.5;
   public cfgFollowerGainLossLogTimer = 10000;
+  public cfgNoMoneyQuitRate = 0.2;
+  public cfgNoMoneyQuitTime = 10000;
   public cfgPassiveMax = 100;
   public cfgPastorRecruitRate = 0.01;
   public cfgPastorTitheCollectionFollowerMax = 100;
@@ -184,6 +194,7 @@ class GameConfig {
 
     // add jobs
     state.addResource(ResourceKey.pastors, new Pastor());
+    state.addResource(ResourceKey.compoundManagers, new CompoundManager());
 
     // add resources
     state.addResource(ResourceKey.money, new Money(3.5));

@@ -131,9 +131,13 @@ class DebugRenderer implements IRenderer {
             }
           }
         }
-        if (resource.inc !== undefined && resource.inc(state) > 0) {
-          const elI = el.getElementsByClassName('resource-inc')[0];
-          elI.innerHTML = ` +${formatNumber(resource.inc(state))}/s`;
+        const inc =
+          resource.inc !== undefined ? resource.inc(state) : undefined;
+        const elI = el.getElementsByClassName('resource-inc')[0];
+        if (inc !== undefined && inc !== 0) {
+          elI.innerHTML = ` ${inc > 0 ? '+' : ''}${formatNumber(inc)}/s`;
+        } else if (elI.innerHTML !== '') {
+          elI.innerHTML = '';
         }
         if (this._handleClick) {
           const elC = el.getElementsByClassName('resource-cost');

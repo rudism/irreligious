@@ -1,4 +1,5 @@
 /// <reference path="./IResource.ts" />
+/// <reference path="./Job.ts" />
 
 class Follower implements IResource {
   public readonly resourceType = ResourceType.religion;
@@ -24,6 +25,8 @@ class Follower implements IResource {
   private _lastRecruitmentLog = 0;
   private _followerSources: ResourceNumber = {};
   private _followerDests: ResourceNumber = {};
+  private _timeSinceLastQuit = 0;
+  private _quitTracker: ResourceNumber = {};
 
   public max(state: GameState): number {
     let max = state.config.cfgInitialMax.followers ?? 0;
@@ -84,7 +87,7 @@ class Follower implements IResource {
   }
 
   public advanceAction(time: number, state: GameState): void {
-    // chance to lose some followers every 10s if credibility < 100%
+    // chance to lose some followers if credibility < 100%
     this._timeSinceLastLost += time;
     if (this._timeSinceLastLost > state.config.cfgCredibilityFollowerLossTime) {
       if (this.value > 0) {
@@ -104,12 +107,40 @@ class Follower implements IResource {
       this._timeSinceLastLost = 0;
     }
 
-    // log lost and gained followers every 10s
+    // chance for some followers to quit their jobs if money === 0
+    const money = state.resource.money;
+    const totalJobs = Job.totalJobs(state);
+    if (money !== undefined && money.value <= 0 && totalJobs > 0) {
+      this._timeSinceLastQuit += time;
+      if (this._timeSinceLastQuit > state.config.cfgNoMoneyQuitTime) {
+        let lost = Math.ceil(totalJobs * state.config.cfgNoMoneyQuitRate);
+        for (const rkey of Job.jobResources(state)) {
+          const job = state.resource[rkey];
+          if (job !== undefined && job.value > 0) {
+            if (job.value >= lost) {
+              job.addValue(lost * -1, state);
+              this._quitTracker[rkey] = lost;
+              break;
+            } else {
+              job.addValue(job.value * -1, state);
+              this._quitTracker[rkey] = job.value;
+              lost -= job.value;
+            }
+          }
+        }
+        this._timeSinceLastQuit = 0;
+      }
+    } else {
+      this._timeSinceLastQuit = 0;
+    }
+
+    // log lost, gained, and quit followers at regular intervals
     if (
       state.now - this._lastRecruitmentLog >
         state.config.cfgFollowerGainLossLogTimer &&
       (Object.keys(this._followerSources).length > 0 ||
-        Object.keys(this._followerDests).length > 0)
+        Object.keys(this._followerDests).length > 0 ||
+        Object.keys(this._quitTracker).length > 0)
     ) {
       if (Object.keys(this._followerDests).length > 0) {
         let msg = '';
@@ -153,6 +184,28 @@ class Follower implements IResource {
           `You gained ${formatNumber(total)} ${
             total > 1 ? this.pluralName : this.singularName
           }: ${msg}`
+        );
+      }
+      if (Object.keys(this._quitTracker).length > 0) {
+        let msg = '';
+        let total = 0;
+        for (const key in this._quitTracker) {
+          const rkey = <ResourceKey>key;
+          const job = state.resource[rkey];
+          const followers = this._quitTracker[rkey];
+          if (job !== undefined && followers !== undefined) {
+            if (msg !== '') msg += ', ';
+            msg += `${formatNumber(followers)} ${
+              followers > 1 ? job.pluralName : job.singularName
+            }`;
+            total += followers;
+            delete this._quitTracker[rkey];
+          }
+        }
+        state.log(
+          `${formatNumber(total)} ${
+            total > 1 ? this.pluralName : this.singularName
+          } quit their jobs: ${msg}`
         );
       }
       this._lastRecruitmentLog = state.now;

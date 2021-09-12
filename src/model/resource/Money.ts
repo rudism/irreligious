@@ -47,6 +47,10 @@ class Money implements IResource {
       (state.resource.pastors?.value ?? 0) *
       (state.config.cfgSalary.pastors ?? 0);
 
+    inc -=
+      (state.resource.compoundManagers?.value ?? 0) *
+      (state.config.cfgSalary.compoundManagers ?? 0);
+
     return inc;
   };
 

@@ -15,7 +15,8 @@ abstract class Job implements IResource {
       description: 'Promote one of your followers.',
       isEnabled: (state: GameState): boolean =>
         (this.max === undefined || this.value < this.max(state)) &&
-        this._availableJobs(state) > 0,
+        Job.availableJobs(state) > 0 &&
+        (state.resource.money?.value ?? 0) > 0,
       performAction: (state: GameState): void => {
         this._promoteFollower(state);
       },
@@ -40,6 +41,39 @@ abstract class Job implements IResource {
     public readonly description: string
   ) {}
 
+  public static jobResources(state: GameState): ResourceKey[] {
+    return state.resources.filter((rkey) => {
+      const res = state.resource[rkey];
+      return res !== undefined && res.resourceType === ResourceType.job;
+    });
+  }
+
+  public static availableJobs(state: GameState): number {
+    // number of followers minus the number of filled jobs
+    const followers = state.resource.followers?.value ?? 0;
+    const hired = state.resources.reduce(
+      (tot: number, rkey: ResourceKey): number => {
+        const res = state.resource[rkey];
+        return res?.resourceType === ResourceType.job ? tot + res.value : tot;
+      },
+      0
+    );
+    return followers - hired;
+  }
+
+  public static totalJobs(state: GameState): number {
+    // number of followers minus the number of filled jobs
+    const followers = state.resource.followers?.value ?? 0;
+    const hired = state.resources.reduce(
+      (tot: number, rkey: ResourceKey): number => {
+        const res = state.resource[rkey];
+        return res?.resourceType === ResourceType.job ? tot + res.value : tot;
+      },
+      0
+    );
+    return followers - hired;
+  }
+
   public addValue(amount: number): void {
     this.value += amount;
     if (this.value < 0) this.value = 0;
@@ -51,37 +85,12 @@ abstract class Job implements IResource {
 
   public advanceAction(_time: number, state: GameState): void {
     // if we're out of followers then the jobs also vacate
-    const avail = this._availableJobs(state);
+    const avail = Job.availableJobs(state);
     if (avail < 0 && this.value > 0) {
       this.addValue(avail);
     }
+
     return;
-  }
-
-  protected _availableJobs(state: GameState): number {
-    // number of followers minus the number of filled jobs
-    const followers = state.resource.followers?.value ?? 0;
-    const hired = state.resources.reduce(
-      (tot: number, rkey: ResourceKey): number => {
-        const res = state.resource[rkey];
-        return res?.resourceType === ResourceType.job ? tot + res.value : tot;
-      },
-      0
-    );
-    return followers - hired;
-  }
-
-  protected _totalPayroll(state: GameState): number {
-    // number of followers minus the number of filled jobs
-    const followers = state.resource.followers?.value ?? 0;
-    const hired = state.resources.reduce(
-      (tot: number, rkey: ResourceKey): number => {
-        const res = state.resource[rkey];
-        return res?.resourceType === ResourceType.job ? tot + res.value : tot;
-      },
-      0
-    );
-    return followers - hired;
   }
 
   protected _hireLog(amount: number, _state: GameState): string {
@@ -95,7 +104,7 @@ abstract class Job implements IResource {
   }
 
   private _promoteFollower(state: GameState): void {
-    if (this._availableJobs(state) <= 0) return;
+    if (Job.availableJobs(state) <= 0) return;
     if (
       this.max !== undefined &&
       this.value < this.max(state) &&

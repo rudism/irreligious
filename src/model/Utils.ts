@@ -14,10 +14,15 @@ function formatNumber(num: number): string {
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
   let item: UnitLookup | undefined;
   for (item of lookup.slice().reverse()) {
-    if (num >= item.value) break;
+    if (Math.abs(num) >= item.value) break;
   }
-  return item !== undefined
-    ? (num / item.value).toFixed(numberFormatDigits).replace(rx, '$1') +
-        item.symbol
-    : num.toFixed(numberFormatDigits).replace(rx, '$1');
+  const sign = num < 0 ? '-' : '';
+  const number =
+    item !== undefined
+      ? (Math.abs(num) / item.value)
+          .toFixed(numberFormatDigits)
+          .replace(rx, '$1') + item.symbol
+      : Math.abs(num).toFixed(numberFormatDigits).replace(rx, '$1');
+
+  return `${sign}${number}`;
 }

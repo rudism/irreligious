@@ -20,6 +20,7 @@ enum ResourceKey {
   other = 'other',
   atheism = 'atheism',
   pastors = 'pastors',
+  compoundManagers = 'compoundManagers',
   money = 'money',
   cryptoCurrency = 'cryptoCurrency',
   cryptoMarket = 'cryptoMarket',
