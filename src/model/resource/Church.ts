@@ -18,8 +18,18 @@ class Church extends Infrastructure {
   }
 
   public max: (state: GameState) => number = (state) =>
-    (state.resource.compounds?.value ?? 0) *
-    (state.config.cfgCapacity.compounds?.churches ?? 0);
+    Math.floor(
+      (state.resource.compounds?.value ?? 0) *
+        (state.config.cfgCapacity.compounds?.churches ?? 0)
+    );
+
+  public inc: (state: GameState) => number = (state) => {
+    // compound managers
+    return (
+      (state.resource.compoundManagers?.value ?? 0) *
+      (state.config.cfgBuySpeed.compoundManagers?.churches ?? 0)
+    );
+  };
 
   public isUnlocked(state: GameState): boolean {
     if (this._isUnlocked) return true;

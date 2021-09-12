@@ -19,7 +19,7 @@ class Pastor extends Job {
     max +=
       (state.resource.megaChurches?.value ?? 0) *
       (state.config.cfgCapacity.megaChurches?.pastors ?? 0);
-    return max;
+    return Math.floor(max);
   };
 
   public isUnlocked(state: GameState): boolean {

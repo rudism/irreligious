@@ -42,10 +42,12 @@ type ResourceAction = {
   performAction: (state: GameState) => void;
 };
 
+type ResourceConfigValues = { [key: string]: string | number | boolean };
+
 type ResourceConfig = {
   value: number;
   cost?: ResourceNumber;
-  config?: { [key: string]: string | number | boolean };
+  config?: ResourceConfigValues;
 };
 
 type SaveData = {

@@ -115,10 +115,14 @@ class DebugRenderer implements IRenderer {
         const value = resource.valueInWholeNumbers
           ? Math.floor(resource.value)
           : resource.value;
+        const max =
+          resource.max !== undefined ? resource.max(state) : undefined;
         elV.innerHTML = formatNumber(value);
         elT.innerHTML =
-          resource.max !== undefined
-            ? ` / ${formatNumber(resource.max(state))}`
+          max !== undefined
+            ? ` / ${formatNumber(
+                resource.valueInWholeNumbers ? Math.floor(max) : max
+              )}`
             : '';
         if (resource.userActions !== undefined) {
           for (let i = 0; i < resource.userActions.length; i++) {

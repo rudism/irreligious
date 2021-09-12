@@ -11,9 +11,9 @@ class CompoundManager extends Job {
   }
 
   public max: (state: GameState) => number = (state) => {
-    return (
+    return Math.floor(
       (state.resource.compounds?.value ?? 0) *
-      (state.config.cfgCapacity.compounds?.compoundManagers ?? 0)
+        (state.config.cfgCapacity.compounds?.compoundManagers ?? 0)
     );
   };
 

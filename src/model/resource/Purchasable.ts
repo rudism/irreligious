@@ -64,6 +64,16 @@ abstract class Purchasable implements IResource {
     return;
   }
 
+  public emitConfig: () => ResourceConfigValues = () => {
+    return { isUnlocked: this._isUnlocked };
+  };
+
+  public restoreConfig: (config: ResourceConfigValues) => void = (config) => {
+    if (typeof config.isUnlocked === 'boolean') {
+      this._isUnlocked = config.isUnlocked;
+    }
+  };
+
   protected _purchaseLog(amount: number, _state: GameState): string {
     let verb = 'purchased';
     if (amount < 0) {

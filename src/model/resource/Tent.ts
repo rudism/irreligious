@@ -21,6 +21,11 @@ class Tent extends Infrastructure {
     max +=
       (state.resource.compounds?.value ?? 0) *
       (state.config.cfgCapacity.compounds?.tents ?? 0);
-    return max;
+    return Math.floor(max);
   };
+
+  public inc: (state: GameState) => number = (state) =>
+    // compound managers
+    (state.resource.compoundManagers?.value ?? 0) *
+    (state.config.cfgBuySpeed.compoundManagers?.tents ?? 0);
 }

@@ -77,6 +77,14 @@ class GameConfig {
     tents: { followers: 2 },
   };
 
+  public cfgBuySpeed: { [key in ResourceKey]?: ResourceNumber } = {
+    compoundManagers: {
+      churches: 0.01,
+      houses: 0.02,
+      tents: 0.05,
+    },
+  };
+
   public cfgCredibilityFollowerLossRatio = 0.04;
   public cfgCredibilityFollowerLossTime = 10000;
   public cfgCredibilityRestoreRate = 0.25;
