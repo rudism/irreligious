@@ -1,8 +1,6 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Resource implements IResource {
-  public cost?: ResourceNumber = undefined;
-
   protected rawValue = 0;
 
   public abstract readonly resourceType: ResourceType;
@@ -26,6 +24,5 @@ abstract class Resource implements IResource {
 
   public restoreConfig = (config: ResourceConfig): void => {
     this.rawValue = config.value;
-    this.cost = config.cost;
   };
 }

@@ -46,7 +46,6 @@ type ResourceConfigValues = { [key: string]: string | number | boolean };
 
 type ResourceConfig = {
   value: number;
-  cost?: ResourceNumber;
   config?: ResourceConfigValues;
 };
 

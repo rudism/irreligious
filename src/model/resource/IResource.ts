@@ -10,10 +10,10 @@ interface IResource {
   readonly description: string;
   readonly valueInWholeNumbers: boolean;
 
-  readonly cost?: ResourceNumber;
+  cost?: (state: GameState) => ResourceNumber;
+  inc?: (state: GameState) => ResourceNumber;
 
   max?: (state: GameState) => number;
-  inc?: (state: GameState) => number;
   advanceAction?: (time: number, state: GameState) => void;
   userActions?: ResourceAction[];
 

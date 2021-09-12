@@ -26,6 +26,8 @@ abstract class Purchasable extends Resource {
   protected _sellMultiplier?: number | ResourceNumber;
   protected _isUnlocked = false;
 
+  private _lastWholeNumberValue = 0;
+
   constructor(
     public readonly label: string,
     public readonly singularName: string,
@@ -63,12 +65,26 @@ abstract class Purchasable extends Resource {
 
   public restoreConfig = (config: ResourceConfig): void => {
     this.rawValue = config.value;
-    if (config.cost !== undefined) this.cost = config.cost;
     if (
       config.config !== undefined &&
       typeof config.config.isUnlocked === 'boolean'
     ) {
       this._isUnlocked = config.config.isUnlocked;
+    }
+  };
+
+  public addValue = (amount: number, _: GameState): void => {
+    this.rawValue += amount;
+    const wholeNumberChange = this.value - this._lastWholeNumberValue;
+    if (wholeNumberChange > 0) {
+      for (const key in this._costMultiplier) {
+        const rkey = <ResourceKey>key;
+        this.cost[rkey] =
+          (this.cost[rkey] ?? 0) *
+          (this._costMultiplier[rkey] ?? 1) *
+          wholeNumberChange;
+      }
+      this._lastWholeNumberValue = this.value;
     }
   };
 
@@ -88,11 +104,6 @@ abstract class Purchasable extends Resource {
     if (state.deductCost(this.cost)) {
       this.addValue(1, state);
       state.log(this._purchaseLog(1, state));
-      for (const key in this._costMultiplier) {
-        const rkey = <ResourceKey>key;
-        this.cost[rkey] =
-          (this.cost[rkey] ?? 0) * (this._costMultiplier[rkey] ?? 1);
-      }
     }
   }
 
@@ -116,7 +127,7 @@ abstract class Purchasable extends Resource {
       costBack[rkey] = cost * -1 * multiplier;
       state.deductCost(costBack);
     }
-    this.addValue(1, state);
+    this.addValue(-1, state);
     state.log(this._purchaseLog(-1, state));
   }
 }
