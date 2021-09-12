@@ -44,12 +44,6 @@ The game's source code on <a href='https://github.com/rudism/irreligious'>Github
 ((): void => {
   const config = new GameConfig(versionMajor, versionMinor);
 
-  // debug values to make the game play faster while testing
-  config.cfgCredibilityRestoreRate = 5;
-  config.cfgPastorRecruitRate = 0.5;
-  config.cfgTimeBetweenTithes = 5000;
-  config.cfgTitheAmount = 1000;
-
   const renderer = new DebugRenderer();
   renderer.onInitialRender = initialRender;
   const state = config.generateState();

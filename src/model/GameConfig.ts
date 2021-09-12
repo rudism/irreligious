@@ -59,8 +59,7 @@ class GameConfig {
   };
 
   public cfgSalary: ResourceNumber = {
-    pastors: 250,
-    compoundManagers: 1000,
+    compoundManagers: 100,
   };
 
   public cfgCapacity: { [key in ResourceKey]?: ResourceNumber } = {
@@ -85,8 +84,6 @@ class GameConfig {
     },
   };
 
-  public cfgCredibilityFollowerLossRatio = 0.04;
-  public cfgCredibilityFollowerLossTime = 10000;
   public cfgCredibilityRestoreRate = 0.25;
   public cfgCryptoCurrencyMinimumValue = 1;
   public cfgCryptoMarketAdjustAmount = 0.1;
@@ -98,9 +95,8 @@ class GameConfig {
   public cfgNoMoneyQuitTime = 10000;
   public cfgPassiveMax = 100;
   public cfgPastorRecruitRate = 0.01;
-  public cfgPastorTitheCollectionFollowerMax = 100;
-  public cfgTimeBetweenTithes = 30000;
-  public cfgTitheAmount = 10;
+  public cfgTimeBetweenTithes = 10000;
+  public cfgTitheAmount = 10000;
   public cfgTitheCredibilityHitFactor = 3;
 
   constructor(public versionMajor: number, public versionMinor: number) {}

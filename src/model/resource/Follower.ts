@@ -31,10 +31,10 @@ class Follower implements IResource {
   public max(state: GameState): number {
     let max = state.config.cfgInitialMax.followers ?? 0;
     max +=
-      (state.resource.tents?.value ?? 0) *
+      Math.floor(state.resource.tents?.value ?? 0) *
       (state.config.cfgCapacity.tents?.followers ?? 0);
     max +=
-      (state.resource.houses?.value ?? 0) *
+      Math.floor(state.resource.houses?.value ?? 0) *
       (state.config.cfgCapacity.houses?.followers ?? 0);
     return max;
   }
@@ -87,26 +87,6 @@ class Follower implements IResource {
   }
 
   public advanceAction(time: number, state: GameState): void {
-    // chance to lose some followers if credibility < 100%
-    this._timeSinceLastLost += time;
-    if (this._timeSinceLastLost > state.config.cfgCredibilityFollowerLossTime) {
-      if (this.value > 0) {
-        const creds = state.resource.credibility;
-        if (creds?.max !== undefined) {
-          const ratio = Math.ceil(creds.value) / creds.max(state);
-          if (Math.random() > ratio) {
-            const lost = Math.ceil(
-              this.value *
-                state.config.cfgCredibilityFollowerLossRatio *
-                (1 - ratio)
-            );
-            this.addValue(lost * -1, state);
-          }
-        }
-      }
-      this._timeSinceLastLost = 0;
-    }
-
     // chance for some followers to quit their jobs if money === 0
     const money = state.resource.money;
     const totalJobs = Job.totalJobs(state);

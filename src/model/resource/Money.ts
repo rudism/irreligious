@@ -42,13 +42,17 @@ class Money implements IResource {
   public inc: (state: GameState) => number = (state) => {
     let inc = 0;
 
+    // tithings
+    inc +=
+      (Math.floor(state.resource.pastors?.value ?? 0) *
+        Math.floor(state.resource.followers?.value ?? 0) *
+        (state.config.cfgTitheAmount ?? 0) *
+        Credibility.ratio(state)) /
+      state.config.cfgTimeBetweenTithes;
+
     // salaries
     inc -=
-      (state.resource.pastors?.value ?? 0) *
-      (state.config.cfgSalary.pastors ?? 0);
-
-    inc -=
-      (state.resource.compoundManagers?.value ?? 0) *
+      Math.floor(state.resource.compoundManagers?.value ?? 0) *
       (state.config.cfgSalary.compoundManagers ?? 0);
 
     return inc;
@@ -57,7 +61,11 @@ class Money implements IResource {
   protected _collectTithes(state: GameState): void {
     if (this.value >= this.max(state)) return;
 
-    const followers = state.resource.followers?.value ?? 0;
+    // can't tithe your pastors
+    const followers =
+      (state.resource.followers?.value ?? 0) -
+      (state.resource.pastors?.value ?? 0);
+
     if (followers <= 0) return;
 
     // collecting too frequently hurts credibility
