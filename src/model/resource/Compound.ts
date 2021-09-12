@@ -1,6 +1,8 @@
 /// <reference path="./Infrastructure.ts" />
 
 class Compound extends Infrastructure {
+  public readonly resourceKey = ResourceKey.compounds;
+
   constructor(config: GameConfig) {
     super(
       'Compounds',
@@ -13,7 +15,7 @@ class Compound extends Infrastructure {
     this._costMultiplier.money = config.cfgCostMultiplier.compounds;
   }
 
-  public isUnlocked(state: GameState): boolean {
+  public isUnlocked = (state: GameState): boolean => {
     if (this._isUnlocked) return true;
     const tents = state.resource.tents;
     if (
@@ -23,5 +25,5 @@ class Compound extends Infrastructure {
       this._isUnlocked = true;
     }
     return this._isUnlocked;
-  }
+  };
 }

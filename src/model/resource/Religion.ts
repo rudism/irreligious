@@ -1,22 +1,20 @@
-/// <reference path="./IResource.ts" />
+/// <reference path="./Resource.ts" />
 
-class Religion implements IResource {
+class Religion extends Resource {
   public readonly resourceType = ResourceType.religion;
   public readonly valueInWholeNumbers = true;
 
   constructor(
+    public readonly resourceKey: ResourceKey,
     public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string,
-    public value: number
-  ) {}
-
-  public addValue(amount: number, _state: GameState): void {
-    this.value += amount;
+    initialValue: number
+  ) {
+    super();
+    this.rawValue = initialValue;
   }
 
-  public isUnlocked(_state: GameState): boolean {
-    return true;
-  }
+  public isUnlocked = (): boolean => true;
 }

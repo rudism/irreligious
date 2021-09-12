@@ -105,12 +105,12 @@ class GameConfig {
     const state = new GameState(this);
 
     // create player organization
-    state.addResource(ResourceKey.followers, new Follower());
+    state.addResource(new Follower());
 
     // create world religions
     state.addResource(
-      ResourceKey.christianity,
       new Religion(
+        ResourceKey.christianity,
         'Christianity',
         'christian',
         'christians',
@@ -120,8 +120,8 @@ class GameConfig {
     );
 
     state.addResource(
-      ResourceKey.islam,
       new Religion(
+        ResourceKey.islam,
         'Islam',
         'muslim',
         'muslims',
@@ -131,8 +131,8 @@ class GameConfig {
     );
 
     state.addResource(
-      ResourceKey.hinduism,
       new Religion(
+        ResourceKey.hinduism,
         'Hinduism',
         'hindu',
         'hindus',
@@ -142,8 +142,8 @@ class GameConfig {
     );
 
     state.addResource(
-      ResourceKey.buddhism,
       new Religion(
+        ResourceKey.buddhism,
         'Buddhism',
         'buddhist',
         'buddhists',
@@ -153,8 +153,8 @@ class GameConfig {
     );
 
     state.addResource(
-      ResourceKey.sikhism,
       new Religion(
+        ResourceKey.sikhism,
         'Sikhism',
         'sikh',
         'sikhs',
@@ -164,8 +164,8 @@ class GameConfig {
     );
 
     state.addResource(
-      ResourceKey.judaism,
       new Religion(
+        ResourceKey.judaism,
         'Judaism',
         'jew',
         'jews',
@@ -175,8 +175,8 @@ class GameConfig {
     );
 
     state.addResource(
-      ResourceKey.other,
       new Religion(
+        ResourceKey.other,
         'Other',
         'person from other faiths',
         'people from other faiths',
@@ -186,8 +186,8 @@ class GameConfig {
     );
 
     state.addResource(
-      ResourceKey.atheism,
       new Religion(
+        ResourceKey.atheism,
         'Non-Religious',
         'atheist',
         'atheists',
@@ -197,24 +197,24 @@ class GameConfig {
     );
 
     // add jobs
-    state.addResource(ResourceKey.pastors, new Pastor());
-    state.addResource(ResourceKey.compoundManagers, new CompoundManager());
+    state.addResource(new Pastor());
+    state.addResource(new CompoundManager());
 
     // add resources
-    state.addResource(ResourceKey.money, new Money(3.5));
-    state.addResource(ResourceKey.cryptoCurrency, new CryptoCurrency(this));
-    state.addResource(ResourceKey.tents, new Tent(this));
-    state.addResource(ResourceKey.houses, new House(this));
-    state.addResource(ResourceKey.churches, new Church(this));
-    state.addResource(ResourceKey.compounds, new Compound(this));
-    state.addResource(ResourceKey.megaChurches, new Megachurch(this));
+    state.addResource(new Money(3.5));
+    state.addResource(new CryptoCurrency(this));
+    state.addResource(new Tent(this));
+    state.addResource(new House(this));
+    state.addResource(new Church(this));
+    state.addResource(new Compound(this));
+    state.addResource(new Megachurch(this));
 
     // add research
-    state.addResource(ResourceKey.buildingPermit, new BuildingPermit(this));
+    state.addResource(new BuildingPermit(this));
 
     // add passive resources
-    state.addResource(ResourceKey.credibility, new Credibility(this));
-    state.addResource(ResourceKey.cryptoMarket, new CryptoMarket(this));
+    state.addResource(new Credibility(this));
+    state.addResource(new CryptoMarket(this));
 
     return state;
   }

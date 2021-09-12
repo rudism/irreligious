@@ -1,22 +1,18 @@
-/// <reference path="./IResource.ts" />
+/// <reference path="./Resource.ts" />
 
-abstract class Passive implements IResource {
+abstract class Passive extends Resource {
   public readonly resourceType = ResourceType.passive;
+
   public readonly valueInWholeNumbers = false;
-  public value = 0;
 
   constructor(
     public readonly label: string,
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string
-  ) {}
-
-  public addValue(amount: number, _state: GameState): void {
-    this.value += amount;
+  ) {
+    super();
   }
 
-  public isUnlocked(_state: GameState): boolean {
-    return true;
-  }
+  public isUnlocked = (): boolean => true;
 }

@@ -26,9 +26,9 @@ class GameState {
     return this._resourceKeys;
   }
 
-  public addResource(key: ResourceKey, resource: IResource): void {
-    this._resourceKeys.push(key);
-    this._resources[key] = resource;
+  public addResource(resource: IResource): void {
+    this._resourceKeys.push(resource.resourceKey);
+    this._resources[resource.resourceKey] = resource;
   }
 
   public advance(time: number): void {
@@ -161,16 +161,7 @@ class GameState {
             if (resource === undefined) continue;
             const saveRes = saveObj.resources[rkey];
             if (saveRes !== undefined) {
-              // @ts-expect-error writing read-only value from save data
-              resource.value = saveRes.value;
-              // @ts-expect-error writing read-only cost from save data
-              resource.cost = saveRes.cost;
-              if (
-                saveRes.config !== undefined &&
-                resource.restoreConfig !== undefined
-              ) {
-                resource.restoreConfig(saveRes.config);
-              }
+              resource.restoreConfig(saveRes);
             }
           }
         } else {

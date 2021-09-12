@@ -1,6 +1,8 @@
 /// <reference path="./Job.ts" />
 
 class CompoundManager extends Job {
+  public readonly resourceKey = ResourceKey.compoundManagers;
+
   constructor() {
     super(
       'Compound Managers',
@@ -10,16 +12,16 @@ class CompoundManager extends Job {
     );
   }
 
-  public max: (state: GameState) => number = (state) => {
+  public max = (state: GameState): number => {
     return (
-      Math.floor(state.resource.compounds?.value ?? 0) *
+      (state.resource.compounds?.value ?? 0) *
       (state.config.cfgCapacity.compounds?.compoundManagers ?? 0)
     );
   };
 
-  public isUnlocked(state: GameState): boolean {
+  public isUnlocked = (state: GameState): boolean => {
     if (this._isUnlocked) return true;
     this._isUnlocked = state.resource.compounds?.isUnlocked(state) === true;
     return this._isUnlocked;
-  }
+  };
 }

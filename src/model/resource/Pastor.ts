@@ -1,6 +1,8 @@
 /// <reference path="./Job.ts" />
 
 class Pastor extends Job {
+  public readonly resourceKey = ResourceKey.pastors;
+
   constructor() {
     super(
       'Pastors',
@@ -10,19 +12,19 @@ class Pastor extends Job {
     );
   }
 
-  public max: (state: GameState) => number = (state) => {
+  public max = (state: GameState): number => {
     let max =
-      Math.floor(state.resource.churches?.value ?? 0) *
+      (state.resource.churches?.value ?? 0) *
       (state.config.cfgCapacity.churches?.pastors ?? 0);
     max +=
-      Math.floor(state.resource.megaChurches?.value ?? 0) *
+      (state.resource.megaChurches?.value ?? 0) *
       (state.config.cfgCapacity.megaChurches?.pastors ?? 0);
-    return Math.floor(max);
+    return max;
   };
 
-  public isUnlocked(state: GameState): boolean {
+  public isUnlocked = (state: GameState): boolean => {
     if (this._isUnlocked) return true;
     this._isUnlocked = state.resource.churches?.isUnlocked(state) === true;
     return this._isUnlocked;
-  }
+  };
 }

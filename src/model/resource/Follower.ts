@@ -1,14 +1,15 @@
-/// <reference path="./IResource.ts" />
+/// <reference path="./Resource.ts" />
 /// <reference path="./Job.ts" />
 
-class Follower implements IResource {
+class Follower extends Resource {
   public readonly resourceType = ResourceType.religion;
+  public readonly resourceKey = ResourceKey.followers;
+
   public readonly label = 'Your Followers';
   public readonly singularName = 'follower';
   public readonly pluralName = 'followers';
   public readonly description = 'In you they trust.';
   public readonly valueInWholeNumbers = true;
-  public value = 0;
 
   public userActions: ResourceAction[] = [
     {
@@ -21,25 +22,24 @@ class Follower implements IResource {
     },
   ];
 
-  private _timeSinceLastLost = 0;
   private _lastRecruitmentLog = 0;
   private _followerSources: ResourceNumber = {};
   private _followerDests: ResourceNumber = {};
   private _timeSinceLastQuit = 0;
   private _quitTracker: ResourceNumber = {};
 
-  public max(state: GameState): number {
+  public max = (state: GameState): number => {
     let max = state.config.cfgInitialMax.followers ?? 0;
     max +=
-      Math.floor(state.resource.tents?.value ?? 0) *
+      (state.resource.tents?.value ?? 0) *
       (state.config.cfgCapacity.tents?.followers ?? 0);
     max +=
-      Math.floor(state.resource.houses?.value ?? 0) *
+      (state.resource.houses?.value ?? 0) *
       (state.config.cfgCapacity.houses?.followers ?? 0);
     return max;
-  }
+  };
 
-  public inc(state: GameState): number {
+  public inc = (state: GameState): number => {
     let inc = 0;
 
     // pastor recruiting
@@ -52,12 +52,12 @@ class Follower implements IResource {
     if (creds?.max !== undefined) inc *= creds.value / creds.max(state);*/
 
     return inc;
-  }
+  };
 
-  public addValue(amount: number, state: GameState): void {
+  public addValue = (amount: number, state: GameState): void => {
     const oldValue = this.value;
-    this.value += amount;
-    const diff = Math.floor(this.value) - Math.floor(oldValue);
+    this.rawValue += amount;
+    const diff = this.value - oldValue;
 
     if (diff > 0) {
       // gained followers must come from other faiths
@@ -80,13 +80,11 @@ class Follower implements IResource {
         }
       }
     }
-  }
+  };
 
-  public isUnlocked(_state: GameState): boolean {
-    return true;
-  }
+  public isUnlocked = (): boolean => true;
 
-  public advanceAction(time: number, state: GameState): void {
+  public advanceAction = (time: number, state: GameState): void => {
     // chance for some followers to quit their jobs if money === 0
     const money = state.resource.money;
     const totalJobs = Job.totalJobs(state);
@@ -190,7 +188,7 @@ class Follower implements IResource {
       }
       this._lastRecruitmentLog = state.now;
     }
-  }
+  };
 
   private _recruitFollower(state: GameState): void {
     // don't exceed max

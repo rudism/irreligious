@@ -1,6 +1,8 @@
 /// <reference path="./Purchasable.ts" />
 
 class CryptoCurrency extends Purchasable {
+  public readonly resourceKey = ResourceKey.cryptoCurrency;
+
   constructor(config: GameConfig) {
     super(
       'FaithCoin',

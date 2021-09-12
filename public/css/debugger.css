@@ -52,7 +52,7 @@ body, html {
 #resource-container-job .resource {
   background-color: #fcf;
 }
-#resource-container-consumable .resource {
+#resource-container-purchasable .resource {
   background-color: #cfc;
 }
 #resource-container-infrastructure .resource {

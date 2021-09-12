@@ -1,6 +1,8 @@
 /// <reference path="./Passive.ts" />
 
 class Credibility extends Passive {
+  public readonly resourceKey = ResourceKey.credibility;
+
   constructor(config: GameConfig) {
     super(
       'Credibility',
@@ -8,7 +10,7 @@ class Credibility extends Passive {
       'credibilities',
       'Affects your ability to retain followers and collect tithes.'
     );
-    this.value = config.cfgPassiveMax;
+    this.rawValue = config.cfgPassiveMax;
   }
 
   public static ratio(state: GameState): number {
@@ -22,9 +24,8 @@ class Credibility extends Passive {
       : cred.value / cred.max(state);
   }
 
-  public max: (state: GameState) => number = (state) =>
-    state.config.cfgPassiveMax;
+  public max = (state: GameState): number => state.config.cfgPassiveMax;
 
-  public inc: (state: GameState) => number = (state) =>
+  public inc = (state: GameState): number =>
     state.config.cfgCredibilityRestoreRate;
 }

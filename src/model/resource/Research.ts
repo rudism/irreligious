@@ -2,6 +2,7 @@
 
 abstract class Research extends Purchasable {
   public readonly resourceType = ResourceType.research;
+
   public inc = undefined;
 
   constructor(
@@ -19,8 +20,7 @@ abstract class Research extends Purchasable {
       'Learn',
       'Complete this research.'
     );
-    this.value = 0;
   }
 
-  public max: (state: GameState) => number = (_state) => 1;
+  public max = (_: GameState): number => 1;
 }

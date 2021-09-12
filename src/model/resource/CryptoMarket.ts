@@ -1,6 +1,8 @@
 /// <reference path="./Hidden.ts" />
 
 class CryptoMarket extends Hidden {
+  public readonly resourceKey = ResourceKey.cryptoMarket;
+
   private _adjustmentTime = 0;
 
   constructor(config: GameConfig) {
@@ -9,7 +11,7 @@ class CryptoMarket extends Hidden {
       'crypto markets',
       'How much money a single FaithCoin is worth'
     );
-    this.value = config.cfgInitialCost.cryptoCurrency ?? 0;
+    this.rawValue = config.cfgInitialCost.cryptoCurrency ?? 0;
   }
 
   public max = (state: GameState): number =>

@@ -1,7 +1,9 @@
-/// <reference path="./Purchasable.ts" />
+/// <reference path="./Resource.ts" />
 
-class Money implements IResource {
-  public readonly resourceType = ResourceType.consumable;
+class Money extends Resource {
+  public readonly resourceType = ResourceType.purchasable;
+  public readonly resourceKey = ResourceKey.money;
+
   public readonly label = 'Money';
   public readonly singularName = '${}';
   public readonly pluralName = '${}';
@@ -23,15 +25,14 @@ class Money implements IResource {
 
   private _lastCollectionTime = 0;
 
-  constructor(public value: number) {}
-
-  public isUnlocked = (_state: GameState): boolean => true;
-
-  public addValue(amount: number, _state: GameState): void {
-    this.value += amount;
+  public constructor(initialValue: number) {
+    super();
+    this.rawValue = initialValue;
   }
 
-  public max: (state: GameState) => number = (state: GameState) => {
+  public isUnlocked = (_: GameState): boolean => true;
+
+  public max = (state: GameState): number => {
     let max = state.config.cfgInitialMax.money ?? 0;
     max +=
       (state.resource.compounds?.value ?? 0) *
@@ -39,20 +40,20 @@ class Money implements IResource {
     return max;
   };
 
-  public inc: (state: GameState) => number = (state) => {
+  public inc = (state: GameState): number => {
     let inc = 0;
 
     // tithings
     inc +=
-      (Math.floor(state.resource.pastors?.value ?? 0) *
-        Math.floor(state.resource.followers?.value ?? 0) *
+      ((state.resource.pastors?.value ?? 0) *
+        (state.resource.followers?.value ?? 0) *
         (state.config.cfgTitheAmount ?? 0) *
         Credibility.ratio(state)) /
       state.config.cfgTimeBetweenTithes;
 
     // salaries
     inc -=
-      Math.floor(state.resource.compoundManagers?.value ?? 0) *
+      (state.resource.compoundManagers?.value ?? 0) *
       (state.config.cfgSalary.compoundManagers ?? 0);
 
     return inc;
@@ -92,11 +93,9 @@ class Money implements IResource {
     if (followers !== undefined) {
       state.log(
         `You collected $${formatNumber(amount)} from ${formatNumber(
-          Math.floor(followers.value)
+          followers.value
         )} ${
-          Math.floor(followers.value) > 1
-            ? followers.pluralName
-            : followers.singularName
+          followers.value > 1 ? followers.pluralName : followers.singularName
         }.`
       );
     } else {

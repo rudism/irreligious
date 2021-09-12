@@ -1,9 +1,9 @@
-/// <reference path="./IResource.ts" />
+/// <reference path="./Resource.ts" />
 
-abstract class Job implements IResource {
+abstract class Job extends Resource {
   public readonly resourceType = ResourceType.job;
+
   public readonly valueInWholeNumbers = true;
-  public value = 0;
   public readonly cost: ResourceNumber = {};
 
   public max?: (state: GameState) => number = undefined;
@@ -39,7 +39,9 @@ abstract class Job implements IResource {
     public readonly singularName: string,
     public readonly pluralName: string,
     public readonly description: string
-  ) {}
+  ) {
+    super();
+  }
 
   public static jobResources(state: GameState): ResourceKey[] {
     return state.resources.filter((rkey) => {
@@ -74,20 +76,15 @@ abstract class Job implements IResource {
     return followers - hired;
   }
 
-  public addValue(amount: number): void {
-    this.value += amount;
-    if (this.value < 0) this.value = 0;
-  }
-
-  public isUnlocked(_state: GameState): boolean {
+  public isUnlocked: (_state: GameState) => boolean = () => {
     return this._isUnlocked;
-  }
+  };
 
   public advanceAction(_time: number, state: GameState): void {
     // if we're out of followers then the jobs also vacate
     const avail = Job.availableJobs(state);
     if (avail < 0 && this.value > 0) {
-      this.addValue(avail);
+      this.addValue(avail, state);
     }
 
     return;
@@ -110,7 +107,7 @@ abstract class Job implements IResource {
       this.value < this.max(state) &&
       state.deductCost(this.cost)
     ) {
-      this.addValue(1);
+      this.addValue(1, state);
       state.log(this._hireLog(1, state));
       for (const key in this._costMultiplier) {
         const rkey = <ResourceKey>key;
@@ -122,7 +119,7 @@ abstract class Job implements IResource {
 
   private _demoteFollower(state: GameState): void {
     if (this.value <= 0) return;
-    this.addValue(-1);
+    this.addValue(-1, state);
     state.log(this._hireLog(-1, state));
     for (const key in this._costMultiplier) {
       const rkey = <ResourceKey>key;

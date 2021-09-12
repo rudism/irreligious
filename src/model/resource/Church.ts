@@ -1,6 +1,8 @@
 /// <reference path="./Infrastructure.ts" />
 
 class Church extends Infrastructure {
+  public readonly resourceKey = ResourceKey.churches;
+
   constructor(config: GameConfig) {
     super(
       'Churches',
@@ -17,13 +19,11 @@ class Church extends Infrastructure {
     this._costMultiplier.money = config.cfgCostMultiplier.churches;
   }
 
-  public max: (state: GameState) => number = (state) =>
-    Math.floor(
-      (state.resource.compounds?.value ?? 0) *
-        (state.config.cfgCapacity.compounds?.churches ?? 0)
-    );
+  public max = (state: GameState): number =>
+    (state.resource.compounds?.value ?? 0) *
+    (state.config.cfgCapacity.compounds?.churches ?? 0);
 
-  public inc: (state: GameState) => number = (state) => {
+  public inc = (state: GameState): number => {
     // compound managers
     return (
       (state.resource.compoundManagers?.value ?? 0) *
@@ -31,12 +31,12 @@ class Church extends Infrastructure {
     );
   };
 
-  public isUnlocked(state: GameState): boolean {
+  public isUnlocked = (state: GameState): boolean => {
     if (this._isUnlocked) return true;
     const compounds = state.resource.compounds;
     if (compounds !== undefined && compounds.value > 0) {
       this._isUnlocked = true;
     }
     return this._isUnlocked;
-  }
+  };
 }

@@ -1,6 +1,8 @@
 /// <reference path="./Infrastructure.ts" />
 
 class Megachurch extends Infrastructure {
+  public readonly resourceKey = ResourceKey.megaChurches;
+
   constructor(config: GameConfig) {
     super(
       'Megachurches',
@@ -15,15 +17,15 @@ class Megachurch extends Infrastructure {
     this._costMultiplier.money = config.cfgCostMultiplier.megaChurches;
   }
 
-  public max: (state: GameState) => number = (state) =>
+  public max = (state: GameState): number =>
     state.config.cfgInitialMax.megaChurches ?? 0;
 
-  public isUnlocked(state: GameState): boolean {
+  public isUnlocked = (state: GameState): boolean => {
     if (this._isUnlocked) return true;
     const permit = state.resource.buildingPermit;
     if (permit !== undefined && permit.value > 0) {
       this._isUnlocked = true;
     }
     return this._isUnlocked;
-  }
+  };
 }

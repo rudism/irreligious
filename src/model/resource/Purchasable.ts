@@ -1,13 +1,13 @@
-/// <reference path="./IResource.ts" />
+/// <reference path="./Resource.ts" />
 
-abstract class Purchasable implements IResource {
-  public readonly resourceType: ResourceType = ResourceType.consumable;
+abstract class Purchasable extends Resource {
+  public readonly resourceType: ResourceType = ResourceType.purchasable;
+
   public valueInWholeNumbers = true;
-  public value = 0;
-  public readonly cost: ResourceNumber = {};
+  public cost: ResourceNumber = {};
 
   public inc?: (state: GameState) => number = undefined;
-  public max?: (_state: GameState) => number = undefined;
+  public max?: (state: GameState) => number = undefined;
 
   public userActions: ResourceAction[] = [
     {
@@ -37,6 +37,7 @@ abstract class Purchasable implements IResource {
     private readonly _sellButtonText = 'Sell',
     private readonly _sellDescription = `Sell a ${singularName}.`
   ) {
+    super();
     if (canSell) {
       this.userActions.push({
         name: this._sellButtonText,
@@ -49,28 +50,25 @@ abstract class Purchasable implements IResource {
     }
   }
 
-  public addValue(amount: number, _state: GameState): void {
-    this.value += amount;
-  }
-
-  public isUnlocked(state: GameState): boolean {
+  public isUnlocked = (state: GameState): boolean => {
     if (!this._isUnlocked && state.isPurchasable(this.cost)) {
       this._isUnlocked = true;
     }
     return this._isUnlocked;
-  }
+  };
 
-  public advanceAction(_time: number, _state: GameState): void {
-    return;
-  }
-
-  public emitConfig: () => ResourceConfigValues = () => {
+  public emitConfig = (): ResourceConfigValues => {
     return { isUnlocked: this._isUnlocked };
   };
 
-  public restoreConfig: (config: ResourceConfigValues) => void = (config) => {
-    if (typeof config.isUnlocked === 'boolean') {
-      this._isUnlocked = config.isUnlocked;
+  public restoreConfig = (config: ResourceConfig): void => {
+    this.rawValue = config.value;
+    if (config.cost !== undefined) this.cost = config.cost;
+    if (
+      config.config !== undefined &&
+      typeof config.config.isUnlocked === 'boolean'
+    ) {
+      this._isUnlocked = config.config.isUnlocked;
     }
   };
 
@@ -88,7 +86,7 @@ abstract class Purchasable implements IResource {
   private _purchase(state: GameState): void {
     if (this.max !== undefined && this.value >= this.max(state)) return;
     if (state.deductCost(this.cost)) {
-      this.value += 1;
+      this.addValue(1, state);
       state.log(this._purchaseLog(1, state));
       for (const key in this._costMultiplier) {
         const rkey = <ResourceKey>key;
@@ -118,7 +116,7 @@ abstract class Purchasable implements IResource {
       costBack[rkey] = cost * -1 * multiplier;
       state.deductCost(costBack);
     }
-    this.value -= 1;
+    this.addValue(1, state);
     state.log(this._purchaseLog(-1, state));
   }
 }
