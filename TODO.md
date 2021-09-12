@@ -82,6 +82,7 @@
 - [x] add an action to sell purchasables and regain some portion of their cost
 - [ ] add a `policy` resource type that can be toggled on or off
 - [x] remove recruitment effects of credibility (that will be for notoriety instead)
+- [ ] change `value` to a getter that does `Math.floor` if it's a whole number resource
 
 ## Long-Term Ideas
 
