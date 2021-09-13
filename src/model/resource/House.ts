@@ -13,7 +13,7 @@ class House extends Infrastructure {
       )} followers.`,
       true
     );
-    this.cost.money = config.cfgInitialCost.houses;
+    this._baseCost.money = config.cfgInitialCost.houses;
     this._costMultiplier.money = config.cfgCostMultiplier.houses;
   }
 
@@ -21,12 +21,15 @@ class House extends Infrastructure {
     (state.resource.compounds?.value ?? 0) *
     (state.config.cfgCapacity.compounds?.houses ?? 0);
 
-  public inc = (state: GameState): number => {
-    // compound managers
-    return (
+  public inc = (state: GameState): ResourceNumber => {
+    const inc: ResourceNumber = {};
+    const compoundManagers =
       (state.resource.compoundManagers?.value ?? 0) *
-      (state.config.cfgBuySpeed.compoundManagers?.houses ?? 0)
-    );
+      (state.config.cfgBuySpeed.compoundManagers?.houses ?? 0);
+    if (compoundManagers > 0) {
+      inc.compoundManagers = compoundManagers;
+    }
+    return inc;
   };
 
   public isUnlocked = (state: GameState): boolean => {

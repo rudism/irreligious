@@ -89,12 +89,12 @@ class GameConfig {
   public cfgCryptoMarketAdjustAmount = 0.1;
   public cfgCryptoMarketAdjustPeriod = 30000;
   public cfgCryptoMarketGrowthBias = 0.1;
-  public cfgDefaultSellMultiplier = 0.5;
   public cfgFollowerGainLossLogTimer = 10000;
   public cfgNoMoneyQuitRate = 0.2;
   public cfgNoMoneyQuitTime = 10000;
   public cfgPassiveMax = 100;
   public cfgPastorRecruitRate = 0.01;
+  public cfgSellCostBackMultiplier = 0.5;
   public cfgTimeBetweenTithes = 10000;
   public cfgTitheAmount = 10000;
   public cfgTitheCredibilityHitFactor = 3;
@@ -202,7 +202,7 @@ class GameConfig {
 
     // add resources
     state.addResource(new Money(3.5));
-    state.addResource(new CryptoCurrency(this));
+    state.addResource(new CryptoCurrency());
     state.addResource(new Tent(this));
     state.addResource(new House(this));
     state.addResource(new Church(this));

@@ -40,17 +40,13 @@ class CryptoMarket extends Hidden {
       ) {
         adjustment = state.config.cfgCryptoCurrencyMinimumValue - this.value;
       }
-      //if (Math.abs(adjustment) > 0) {
-      this.addValue(adjustment, state);
-      state.log(
-        `FaithCoin just ${
-          adjustment > 0 ? 'increased' : 'decreased'
-        } in value by $${formatNumber(Math.abs(adjustment))}.`
-      );
-      //}
-      if (crypto?.cost !== undefined) {
-        crypto.cost.money = this.value;
-        state.autoAction(); // cause redraw
+      if (Math.abs(adjustment) > 0) {
+        this.addValue(adjustment, state);
+        state.log(
+          `FaithCoin just ${
+            adjustment > 0 ? 'increased' : 'decreased'
+          } in value by $${formatNumber(Math.abs(adjustment))}.`
+        );
       }
     }
   };

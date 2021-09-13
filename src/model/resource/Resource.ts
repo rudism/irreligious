@@ -1,6 +1,10 @@
 /// <reference path="./IResource.ts" />
 
 abstract class Resource implements IResource {
+  public inc?: (state: GameState) => ResourceNumber = undefined;
+  public cost?: (state: GameState) => ResourceNumber = undefined;
+  public max?: (state: GameState) => number = undefined;
+
   protected rawValue = 0;
 
   public abstract readonly resourceType: ResourceType;

@@ -1,7 +1,5 @@
 ## In Progress
 
-- [ ] change `inc` to a `ResourceNumber` instead of a `number`
-- [ ] change `cost` into a function that computes based on `value`
 
 ## Initial Game Progression Plan
 
@@ -13,17 +11,16 @@
     - [x] houses (+follower cap)
     - [x] churches (+pastor cap)
   - [x] hire pastors to recruit and gather tithes (+money, +followers)
-  - [ ] hire compound managers to auto-build (+tents, +houses, +churches)
-  - [ ] fluctuating crypto market value passive determines crypto value
+  - [x] hire compound managers to auto-build (+tents, +houses, +churches)
+  - [x] fluctuating crypto market value passive determines crypto value
   - [ ] prosperity gospel policy increases tithes, decreases recruitment rate
   - main resource problems:
     - [x] lose money on purchases
     - [x] lose money for salaries
-    - [ ] lose money for compound maintenance
     - [x] gain money from tithes
     - [x] low credibility loses followers
-    - [ ] low and decreasing money loses jobs
-    - [ ] gain or lose money on crypto based on market passive
+    - [x] low and decreasing money loses jobs
+    - [x] gain or lose money on crypto based on market passive
 
 ### Phase 2: 1K-100K Followers
 
@@ -84,10 +81,7 @@
 ## Short-Term Todos
 
 - [ ] add `disabledHint` to `userActions` to generate hint about how to enable an action
-- [x] add an action to sell purchasables and regain some portion of their cost
 - [ ] add a `policy` resource type that can be toggled on or off
-- [x] remove recruitment effects of credibility (that will be for notoriety instead)
-- [x] change `value` to a getter that does `Math.floor` if it's a whole number resource
 
 ## Long-Term Ideas
 

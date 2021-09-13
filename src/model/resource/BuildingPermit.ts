@@ -10,7 +10,7 @@ class BuildingPermit extends Research {
       'building permits',
       'Unlocks several new buildings you can build outside of your compounds.'
     );
-    this.cost.money = config.cfgInitialCost.buildingPermit;
+    this._baseCost.money = config.cfgInitialCost.buildingPermit;
   }
 
   public isUnlocked = (state: GameState): boolean => {

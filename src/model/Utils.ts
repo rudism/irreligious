@@ -1,3 +1,5 @@
+/// <reference path="./resource/SharedTypes.ts" />
+
 const numberFormatDigits = 1;
 
 function formatNumber(num: number): string {
@@ -25,4 +27,13 @@ function formatNumber(num: number): string {
       : Math.abs(num).toFixed(numberFormatDigits).replace(rx, '$1');
 
   return `${sign}${number}`;
+}
+
+function resourceNumberSum(res: ResourceNumber): number {
+  let sum = 0;
+  for (const key in res) {
+    const rkey = <ResourceKey>key;
+    sum += res[rkey] ?? 0;
+  }
+  return sum;
 }

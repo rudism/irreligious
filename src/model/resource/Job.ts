@@ -4,10 +4,9 @@ abstract class Job extends Resource {
   public readonly resourceType = ResourceType.job;
 
   public readonly valueInWholeNumbers = true;
-  public readonly cost: ResourceNumber = {};
 
   public max?: (state: GameState) => number = undefined;
-  public inc?: (state: GameState) => number = undefined;
+  public inc?: (state: GameState) => ResourceNumber = undefined;
 
   public userActions: ResourceAction[] = [
     {
@@ -31,7 +30,6 @@ abstract class Job extends Resource {
     },
   ];
 
-  protected _costMultiplier: { [key in ResourceKey]?: number } = {};
   protected _isUnlocked = false;
 
   constructor(
@@ -102,18 +100,9 @@ abstract class Job extends Resource {
 
   private _promoteFollower(state: GameState): void {
     if (Job.availableJobs(state) <= 0) return;
-    if (
-      this.max !== undefined &&
-      this.value < this.max(state) &&
-      state.deductCost(this.cost)
-    ) {
+    if (this.max !== undefined && this.value < this.max(state)) {
       this.addValue(1, state);
       state.log(this._hireLog(1, state));
-      for (const key in this._costMultiplier) {
-        const rkey = <ResourceKey>key;
-        this.cost[rkey] =
-          (this.cost[rkey] ?? 0) * (this._costMultiplier[rkey] ?? 1);
-      }
     }
   }
 
@@ -121,10 +110,5 @@ abstract class Job extends Resource {
     if (this.value <= 0) return;
     this.addValue(-1, state);
     state.log(this._hireLog(-1, state));
-    for (const key in this._costMultiplier) {
-      const rkey = <ResourceKey>key;
-      this.cost[rkey] =
-        (this.cost[rkey] ?? 0) / (this._costMultiplier[rkey] ?? 1);
-    }
   }
 }

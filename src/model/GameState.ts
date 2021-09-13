@@ -58,7 +58,10 @@ class GameState {
         resource.inc !== undefined &&
         (resource.max === undefined || resource.value < resource.max(this))
       ) {
-        resource.addValue((resource.inc(this) * time) / 1000, this);
+        resource.addValue(
+          (resourceNumberSum(resource.inc(this)) * time) / 1000,
+          this
+        );
       }
 
       if (resource.max !== undefined && resource.value > resource.max(this)) {
@@ -138,7 +141,6 @@ class GameState {
       if (resource === undefined) continue;
       const resSav: ResourceConfig = {
         value: resource.value,
-        cost: resource.cost,
       };
       if (resource.emitConfig !== undefined) {
         resSav.config = resource.emitConfig();

@@ -73,7 +73,7 @@ class DebugRenderer implements IRenderer {
         }
         if (
           resource.cost !== undefined &&
-          Object.keys(resource.cost).length !== 0
+          Object.keys(resource.cost(state)).length !== 0
         ) {
           content += "<br>Cost: <span class='resource-cost'></span>";
         }
@@ -81,7 +81,6 @@ class DebugRenderer implements IRenderer {
         resContainer.appendChild(el);
         if (resource.userActions !== undefined) {
           for (let i = 0; i < resource.userActions.length; i++) {
-            const action = resource.userActions[i];
             const btn = document.getElementById(`resource-btn-${rkey}-${i}`);
             btn?.addEventListener('click', (): void => {
               state.performAction(rkey, i);
@@ -135,13 +134,17 @@ class DebugRenderer implements IRenderer {
             }
           }
         }
-        const inc =
-          resource.inc !== undefined ? resource.inc(state) : undefined;
-        const elI = el.getElementsByClassName('resource-inc')[0];
-        if (inc !== undefined && inc !== 0) {
-          elI.innerHTML = ` ${inc > 0 ? '+' : ''}${formatNumber(inc)}/s`;
-        } else if (elI.innerHTML !== '') {
-          elI.innerHTML = '';
+        if (resource.inc !== undefined) {
+          const resInc = resource.inc(state);
+          const inc = resourceNumberSum(resInc);
+          const elI = el.getElementsByClassName('resource-inc')[0];
+          if (inc !== 0) {
+            elI.innerHTML = ` ${inc > 0 ? '+' : ''}${formatNumber(inc)}/s`;
+            elI.setAttribute('title', this._getIncDetails(resource, state));
+          } else if (elI.innerHTML !== '') {
+            elI.innerHTML = '';
+            elI.removeAttribute('title');
+          }
         }
         if (this._handleClick) {
           const elC = el.getElementsByClassName('resource-cost');
@@ -177,17 +180,37 @@ class DebugRenderer implements IRenderer {
 
   private _getCostStr(resource: IResource, state: GameState): string {
     let cost = '';
+    if (resource.cost === undefined) return cost;
     for (const rkey of state.resources) {
-      if (resource.cost?.[rkey] !== undefined) {
+      const rcost = resource.cost(state)[rkey];
+      if (rcost !== undefined && rcost > 0) {
         if (cost !== '') cost += ', ';
         if (rkey === ResourceKey.money) {
-          cost += `$${formatNumber(resource.cost[rkey] ?? 0)}`;
+          cost += `$${formatNumber(rcost)}`;
         } else {
-          cost += `${formatNumber(resource.cost[rkey] ?? 0)}
-            ${state.resource[rkey]?.pluralName ?? rkey}`;
+          cost += `${formatNumber(rcost)} ${
+            (rcost > 1
+              ? state.resource[rkey]?.pluralName
+              : state.resource[rkey]?.singularName) ?? rkey
+          }`;
         }
       }
     }
     return cost;
+  }
+
+  private _getIncDetails(resource: IResource, state: GameState): string {
+    let inc = '';
+    if (resource.inc === undefined) return inc;
+    for (const rkey of state.resources) {
+      const incRes = state.resource[rkey];
+      if (incRes === undefined || incRes.label === undefined) continue;
+      const rinc = resource.inc(state)[rkey];
+      if (rinc !== undefined && rinc !== 0) {
+        if (inc !== '') inc += '\n';
+        inc += `${incRes.label}: ${rinc > 0 ? '+' : ''}${formatNumber(rinc)}/s`;
+      }
+    }
+    return inc;
   }
 }

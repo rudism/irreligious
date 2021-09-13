@@ -39,12 +39,14 @@ class Follower extends Resource {
     return max;
   };
 
-  public inc = (state: GameState): number => {
-    let inc = 0;
+  public inc = (state: GameState): ResourceNumber => {
+    const inc: ResourceNumber = {};
 
     // pastor recruiting
-    const pastors = state.resource.pastors?.value ?? 0;
-    inc += pastors * state.config.cfgPastorRecruitRate;
+    const pastors =
+      (state.resource.pastors?.value ?? 0) * state.config.cfgPastorRecruitRate;
+
+    if (pastors > 0) inc.pastors = pastors;
 
     // credibility adjustment
     // this should be based on notoriety instead

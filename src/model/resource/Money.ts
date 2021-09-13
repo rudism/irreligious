@@ -40,11 +40,11 @@ class Money extends Resource {
     return max;
   };
 
-  public inc = (state: GameState): number => {
-    let inc = 0;
+  public inc = (state: GameState): ResourceNumber => {
+    const inc: ResourceNumber = {};
 
     // tithings
-    inc +=
+    const tithings =
       ((state.resource.pastors?.value ?? 0) *
         (state.resource.followers?.value ?? 0) *
         (state.config.cfgTitheAmount ?? 0) *
@@ -52,9 +52,12 @@ class Money extends Resource {
       state.config.cfgTimeBetweenTithes;
 
     // salaries
-    inc -=
+    const compoundManagers =
       (state.resource.compoundManagers?.value ?? 0) *
       (state.config.cfgSalary.compoundManagers ?? 0);
+
+    if (tithings > 0) inc.pastors = tithings;
+    if (compoundManagers > 0) inc.compoundManagers = compoundManagers * -1;
 
     return inc;
   };

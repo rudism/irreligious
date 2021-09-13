@@ -13,7 +13,7 @@ class Megachurch extends Infrastructure {
       )} pastors`,
       true
     );
-    this.cost.money = config.cfgInitialCost.megaChurches;
+    this._baseCost.money = config.cfgInitialCost.megaChurches;
     this._costMultiplier.money = config.cfgCostMultiplier.megaChurches;
   }
 

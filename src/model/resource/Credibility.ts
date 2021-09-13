@@ -26,6 +26,9 @@ class Credibility extends Passive {
 
   public max = (state: GameState): number => state.config.cfgPassiveMax;
 
-  public inc = (state: GameState): number =>
-    state.config.cfgCredibilityRestoreRate;
+  public inc = (state: GameState): ResourceNumber => {
+    const inc: ResourceNumber = {};
+    inc.credibility = state.config.cfgCredibilityRestoreRate;
+    return inc;
+  };
 }

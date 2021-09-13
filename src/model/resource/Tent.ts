@@ -13,7 +13,7 @@ class Tent extends Infrastructure {
       )} followers.`,
       true
     );
-    this.cost.money = config.cfgInitialCost.tents;
+    this._baseCost.money = config.cfgInitialCost.tents;
     this._costMultiplier.money = config.cfgCostMultiplier.tents;
   }
 
@@ -26,8 +26,14 @@ class Tent extends Infrastructure {
     return max;
   };
 
-  public inc = (state: GameState): number =>
-    // compound managers
-    (state.resource.compoundManagers?.value ?? 0) *
-    (state.config.cfgBuySpeed.compoundManagers?.tents ?? 0);
+  public inc = (state: GameState): ResourceNumber => {
+    const inc: ResourceNumber = {};
+    const compoundManagers =
+      (state.resource.compoundManagers?.value ?? 0) *
+      (state.config.cfgBuySpeed.compoundManagers?.tents ?? 0);
+    if (compoundManagers > 0) {
+      inc.compoundManagers = compoundManagers;
+    }
+    return inc;
+  };
 }
