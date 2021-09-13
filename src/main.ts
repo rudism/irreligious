@@ -1,8 +1,8 @@
 /// <reference path="./model/GameConfig.ts" />
 /// <reference path="./render/DebugRenderer.ts" />
 
-const versionMajor = 2;
-const versionMinor = 1;
+const versionMajor = 3;
+const versionMinor = 0;
 
 let globalStartTime = 0;
 let globalTimeout: number | null = null;

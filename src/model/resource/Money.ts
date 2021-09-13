@@ -47,9 +47,11 @@ class Money extends Resource {
     const tithings =
       ((state.resource.pastors?.value ?? 0) *
         (state.resource.followers?.value ?? 0) *
-        (state.config.cfgTitheAmount ?? 0) *
-        Credibility.ratio(state)) /
+        (state.config.cfgTitheAmount ?? 0)) /
       state.config.cfgTimeBetweenTithes;
+
+    // credibility hit
+    const credibility = tithings - tithings * Credibility.ratio(state);
 
     // salaries
     const compoundManagers =
@@ -57,6 +59,7 @@ class Money extends Resource {
       (state.config.cfgSalary.compoundManagers ?? 0);
 
     if (tithings > 0) inc.pastors = tithings;
+    if (credibility > 0) inc.credibility = credibility * -1;
     if (compoundManagers > 0) inc.compoundManagers = compoundManagers * -1;
 
     return inc;

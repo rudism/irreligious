@@ -111,18 +111,21 @@ class DebugRenderer implements IRenderer {
         if (el.className !== 'resource') el.className = 'resource';
         const elV = el.getElementsByClassName('resource-value')[0];
         const elT = el.getElementsByClassName('resource-max')[0];
-        const value = resource.valueInWholeNumbers
-          ? Math.floor(resource.value)
-          : resource.value;
+        const value = formatNumber(
+          resource.valueInWholeNumbers
+            ? Math.floor(resource.value)
+            : resource.value
+        );
         const max =
           resource.max !== undefined ? resource.max(state) : undefined;
-        elV.innerHTML = formatNumber(value);
-        elT.innerHTML =
+        if (elV.innerHTML !== value) elV.innerHTML = value;
+        const maxStr =
           max !== undefined
             ? ` / ${formatNumber(
                 resource.valueInWholeNumbers ? Math.floor(max) : max
               )}`
             : '';
+        if (elT.innerHTML !== maxStr) elT.innerHTML = maxStr;
         if (resource.userActions !== undefined) {
           for (let i = 0; i < resource.userActions.length; i++) {
             const elB = document.getElementById(`resource-btn-${rkey}-${i}`);
@@ -139,17 +142,21 @@ class DebugRenderer implements IRenderer {
           const inc = resourceNumberSum(resInc);
           const elI = el.getElementsByClassName('resource-inc')[0];
           if (inc !== 0) {
-            elI.innerHTML = ` ${inc > 0 ? '+' : ''}${formatNumber(inc)}/s`;
-            elI.setAttribute('title', this._getIncDetails(resource, state));
+            const incStr = ` ${inc > 0 ? '+' : ''}${formatNumber(inc)}/s`;
+            if (elI.innerHTML !== incStr) {
+              elI.innerHTML = incStr;
+              elI.setAttribute('title', this._getIncDetails(resource, state));
+            }
           } else if (elI.innerHTML !== '') {
             elI.innerHTML = '';
             elI.removeAttribute('title');
           }
         }
-        if (this._handleClick) {
-          const elC = el.getElementsByClassName('resource-cost');
-          if (elC.length > 0) {
-            elC[0].innerHTML = this._getCostStr(resource, state);
+        const elC = el.getElementsByClassName('resource-cost');
+        if (elC.length > 0) {
+          const costStr = this._getCostStr(resource, state);
+          if (elC[0].innerHTML !== costStr) {
+            elC[0].innerHTML = costStr;
           }
         }
       } else {
