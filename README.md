@@ -1,3 +1,5 @@
+**Note:** Active development has moved to https://code.sitosis.com/rudism/irreligious
+
 # irreligio.us
 
 An incremental game in which you start a cult and must grow it into the dominant world religion.
